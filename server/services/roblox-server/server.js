@@ -192,7 +192,7 @@ io.on('connection', (socket) => {
       io.emit('chat_message', message);
       logger.info(`Chat: ${player.username}: ${data.message}`);
     }
-  }
+  });
 
   // Spieleraktionen
   socket.on('player_action', (data) => {
