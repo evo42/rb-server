@@ -259,7 +259,7 @@ node scripts/ci-cd-security-pipeline.js --update-deps --fail-high --no-reports
 ### **1. Development Environment**
 ```bash
 # Schnelle Entwicklung
-docker-compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 
 # Security Scanner
 node scripts/dependency-security-scanner.js --dry-run
@@ -271,7 +271,7 @@ npm test
 ### **2. Staging Environment**
 ```bash
 # Staging mit Security Features
-docker-compose -f docker-compose.secure.yml up -d
+docker compose -f docker-compose.secure.yml up -d
 
 # Vollständige Security Pipeline
 node scripts/ci-cd-security-pipeline.js --stage all
@@ -283,7 +283,7 @@ node scripts/dependency-update-manager.js --minor --test-after-update
 ### **3. Production Environment**
 ```bash
 # Production mit Enterprise Security
-docker-compose -f docker-compose.secure.yml -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.secure.yml -f docker-compose.prod.yml up -d
 
 # Nur kritische Security Checks
 node scripts/ci-cd-security-pipeline.js --stage security --fail-critical
@@ -422,14 +422,14 @@ node scripts/dependency-security-scanner.js
 # Problem: Permission denied
 # Lösung:
 chmod +x scripts/*.js
-docker-compose build --no-cache
+docker compose build --no-cache
 ```
 
 #### **3. Database Connection Issues**
 ```bash
 # Problem: PostgreSQL connection refused
 # Lösung:
-docker-compose exec postgres-secure psql -U roblox_user -d roblox_games
+docker compose exec postgres-secure psql -U roblox_user -d roblox_games
 # Check connection pool settings
 ```
 

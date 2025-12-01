@@ -21,7 +21,7 @@ cd /Users/rene/ikaria/roblox/server
 ./start.sh start
 
 # Oder manuell mit Docker Compose
-docker-compose up -d
+docker compose up -d
 ```
 
 ### 2. Game über Web-Interface starten
@@ -330,13 +330,13 @@ open http://localhost
 ### Production Deployment
 ```bash
 # Production Setup
-docker-compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml up -d
 
 # Mit Monitoring
-docker-compose --profile monitoring up -d
+docker compose --profile monitoring up -d
 
 # Mit Load Balancer
-docker-compose --profile load-balancer up -d
+docker compose --profile load-balancer up -d
 ```
 
 ## 📚 Weiterführende Ressourcen

@@ -272,7 +272,7 @@ cp .env.example .env
 # Edit .env with secure values
 
 # 2. Deploy with security hardening
-docker-compose -f docker-compose.secure.yml up -d
+docker compose -f docker-compose.secure.yml up -d
 
 # 3. Verify deployment
 curl http://localhost:3000/health

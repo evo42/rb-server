@@ -97,11 +97,11 @@ check_requirements() {
     success "Docker gefunden: $(docker --version)"
 
     # Docker Compose prüfen
-    if ! command -v docker-compose &> /dev/null; then
+    if ! command -v docker compose &> /dev/null; then
         error "Docker Compose ist nicht installiert"
         return 1
     fi
-    success "Docker Compose gefunden: $(docker-compose --version)"
+    success "Docker Compose gefunden: $(docker compose --version)"
 
     return 0
 }
@@ -182,11 +182,11 @@ start_server() {
 
     # Alte Container stoppen
     log "Stoppe alte Container..."
-    eval "docker-compose $COMPOSE_ARGS down --remove-orphans" || true
+    eval "docker compose $COMPOSE_ARGS down --remove-orphans" || true
 
     # Neue Container starten
     log "Starte neue Container..."
-    if eval "docker-compose $COMPOSE_ARGS up -d"; then
+    if eval "docker compose $COMPOSE_ARGS up -d"; then
         success "Server erfolgreich gestartet (Modus: $MODE)"
 
         # Warte auf Services
@@ -213,7 +213,7 @@ wait_for_services() {
     for service in "${services[@]}"; do
         log "Warte auf $service..."
         while [[ $wait_time -lt $max_wait ]]; do
-            if eval "docker-compose $COMPOSE_ARGS ps $service" | grep -q "Up\|healthy"; then
+            if eval "docker compose $COMPOSE_ARGS ps $service" | grep -q "Up\|healthy"; then
                 success "$service ist bereit"
                 break
             fi
@@ -231,7 +231,7 @@ wait_for_services() {
 stop_server() {
     log "Stoppe Roblox Server..."
 
-    if eval "docker-compose $COMPOSE_ARGS down"; then
+    if eval "docker compose $COMPOSE_ARGS down"; then
         success "Server gestoppt"
     else
         error "Fehler beim Stoppen des Servers"
@@ -260,7 +260,7 @@ show_status() {
     log "Server Status:"
     echo
 
-    eval "docker-compose $COMPOSE_ARGS ps"
+    eval "docker compose $COMPOSE_ARGS ps"
     echo
 
     # Services-Status
@@ -268,7 +268,7 @@ show_status() {
     local services=("roblox-server" "postgres" "redis" "nginx")
 
     for service in "${services[@]}"; do
-        if eval "docker-compose $COMPOSE_ARGS ps $service" | grep -q "healthy\|Up"; then
+        if eval "docker compose $COMPOSE_ARGS ps $service" | grep -q "healthy\|Up"; then
             success "$service: Running"
         else
             warning "$service: Not Ready"
@@ -288,7 +288,7 @@ show_status() {
     # System-Info
     info "System-Informationen:"
     echo "  Docker Version:   $(docker --version 2>/dev/null || echo 'N/A')"
-    echo "  Compose Version:  $(docker-compose --version 2>/dev/null || echo 'N/A')"
+    echo "  Compose Version:  $(docker compose --version 2>/dev/null || echo 'N/A')"
     echo "  Modus:            ${MODE:-Unknown}"
     echo "  Uptime:           $(uptime | cut -d',' -f1 | cut -d' ' -f4-)"
 }
@@ -324,9 +324,9 @@ show_logs() {
     fi
 
     if [[ -n "$service" ]]; then
-        eval "docker-compose $COMPOSE_ARGS logs $args $service"
+        eval "docker compose $COMPOSE_ARGS logs $args $service"
     else
-        eval "docker-compose $COMPOSE_ARGS logs $args"
+        eval "docker compose $COMPOSE_ARGS logs $args"
     fi
 }
 
@@ -353,13 +353,13 @@ create_backup() {
 
     # Datenbank-Backup
     log "Sichere Datenbank..."
-    eval "docker-compose $COMPOSE_ARGS exec -T postgres pg_dump -U roblox_user roblox_game" > "$backup_dir/database_$timestamp.sql"
+    eval "docker compose $COMPOSE_ARGS exec -T postgres pg_dump -U roblox_user roblox_game" > "$backup_dir/database_$timestamp.sql"
     gzip "$backup_dir/database_$timestamp.sql"
 
     # Redis-Backup
     log "Sichere Redis..."
-    eval "docker-compose $COMPOSE_ARGS exec redis redis-cli BGSAVE"
-    eval "docker-compose $COMPOSE_ARGS cp redis:/data/dump.rdb $backup_dir/redis_$timestamp.rdb"
+    eval "docker compose $COMPOSE_ARGS exec redis redis-cli BGSAVE"
+    eval "docker compose $COMPOSE_ARGS cp redis:/data/dump.rdb $backup_dir/redis_$timestamp.rdb"
 
     # Komprimierung
     gzip "$backup_dir/redis_$timestamp.rdb"
@@ -383,7 +383,7 @@ update_project() {
         git pull origin main
 
         log "Baue Images neu..."
-        eval "docker-compose $COMPOSE_ARGS build --no-cache"
+        eval "docker compose $COMPOSE_ARGS build --no-cache"
 
         success "Update abgeschlossen"
         info "Starten Sie den Server neu: $0 restart"
@@ -401,7 +401,7 @@ cleanup() {
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         log "Stoppe Container..."
-        eval "docker-compose $COMPOSE_ARGS down --volumes --remove-orphans"
+        eval "docker compose $COMPOSE_ARGS down --volumes --remove-orphans"
 
         log "Entferne Images..."
         docker system prune -af --volumes
@@ -425,7 +425,7 @@ health_check() {
 
     # Docker-Container Health
     local failed_containers=0
-    local containers=$(eval "docker-compose $COMPOSE_ARGS ps -q")
+    local containers=$(eval "docker compose $COMPOSE_ARGS ps -q")
 
     for container in $containers; do
         local status=$(docker inspect --format='{{.State.Health.Status}}' "$container" 2>/dev/null || echo "none")
@@ -449,12 +449,12 @@ open_shell() {
     if [[ -z "$service" ]]; then
         error "Service-Name erforderlich"
         info "Verfügbare Services:"
-        eval "docker-compose $COMPOSE_ARGS config --services"
+        eval "docker compose $COMPOSE_ARGS config --services"
         return 1
     fi
 
     log "Öffne Shell in $service..."
-    eval "docker-compose $COMPOSE_ARGS exec $service bash"
+    eval "docker compose $COMPOSE_ARGS exec $service bash"
 }
 
 # Haupt-Funktion

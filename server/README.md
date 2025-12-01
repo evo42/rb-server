@@ -44,12 +44,12 @@ cp .env.example .env
 
 3. Server starten:
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 4. Server-Status überprüfen:
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 ## Konfiguration
@@ -88,10 +88,10 @@ Siehe `.env.example` für alle verfügbaren Konfigurationsoptionen.
 
 ```bash
 # Server-Logs anzeigen
-docker-compose logs -f roblox-server
+docker compose logs -f roblox-server
 
 # Datenbank-Verbindung testen
-docker-compose exec postgres psql -U roblox_user -d roblox_game
+docker compose exec postgres psql -U roblox_user -d roblox_game
 
 # Server-Health-Check
 curl http://localhost/api/health
@@ -101,12 +101,12 @@ curl http://localhost/api/health
 
 ### Lokale Entwicklung
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Produktions-Deployment
 ```bash
-docker-compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 ## Troubleshooting
@@ -115,26 +115,26 @@ docker-compose -f docker-compose.prod.yml up -d
 
 1. **Port bereits belegt**
    - Prüfen Sie `.env` Konfiguration
-   - Nutzen Sie `docker-compose down` zum Stoppen
+   - Nutzen Sie `docker compose down` zum Stoppen
 
 2. **Datenbank-Verbindung fehlgeschlagen**
    - Überprüfen Sie PostgreSQL-Container Status
    - Prüfen Sie Umgebungsvariablen
 
 3. **Roblox Server startet nicht**
-   - Prüfen Sie Logs: `docker-compose logs roblox-server`
+   - Prüfen Sie Logs: `docker compose logs roblox-server`
    - Verifizieren Sie Lua-Scripts Syntax
 
 ### Logs
 
 ```bash
 # Alle Services
-docker-compose logs
+docker compose logs
 
 # Spezifischer Service
-docker-compose logs roblox-server
-docker-compose logs postgres
-docker-compose logs nginx
+docker compose logs roblox-server
+docker compose logs postgres
+docker compose logs nginx
 ```
 
 ## Contributing

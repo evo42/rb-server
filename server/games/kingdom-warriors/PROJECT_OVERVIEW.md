@@ -23,7 +23,7 @@ Kingdom Warriors (v1.0.0)
 ├── 🎮 Lua-Game-Engine (main.lua)
 ├── 📦 Package-Management (package.json)
 ├── 🐳 Container-Isolation (Dockerfile)
-├── 🌐 Docker-Compose Integration
+├── 🌐 docker compose Integration
 ├── 🚀 Automated Deployment (deploy.sh)
 ├── 📚 Comprehensive Documentation (README.md)
 └── 🔧 Development Tools & Testing
@@ -91,7 +91,7 @@ cd games/kingdom-warriors
 
 ### 2. Docker Compose Integration
 ```bash
-docker-compose -f ../../docker-compose.yml -f docker-compose.override.yml up
+docker compose -f ../../docker-compose.yml -f docker-compose.override.yml up
 ```
 
 ### 3. Manual Docker Run

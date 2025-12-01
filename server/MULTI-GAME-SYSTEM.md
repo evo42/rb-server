@@ -107,7 +107,7 @@ roblox-server/
 ### 1. Web-Interface starten
 ```bash
 # Alle Services inklusive Game Manager starten
-docker-compose up -d
+docker compose up -d
 
 # Web-Interface aufrufen
 open http://localhost
@@ -321,13 +321,13 @@ services:
 ### Production Deployment
 ```bash
 # Mit allen Features
-docker-compose -f docker-compose.yml -f docker-compose.game-manager.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.game-manager.yml up -d
 
 # Mit Monitoring
-docker-compose --profile monitoring up -d
+docker compose --profile monitoring up -d
 
 # Mit Load Balancer
-docker-compose --profile load-balancer up -d
+docker compose --profile load-balancer up -d
 ```
 
 ## 🎮 Game Development Workflow

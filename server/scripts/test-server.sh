@@ -49,11 +49,11 @@ test_docker_installation() {
     fi
     success "Docker ist installiert: $(docker --version)"
 
-    if ! command -v docker-compose &> /dev/null; then
+    if ! command -v docker compose &> /dev/null; then
         error "Docker Compose ist nicht installiert"
         return 1
     fi
-    success "Docker Compose ist installiert: $(docker-compose --version)"
+    success "Docker Compose ist installiert: $(docker compose --version)"
 
     return 0
 }
@@ -116,10 +116,10 @@ start_services() {
     cd "$PROJECT_ROOT"
 
     # Alte Container stoppen und entfernen
-    docker-compose down --remove-orphans
+    docker compose down --remove-orphans
 
     # Services starten
-    if docker-compose up -d; then
+    if docker compose up -d; then
         success "Services gestartet"
         return 0
     else
@@ -138,7 +138,7 @@ wait_for_services() {
     for service in "${services[@]}"; do
         log "Warte auf $service..."
         while [[ $wait_time -lt $max_wait ]]; do
-            if docker-compose ps "$service" | grep -q "healthy\|Up"; then
+            if docker compose ps "$service" | grep -q "healthy\|Up"; then
                 success "$service ist bereit"
                 break
             fi
@@ -188,7 +188,7 @@ test_health_endpoints() {
 test_database_connection() {
     log "Teste Datenbankverbindung..."
 
-    if docker-compose exec -T postgres psql -U roblox_user -d roblox_game -c "SELECT 1;" >/dev/null 2>&1; then
+    if docker compose exec -T postgres psql -U roblox_user -d roblox_game -c "SELECT 1;" >/dev/null 2>&1; then
         success "PostgreSQL Verbindung erfolgreich"
     else
         error "PostgreSQL Verbindung fehlgeschlagen"
@@ -196,7 +196,7 @@ test_database_connection() {
     fi
 
     # Tabelle prüfen
-    if docker-compose exec -T postgres psql -U roblox_user -d roblox_game -c "\dt" | grep -q "profiles"; then
+    if docker compose exec -T postgres psql -U roblox_user -d roblox_game -c "\dt" | grep -q "profiles"; then
         success "Datenbank-Tabellen sind erstellt"
     else
         error "Datenbank-Tabellen fehlen"
@@ -209,7 +209,7 @@ test_database_connection() {
 test_redis_connection() {
     log "Teste Redis-Verbindung..."
 
-    if docker-compose exec -T redis redis-cli ping | grep -q "PONG"; then
+    if docker compose exec -T redis redis-cli ping | grep -q "PONG"; then
         success "Redis Verbindung erfolgreich"
     else
         error "Redis Verbindung fehlgeschlagen"
@@ -330,12 +330,12 @@ Server-Name: ${SERVER_NAME:-"Local Roblox Server"}
 
 System Information:
 - Docker Version: $(docker --version 2>/dev/null || echo "N/A")
-- Docker Compose Version: $(docker-compose --version 2>/dev/null || echo "N/A")
+- Docker Compose Version: $(docker compose --version 2>/dev/null || echo "N/A")
 - Betriebssystem: $(uname -s) $(uname -r)
 - Architektur: $(uname -m)
 
 Service Status:
-$(docker-compose ps)
+$(docker compose ps)
 
 Resource Usage:
 $(docker stats --no-stream --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.BlockIO}}" 2>/dev/null || echo "N/A")
@@ -356,7 +356,7 @@ Test-Zusammenfassung:
 Nächste Schritte:
 1. Prüfen Sie alle Warning-Nachrichten
 2. Führen Sie manuelle Tests in der Roblox-Client-Anwendung durch
-3. Überprüfen Sie die Logs: docker-compose logs
+3. Überprüfen Sie die Logs: docker compose logs
 4. Stellen Sie sicher, dass alle Secrets in der Produktionsumgebung geändert werden
 EOF
 
@@ -475,7 +475,7 @@ main() {
             ;;
         "cleanup")
             cleanup
-            docker-compose down --remove-orphans
+            docker compose down --remove-orphans
             ;;
         "help"|"-h"|"--help")
             show_help

@@ -529,13 +529,13 @@ jobs:
 ```bash
 # ✅ CORRECT: Environment-specific deployments
 # Production
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 # Staging
-docker-compose -f docker-compose.yml -f docker-compose.staging.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d
 
 # Development
-docker-compose up -d
+docker compose up -d
 ```
 
 ---

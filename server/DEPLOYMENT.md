@@ -74,13 +74,13 @@ nano .env
 ### 3. Server starten
 ```bash
 # Alle Services starten
-docker-compose up -d
+docker compose up -d
 
 # Status überprüfen
-docker-compose ps
+docker compose ps
 
 # Logs anzeigen
-docker-compose logs -f
+docker compose logs -f
 ```
 
 ### 4. Server testen
@@ -191,25 +191,25 @@ Anpassbare Game-Einstellungen:
 1. **Logs überwachen:**
    ```bash
    # Alle Services
-   docker-compose logs -f
+   docker compose logs -f
 
    # Spezifischer Service
-   docker-compose logs -f roblox-server
+   docker compose logs -f roblox-server
 
    # Letzte 100 Zeilen
-   docker-compose logs --tail=100 roblox-server
+   docker compose logs --tail=100 roblox-server
    ```
 
 2. **Container-Shell:**
    ```bash
    # Roblox Server Container
-   docker-compose exec roblox-server bash
+   docker compose exec roblox-server bash
 
    # PostgreSQL Database
-   docker-compose exec postgres psql -U roblox_user -d roblox_game
+   docker compose exec postgres psql -U roblox_user -d roblox_game
 
    # Redis
-   docker-compose exec redis redis-cli
+   docker compose exec redis redis-cli
    ```
 
 3. **Web Interface:**
@@ -221,7 +221,7 @@ Anpassbare Game-Einstellungen:
 
 ```bash
 # Verbindung zur Datenbank
-docker-compose exec postgres psql -U roblox_user -d roblox_game
+docker compose exec postgres psql -U roblox_user -d roblox_game
 
 # Tabellen auflisten
 \dt
@@ -230,10 +230,10 @@ docker-compose exec postgres psql -U roblox_user -d roblox_game
 SELECT * FROM players.profiles LIMIT 5;
 
 # Backup erstellen
-docker-compose exec postgres pg_dump -U roblox_user roblox_game > backup.sql
+docker compose exec postgres pg_dump -U roblox_user roblox_game > backup.sql
 
 # Daten wiederherstellen
-docker-compose exec -T postgres psql -U roblox_user -d roblox_game < backup.sql
+docker compose exec -T postgres psql -U roblox_user -d roblox_game < backup.sql
 ```
 
 ## Produktions-Deployment
@@ -284,10 +284,10 @@ echo "SSL_EMAIL=admin@your-domain.com" >> .env.production
 
 ```bash
 # Mit Produktions-Konfiguration starten
-docker-compose -f docker-compose.prod.yml --env-file .env.production up -d
+docker compose -f docker-compose.prod.yml --env-file .env.production up -d
 
 # Services überprüfen
-docker-compose -f docker-compose.prod.yml ps
+docker compose -f docker-compose.prod.yml ps
 
 # Health-Check
 curl -f http://localhost/api/health
@@ -297,17 +297,17 @@ curl -f http://localhost/api/health
 
 ```bash
 # Certbot-Profile aktivieren
-docker-compose -f docker-compose.prod.yml --profile ssl up -d
+docker compose -f docker-compose.prod.yml --profile ssl up -d
 
 # Zertifikate automatisch erneuern
-docker-compose -f docker-compose.prod.yml --profile ssl up -d certbot
+docker compose -f docker-compose.prod.yml --profile ssl up -d certbot
 ```
 
 ### 6. Monitoring aktivieren
 
 ```bash
 # Monitoring-Profile starten
-docker-compose -f docker-compose.prod.yml --profile monitoring up -d
+docker compose -f docker-compose.prod.yml --profile monitoring up -d
 
 # Grafana-Dashboard
 # http://your-domain.com:3000
@@ -320,37 +320,37 @@ docker-compose -f docker-compose.prod.yml --profile monitoring up -d
 
 ```bash
 # Standard-Services (immer aktiv)
-docker-compose up -d
+docker compose up -d
 
 # Nur Monitoring
-docker-compose --profile monitoring up -d
+docker compose --profile monitoring up -d
 
 # Nur Logging
-docker-compose --profile logging up -d
+docker compose --profile logging up -d
 
 # Nur Backup
-docker-compose --profile backup up -d
+docker compose --profile backup up -d
 
 # Nur SSL
-docker-compose --profile ssl up -d
+docker compose --profile ssl up -d
 
 # Load Balancer (für horizontale Skalierung)
-docker-compose --profile load-balancer up -d
+docker compose --profile load-balancer up -d
 
 # Alle Profile
-docker-compose --profile monitoring --profile logging --profile backup up -d
+docker compose --profile monitoring --profile logging --profile backup up -d
 ```
 
 ### Profile-Kombinationen
 
 **Entwicklung:**
 ```bash
-docker-compose --profile monitoring --profile logging up -d
+docker compose --profile monitoring --profile logging up -d
 ```
 
 **Produktion:**
 ```bash
-docker-compose -f docker-compose.prod.yml \
+docker compose -f docker-compose.prod.yml \
   --profile monitoring --profile logging --profile backup \
   --profile ssl --env-file .env.production up -d
 ```
@@ -361,7 +361,7 @@ docker-compose -f docker-compose.prod.yml \
 
 1. **Monitoring aktivieren:**
    ```bash
-   docker-compose --profile monitoring up -d
+   docker compose --profile monitoring up -d
    ```
 
 2. **Zugriff:**
@@ -381,7 +381,7 @@ docker-compose -f docker-compose.prod.yml \
 
 1. **Logging aktivieren:**
    ```bash
-   docker-compose --profile logging up -d
+   docker compose --profile logging up -d
    ```
 
 2. **Log-Analyse:**
@@ -392,7 +392,7 @@ docker-compose -f docker-compose.prod.yml \
 
 ```bash
 # Automatischer Health-Check
-docker-compose exec healthchecker crontab -l
+docker compose exec healthchecker crontab -l
 
 # Manueller Health-Check
 ./scripts/healthcheck.sh
@@ -404,7 +404,7 @@ docker-compose exec healthchecker crontab -l
 
 ```bash
 # Backup-Service starten
-docker-compose --profile backup up -d
+docker compose --profile backup up -d
 
 # Backups werden automatisch erstellt:
 # - Täglich um 2:00 Uhr
@@ -416,13 +416,13 @@ docker-compose --profile backup up -d
 
 ```bash
 # Vollständiges Backup
-docker-compose exec postgres pg_dumpall -U roblox_user > full_backup.sql
+docker compose exec postgres pg_dumpall -U roblox_user > full_backup.sql
 
 # Nur Datenbank
-docker-compose exec postgres pg_dump -U roblox_user roblox_game > database_backup.sql
+docker compose exec postgres pg_dump -U roblox_user roblox_game > database_backup.sql
 
 # Redis Backup
-docker-compose exec redis redis-cli BGSAVE
+docker compose exec redis redis-cli BGSAVE
 docker cp roblox-redis-prod:/data/dump.rdb ./backups/redis_dump.rdb
 ```
 
@@ -430,19 +430,19 @@ docker cp roblox-redis-prod:/data/dump.rdb ./backups/redis_dump.rdb
 
 ```bash
 # 1. Services stoppen
-docker-compose down
+docker compose down
 
 # 2. Daten wiederherstellen
-docker-compose up -d postgres
+docker compose up -d postgres
 
 # Warten bis PostgreSQL bereit ist
-docker-compose logs postgres | grep "database system is ready to accept connections"
+docker compose logs postgres | grep "database system is ready to accept connections"
 
 # 3. Datenbank wiederherstellen
-docker-compose exec -T postgres psql -U roblox_user < database_backup.sql
+docker compose exec -T postgres psql -U roblox_user < database_backup.sql
 
 # 4. Andere Services starten
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Backup-Scripts
@@ -480,19 +480,19 @@ chmod +x scripts/custom_backup.sh
 #### 1. Container startet nicht
 
 **Symptome:**
-- `docker-compose ps` zeigt Exited Status
+- `docker compose ps` zeigt Exited Status
 - Keine Logs verfügbar
 
 **Lösungen:**
 ```bash
 # Logs prüfen
-docker-compose logs SERVICE_NAME
+docker compose logs SERVICE_NAME
 
 # Container-Details anzeigen
-docker-compose ps -a
+docker compose ps -a
 
 # Manuelle Ausführung testen
-docker-compose run --rm SERVICE_NAME
+docker compose run --rm SERVICE_NAME
 ```
 
 #### 2. Datenbank-Verbindungsfehler
@@ -504,13 +504,13 @@ docker-compose run --rm SERVICE_NAME
 **Lösungen:**
 ```bash
 # PostgreSQL Status prüfen
-docker-compose exec postgres pg_isready -U roblox_user
+docker compose exec postgres pg_isready -U roblox_user
 
 # Netzwerk-Verbindung testen
-docker-compose exec roblox-server nc -zv postgres 5432
+docker compose exec roblox-server nc -zv postgres 5432
 
 # Datenbank-Credentials überprüfen
-docker-compose exec postgres psql -U roblox_user -d roblox_game -c "SELECT 1;"
+docker compose exec postgres psql -U roblox_user -d roblox_game -c "SELECT 1;"
 ```
 
 #### 3. Port-Konflikte
@@ -588,13 +588,13 @@ du -sh ./*
 ```bash
 # Debug-Log-Level aktivieren
 echo "LOG_LEVEL=DEBUG" >> .env
-docker-compose up -d
+docker compose up -d
 
 # Erweiterte Logs
-docker-compose logs -f --tail=1000 roblox-server
+docker compose logs -f --tail=1000 roblox-server
 
 # Container-Shell für manuelles Debugging
-docker-compose exec roblox-server bash
+docker compose exec roblox-server bash
 ```
 
 ### Log-Analyse
@@ -694,14 +694,14 @@ services:
 
 ```bash
 # Skalierung starten
-docker-compose -f docker-compose.yml -f docker-compose.scale.yml up -d --scale roblox-server=3
+docker compose -f docker-compose.yml -f docker-compose.scale.yml up -d --scale roblox-server=3
 ```
 
 ### Load Balancer Setup
 
 ```bash
 # HAProxy aktivieren
-docker-compose --profile load-balancer up -d
+docker compose --profile load-balancer up -d
 
 # Konfiguration anpassen
 nano config/haproxy/haproxy.cfg
@@ -725,10 +725,10 @@ sudo ufw enable
 
 ```bash
 # Let's Encrypt Zertifikat
-docker-compose --profile ssl up -d certbot
+docker compose --profile ssl up -d certbot
 
 # Automatische Erneuerung
-0 12 * * * /usr/bin/docker-compose -f /path/to/docker-compose.prod.yml --profile ssl up -d certbot && /usr/bin/docker-compose -f /path/to/docker-compose.prod.yml exec certbot certbot renew --quiet
+0 12 * * * /usr/bin/docker compose -f /path/to/docker-compose.prod.yml --profile ssl up -d certbot && /usr/bin/docker compose -f /path/to/docker-compose.prod.yml exec certbot certbot renew --quiet
 ```
 
 ### Secrets Management

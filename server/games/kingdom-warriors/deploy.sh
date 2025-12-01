@@ -63,7 +63,7 @@ check_prerequisites() {
     success "Docker ist verfügbar"
 
     # Docker Compose prüfen
-    if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null; then
+    if ! command -v docker compose &> /dev/null && ! docker compose version &> /dev/null; then
         error "Docker Compose ist nicht verfügbar!"
         exit 1
     fi

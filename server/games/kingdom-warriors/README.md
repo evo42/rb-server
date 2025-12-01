@@ -373,13 +373,13 @@ npm run test:multiplayer:kingdom-warriors
 ### Development Build
 ```bash
 # Lokale Entwicklung
-docker-compose up kingdom-warriors-dev
+docker compose up kingdom-warriors-dev
 ```
 
 ### Production Build
 ```bash
 # Produktions-Deployment
-docker-compose -f docker-compose.prod.yml up kingdom-warriors
+docker compose -f docker-compose.prod.yml up kingdom-warriors
 ```
 
 ### CI/CD Pipeline
