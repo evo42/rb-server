@@ -278,6 +278,24 @@ services:
         max-size: "20m"
         max-file: "3"
 
+  # Health Check Service (Separate Monitoring Container)
+  healthchecker:
+    image: alpine:latest
+    container_name: roblox-healthcheck-prod
+    restart: always
+    depends_on:
+      - roblox-server
+      - postgres
+      - redis
+      - nginx
+    networks:
+      - roblox-network
+    volumes:
+      - ./scripts/healthcheck.sh:/healthcheck.sh:ro
+    command: sh -c "chmod +x /healthcheck.sh && crond -f && /healthcheck.sh"
+    profiles:
+      - monitoring
+
   # Log Aggregation Service (Loki + Promtail)
   loki:
     image: grafana/loki:latest
@@ -443,21 +461,3 @@ volumes:
       type: none
       o: bind
       device: ./data/logging
-
-# Health Check Service (Separate Monitoring Container)
-  healthchecker:
-    image: alpine:latest
-    container_name: roblox-healthcheck-prod
-    restart: always
-    depends_on:
-      - roblox-server
-      - postgres
-      - redis
-      - nginx
-    networks:
-      - roblox-network
-    volumes:
-      - ./scripts/healthcheck.sh:/healthcheck.sh:ro
-    command: sh -c "chmod +x /healthcheck.sh && crond -f && /healthcheck.sh"
-    profiles:
-      - monitoring
