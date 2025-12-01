@@ -1,0 +1,307 @@
+{
+  "id": "lernblox-school-battle",
+  "name": "LernBlox School Battle",
+  "version": "2.0.0",
+  "description": "Ein pädagogisches Quiz-Spiel für Gymnasiasten mit mathematischen, englischen, spanischen, geografischen und anderen Schulfächern",
+  "author": "LernBlox Educational Team",
+  "category": "educational",
+  "tags": ["education", "quiz", "mathematics", "languages", "geography", "school", "learning"],
+  "maxPlayers": 20,
+  "minPlayers": 2,
+  "sessionTimeout": 1800,
+  "gameMode": "school-quiz",
+  "maps": ["classroom", "library", "laboratory", "auditorium"],
+  "rules": {
+    "objective": "Answer educational questions to earn points and advance in the leaderboard",
+    "questsPerGame": 10,
+    "maxTotalQuests": 42,
+    "pointsPerCorrectAnswer": 100,
+    "pointsForWrongAnswer": 25,
+    "extraGiftThreshold": 10,
+    "roundTime": 900,
+    "questionTimeLimit": 30,
+    "friendlyCompetition": true
+  },
+  "subjects": [
+    {
+      "id": "mathematics",
+      "name": "Mathematik",
+      "description": "Grundlegende mathematische Konzepte für Gymnasiasten",
+      "icon": "🧮",
+      "difficulty": "medium",
+      "questTypes": ["arithmetic", "algebra", "geometry", "calculus"]
+    },
+    {
+      "id": "english",
+      "name": "Englisch",
+      "description": "Englische Grammatik, Vokabular und Sprachverständnis",
+      "icon": "🇬🇧",
+      "difficulty": "easy",
+      "questTypes": ["grammar", "vocabulary", "reading", "writing"]
+    },
+    {
+      "id": "spanish",
+      "name": "Spanisch",
+      "description": "Spanische Grammatik, Vokabular und Kultur",
+      "icon": "🇪🇸",
+      "difficulty": "medium",
+      "questTypes": ["grammar", "vocabulary", "culture", "pronunciation"]
+    },
+    {
+      "id": "geography",
+      "name": "Geografie",
+      "description": "Weltgeografie, Länder, Hauptstädte und geografische Features",
+      "icon": "🌍",
+      "difficulty": "easy",
+      "questTypes": ["countries", "capitals", "landforms", "climate"]
+    },
+    {
+      "id": "history",
+      "name": "Geschichte",
+      "description": "Weltgeschichte, wichtige Ereignisse und historische Persönlichkeiten",
+      "icon": "🏛️",
+      "difficulty": "medium",
+      "questTypes": ["ancient", "medieval", "modern", "figures"]
+    },
+    {
+      "id": "science",
+      "name": "Naturwissenschaften",
+      "description": "Physik, Chemie, Biologie und Umweltwissenschaften",
+      "icon": "🔬",
+      "difficulty": "hard",
+      "questTypes": ["physics", "chemistry", "biology", "earth"]
+    },
+    {
+      "id": "literature",
+      "name": "Literatur",
+      "description": "Berühmte Werke, Autoren und literarische Konzepte",
+      "icon": "📚",
+      "difficulty": "medium",
+      "questTypes": ["authors", "works", "genres", "poetry"]
+    },
+    {
+      "id": "art",
+      "name": "Kunst",
+      "description": "Kunstgeschichte, berühmte Künstler und künstlerische Techniken",
+      "icon": "🎨",
+      "difficulty": "easy",
+      "questTypes": ["artists", "movements", "techniques", "periods"]
+    }
+  ],
+  "questRewards": [
+    {
+      "id": "knowledge_badge",
+      "name": "Wissensabzeichen",
+      "description": "Ein Badge für erworbenes Wissen",
+      "effect": "score_boost",
+      "value": 50,
+      "rarity": "common"
+    },
+    {
+      "id": "scholar_crown",
+      "name": "Gelehrtenkrone",
+      "description": "Eine Krone für herausragende Leistungen",
+      "effect": "score_boost",
+      "value": 100,
+      "rarity": "rare"
+    },
+    {
+      "id": "wisdom_orb",
+      "name": "Weisheitskugel",
+      "description": "Eine magische Kugel mit uraltem Wissen",
+      "effect": "extra_question",
+      "value": 1,
+      "rarity": "epic"
+    },
+    {
+      "id": "master_trophy",
+      "name": "Meister-Trophäe",
+      "description": "Die ultimative Trophäe für perfekte Spiele",
+      "effect": "perfect_game",
+      "value": 500,
+      "rarity": "legendary"
+    }
+  ],
+  "studyEnvironments": [
+    {
+      "map": "classroom",
+      "name": "Klassenzimmer",
+      "description": "Traditionelles Klassenzimmer mit Tafel und Pulten",
+      "size": [150, 80, 150],
+      "theme": "traditional",
+      "studyBonus": "concentration_boost"
+    },
+    {
+      "map": "library",
+      "name": "Bibliothek",
+      "description": "Ruhige Bibliothek mit Bücherregalen und Lesesälen",
+      "size": [200, 100, 200],
+      "theme": "quiet",
+      "studyBonus": "knowledge_boost"
+    },
+    {
+      "map": "laboratory",
+      "name": "Laboratorium",
+      "description": "Wissenschaftliches Labor mit Experimentier-Ausstattung",
+      "size": [180, 90, 180],
+      "theme": "scientific",
+      "studyBonus": "science_mastery"
+    },
+    {
+      "map": "auditorium",
+      "name": "Auditorium",
+      "description": "Großer Vortragssaal für Präsentationen",
+      "size": [250, 120, 250],
+      "theme": "formal",
+      "studyBonus": "presentation_skill"
+    }
+  ],
+  "leaderboardSettings": {
+    "categories": ["total_score", "accuracy_rate", "subject_mastery", "streak_record"],
+    "resetPeriod": "weekly",
+    "topPlayers": 10,
+    "showPersonal": true
+  },
+  "settings": {
+    "physics": {
+      "gravity": 9.81,
+      "tickRate": 60,
+      "collisionDetection": true,
+      "ragdollPhysics": false
+    },
+    "audio": {
+      "soundEnabled": true,
+      "musicEnabled": true,
+      "volume": 0.7
+    },
+    "graphics": {
+      "particleEffects": true,
+      "lighting": "dynamic",
+      "shadowQuality": "medium"
+    },
+    "network": {
+      "antiCheat": true,
+      "lagCompensation": true,
+      "tickRate": 60
+    }
+  },
+  "plugins": ["quiz-system", "leaderboard-manager", "subject-tracker", "achievement-system", "question-generator"],
+  "analytics": {
+    "trackEvents": [
+      "player_join",
+      "player_leave",
+      "question_answered",
+      "correct_answer",
+      "wrong_answer",
+      "quest_completed",
+      "extra_gift_earned",
+      "leaderboard_update",
+      "perfect_score",
+      "subject_mastery",
+      "streak_record"
+    ],
+    "trackMetrics": [
+      "avg_session_time",
+      "questions_per_minute",
+      "accuracy_rate",
+      "favorite_subject",
+      "total_score",
+      "quest_efficiency",
+      "learning_progress"
+    ]
+  },
+  "localization": {
+    "supportedLanguages": ["en", "de", "fr", "es"],
+    "defaultLanguage": "en",
+    "strings": {
+      "en": {
+        "game_title": "LernBlox School Battle",
+        "game_description": "Educational quiz game for high school students",
+        "waiting_for_players": "Waiting for students...",
+        "question_starting": "Question starting in {seconds}",
+        "quiz_ended": "Quiz ended! Top scorer: {winner}",
+        "player_joined": "{player} joined the school battle!",
+        "player_left": "{player} left the quiz",
+        "correct_answer": "{player} answered correctly! +{points} points",
+        "wrong_answer": "{player} got it wrong! +{points} consolation points",
+        "score_update": "Score: {score}",
+        "new_question": "New question available!",
+        "quest_complete": "Quest completed!",
+        "extra_gift": "Extra gift unlocked!",
+        "leaderboard_update": "Leaderboard updated!",
+        "perfect_score": "Perfect score achieved! {player} gets a Master Trophy!"
+      },
+      "de": {
+        "game_title": "LernBlox Schul-Schlacht",
+        "game_description": "Pädagogisches Quiz-Spiel für Gymnasiasten",
+        "waiting_for_players": "Warte auf Schüler...",
+        "question_starting": "Frage startet in {seconds}",
+        "quiz_ended": "Quiz beendet! Bester Schüler: {winner}",
+        "player_joined": "{player} ist der Schul-Schlacht beigetreten!",
+        "player_left": "{player} hat das Quiz verlassen",
+        "correct_answer": "{player} hat richtig geantwortet! +{points} Punkte",
+        "wrong_answer": "{player} hat falsch geantwortet! +{points} Trostpunkte",
+        "score_update": "Punkte: {score}",
+        "new_question": "Neue Frage verfügbar!",
+        "quest_complete": "Quest abgeschlossen!",
+        "extra_gift": "Extra Geschenk freigeschaltet!",
+        "leaderboard_update": "Bestenliste aktualisiert!",
+        "perfect_score": "Perfekte Punktzahl erreicht! {player} erhält eine Meister-Trophäe!"
+      },
+      "es": {
+        "game_title": "LernBlox Batalla Escolar",
+        "game_description": "Juego educativo de preguntas para estudiantes de secundaria",
+        "waiting_for_players": "Esperando estudiantes...",
+        "question_starting": "Pregunta comenzando en {seconds}",
+        "quiz_ended": "¡Quiz terminado! Mejor estudiante: {winner}",
+        "player_joined": "¡{player} se unió a la batalla escolar!",
+        "player_left": "{player} dejó el quiz",
+        "correct_answer": "¡{player} respondió correctamente! +{points} puntos",
+        "wrong_answer": "¡{player} se equivocó! +{points} puntos de consuelo",
+        "score_update": "Puntuación: {score}",
+        "new_question": "¡Nueva pregunta disponible!",
+        "quest_complete": "¡Quest completado!",
+        "extra_gift": "¡Regalo extra desbloqueado!",
+        "leaderboard_update": "¡Tabla de clasificación actualizada!",
+        "perfect_score": "¡Puntuación perfecta alcanzada! ¡{player} recibe un Trofeo Maestro!"
+      }
+    }
+  },
+  "development": {
+    "debugMode": false,
+    "devTools": true,
+    "showHitboxes": false,
+    "infiniteAmmo": false,
+    "godMode": false
+  },
+  "testing": {
+    "mockClients": {
+      "enabled": true,
+      "minClients": 2,
+      "maxClients": 10,
+      "behaviorScript": "scripts/mock_clients.lua"
+    },
+    "loadTesting": {
+      "enabled": false,
+      "concurrentPlayers": 20,
+      "duration": 300
+    }
+  },
+  "serverRequirements": {
+    "minRAM": "2GB",
+    "minCPU": "2 cores",
+    "networkBandwidth": "100 Mbps",
+    "maxConcurrentGames": 5
+  },
+  "publishing": {
+    "releaseDate": "2024-12-01",
+    "version": "1.0.0",
+    "changelog": [
+      "Initial release",
+      "Multiplayer arena combat",
+      "Multiple weapons and maps",
+      "Power-up system",
+      "Chat and score tracking"
+    ]
+  }
+}

@@ -1,0 +1,463 @@
+# Roblox Server - Production Docker Compose Configuration
+# Produktions-Ready Setup mit erweiterten Features für Production-Deployment
+
+version: '3.8'
+
+services:
+  # Roblox Game Server Service (Production Optimized)
+  roblox-server:
+    build:
+      context: ./services/roblox-server
+      dockerfile: Dockerfile
+    container_name: roblox-game-server-prod
+    restart: always
+    ports:
+      - "${ROBLOX_SERVER_PORT:-27015}:27015"
+      - "${ROBLOX_SERVER_HTTP_PORT:-8080}:8080"
+    environment:
+      - NODE_ENV=production
+      - ROBLOX_SERVER_PORT=27015
+      - ROBLOX_SERVER_HTTP_PORT=8080
+      - MAX_PLAYERS=${MAX_PLAYERS:-50}
+      - SESSION_TIMEOUT=${SESSION_TIMEOUT:-3600}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-roblox_game}
+      - DB_USER=${DB_USER:-roblox_user}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - SERVER_NAME=${SERVER_NAME:-Production Roblox Server}
+      - LOG_LEVEL=${LOG_LEVEL:-WARN}
+      - JWT_SECRET=${JWT_SECRET}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+    volumes:
+      - ./game:/app/game:ro
+      - ./config/server.json:/app/config/server.json:ro
+      - logs:/app/logs
+      - game_data:/app/data
+      - ./backups:/app/backups:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - roblox-network
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+        reservations:
+          memory: 1G
+          cpus: '1.0'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.roblox-api.rule=Host(`api.${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.roblox-api.tls=true"
+      - "traefik.http.routers.roblox-api.tls.certresolver=letsencrypt"
+
+  # PostgreSQL Database Service (Production Ready)
+  postgres:
+    image: postgres:15-alpine
+    container_name: roblox-postgres-prod
+    restart: always
+    environment:
+      - POSTGRES_DB=${DB_NAME:-roblox_game}
+      - POSTGRES_USER=${DB_USER:-roblox_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./database/migrations:/docker-entrypoint-initdb.d/migrations:ro
+      - ./backups:/backups:ro
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - roblox-network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-roblox_user} -d ${DB_NAME:-roblox_game}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+    command: >
+      postgres
+      -c shared_preload_libraries=pg_stat_statements
+      -c pg_stat_statements.track=all
+      -c log_statement=all
+      -c log_destination=stderr
+      -c logging_collector=on
+      -c log_directory=/var/log/postgresql
+      -c log_filename=postgresql-%Y-%m-%d_%H%M%S.log
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c maintenance_work_mem=64MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+
+  # Redis Cache Service (Production Ready)
+  redis:
+    image: redis:7-alpine
+    container_name: roblox-redis-prod
+    restart: always
+    command: >
+      redis-server
+      --appendonly yes
+      --requirepass ${REDIS_PASSWORD}
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --tcp-keepalive 60
+      --timeout 300
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+    volumes:
+      - redis_data:/data
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    networks:
+      - roblox-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # nginx Reverse Proxy Service (Production with SSL)
+  nginx:
+    image: nginx:alpine
+    container_name: roblox-nginx-prod
+    restart: always
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx/sites:/etc/nginx/sites-available:ro
+      - ./config/nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+      - ./static:/var/www/static:ro
+    depends_on:
+      - roblox-server
+    networks:
+      - roblox-network
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+  # Monitoring Service (Production Prometheus)
+  monitoring:
+    image: prom/prometheus:latest
+    container_name: roblox-monitoring-prod
+    restart: always
+    ports:
+      - "${MONITORING_PORT:-9090}:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - monitoring_data:/prometheus
+      - ./config/alerting_rules.yml:/etc/prometheus/alerting_rules.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    networks:
+      - roblox-network
+    profiles:
+      - monitoring
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # Grafana Dashboard Service
+  grafana:
+    image: grafana/grafana:latest
+    container_name: roblox-grafana-prod
+    restart: always
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./config/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    depends_on:
+      - monitoring
+    networks:
+      - roblox-network
+    profiles:
+      - monitoring
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # Log Aggregation Service (Loki + Promtail)
+  loki:
+    image: grafana/loki:latest
+    container_name: roblox-loki-prod
+    restart: always
+    ports:
+      - "${LOKI_PORT:-3100}:3100"
+    volumes:
+      - ./config/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - logging_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - roblox-network
+    profiles:
+      - logging
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # Backup Service (Automated Database Backups)
+  backup:
+    image: postgres:15-alpine
+    container_name: roblox-backup-prod
+    restart: "no"
+    environment:
+      - PGPASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME:-roblox_game}
+      - POSTGRES_USER=${DB_USER:-roblox_user}
+      - POSTGRES_HOST=postgres
+    volumes:
+      - ./backups:/backups:rw
+      - ./scripts/backup.sh:/backup.sh:ro
+    networks:
+      - roblox-network
+    depends_on:
+      - postgres
+    command: >
+      sh -c "
+        chmod +x /backup.sh &&
+        crond -f -l 2 &&
+        exec /backup.sh
+      "
+    profiles:
+      - backup
+
+  # Load Balancer Service (HAProxy for Production)
+  haproxy:
+    image: haproxy:2.6-alpine
+    container_name: roblox-haproxy-prod
+    restart: always
+    ports:
+      - "${LOAD_BALANCER_PORT:-8080}:8080"
+      - "${LOAD_BALANCER_STATS_PORT:-8404}:8404"
+    volumes:
+      - ./config/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./config/haproxy/errors:/etc/haproxy/errors:ro
+    networks:
+      - roblox-network
+    depends_on:
+      - roblox-server
+    profiles:
+      - load-balancer
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # SSL Certificate Management (Let's Encrypt)
+  certbot:
+    image: certbot/certbot:latest
+    container_name: roblox-certbot-prod
+    restart: "no"
+    volumes:
+      - ./config/nginx/ssl:/etc/letsencrypt:rw
+      - ./config/ssl/webroot:/var/www/certbot:rw
+    networks:
+      - roblox-network
+    profiles:
+      - ssl
+    command: >
+      certonly
+      --webroot
+      --webroot-path=/var/www/certbot
+      --email ${SSL_EMAIL:-admin@localhost}
+      --agree-tos
+      --no-eff-email
+      --staging
+      -d ${DOMAIN:-localhost}
+      -d api.${DOMAIN:-localhost}
+
+# Network Definition (Production Optimized)
+networks:
+  roblox-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+    driver_opts:
+      com.docker.network.bridge.name: roblox-br0
+
+# Volume Definitions (Production Storage)
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/postgres
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/redis
+  logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./logs
+  game_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/game
+  nginx_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./logs/nginx
+  monitoring_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/monitoring
+  grafana_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/grafana
+  logging_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/logging
+
+# Health Check Service (Separate Monitoring Container)
+  healthchecker:
+    image: alpine:latest
+    container_name: roblox-healthcheck-prod
+    restart: always
+    depends_on:
+      - roblox-server
+      - postgres
+      - redis
+      - nginx
+    networks:
+      - roblox-network
+    volumes:
+      - ./scripts/healthcheck.sh:/healthcheck.sh:ro
+    command: sh -c "chmod +x /healthcheck.sh && crond -f && /healthcheck.sh"
+    profiles:
+      - monitoring

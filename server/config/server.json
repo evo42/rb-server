@@ -1,0 +1,298 @@
+{
+  "server": {
+    "name": "Local Roblox Server",
+    "version": "1.0.0",
+    "environment": "development",
+    "debug": true,
+    "port": {
+      "game": 27015,
+      "http": 8080,
+      "websocket": 8080
+    }
+  },
+  "game": {
+    "mode": "multiplayer",
+    "maxPlayers": 50,
+    "minPlayers": 1,
+    "sessionTimeout": 3600,
+    "mapRotation": [
+      "spawn_area",
+      "arena_main",
+      "testing_ground"
+    ],
+    "gameSettings": {
+      "friendlyFire": false,
+      "autoBalance": true,
+      "respawnTime": 5,
+      "roundTime": 300,
+      "captureTime": 60
+    },
+    "physics": {
+      "gravity": 9.81,
+      "tickRate": 60,
+      "interpolationDelay": 100,
+      "priorityQueue": true
+    }
+  },
+  "network": {
+    "compression": true,
+    "encryption": false,
+    "rateLimit": {
+      "messagesPerSecond": 10,
+      "bytesPerSecond": 65536
+    },
+    "timeouts": {
+      "connection": 30000,
+      "heartbeat": 5000,
+      "reconnect": 10000
+    }
+  },
+  "database": {
+    "type": "postgresql",
+    "host": "postgres",
+    "port": 5432,
+    "database": "roblox_game",
+    "user": "roblox_user",
+    "password": "secure_password_change_me",
+    "pool": {
+      "min": 5,
+      "max": 20,
+      "idle": 10000,
+      "acquire": 30000
+    },
+    "ssl": false,
+    "retry": {
+      "attempts": 3,
+      "delay": 1000
+    }
+  },
+  "redis": {
+    "host": "redis",
+    "port": 6379,
+    "password": "redis_password_change_me",
+    "database": 0,
+    "keyPrefix": "roblox:",
+    "retryDelay": 1000,
+    "maxRetriesPerRequest": 3
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "json",
+    "outputs": [
+      {
+        "type": "file",
+        "filename": "logs/server.log",
+        "maxSize": "100MB",
+        "maxFiles": 5
+      },
+      {
+        "type": "console",
+        "colorize": true
+      }
+    ],
+    "sensitiveFields": ["password", "token", "key"],
+    "includeStack": false
+  },
+  "security": {
+    "authentication": {
+      "enabled": true,
+      "method": "jwt",
+      "secret": "your_super_secret_jwt_key_change_this_in_production",
+      "expiration": "24h",
+      "refreshExpiration": "7d"
+    },
+    "rateLimit": {
+      "enabled": true,
+      "windowMs": 60000,
+      "max": 100,
+      "skipSuccessfulRequests": false,
+      "skipFailedRequests": false
+    },
+    "cors": {
+      "enabled": true,
+      "origin": ["http://localhost:3000", "http://localhost:8080"],
+      "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      "allowedHeaders": ["Content-Type", "Authorization", "X-Requested-With"],
+      "credentials": true
+    },
+    "headers": {
+      "xFrameOptions": "DENY",
+      "xContentTypeOptions": "nosniff",
+      "xXSSProtection": "1; mode=block",
+      "strictTransportSecurity": "max-age=31536000; includeSubDomains"
+    }
+  },
+  "features": {
+    "multiplayer": {
+      "enabled": true,
+      "voiceChat": false,
+      "textChat": true,
+      "emotes": true,
+      "friendSystem": true,
+      "partySystem": true
+    },
+    "analytics": {
+      "enabled": true,
+      "playerTracking": true,
+      "sessionTracking": true,
+      "performanceMetrics": true,
+      "customEvents": true
+    },
+    "development": {
+      "hotReload": true,
+      "debugMode": true,
+      "profiling": false,
+      "testMode": true,
+      "mockData": false
+    },
+    "admin": {
+      "enabled": true,
+      "panel": true,
+      "remoteConsole": true,
+      "playerManagement": true,
+      "serverControl": true
+    }
+  },
+  "monitoring": {
+    "enabled": true,
+    "metrics": {
+      "enabled": true,
+      "interval": 30000,
+      "endpoints": {
+        "prometheus": "/metrics",
+        "health": "/health",
+        "status": "/status"
+      }
+    },
+    "alerts": {
+      "enabled": false,
+      "thresholds": {
+        "memoryUsage": 80,
+        "cpuUsage": 80,
+        "playerCount": 45,
+        "responseTime": 1000
+      },
+      "notifications": {
+        "email": false,
+        "webhook": false,
+        "slack": false
+      }
+    }
+  },
+  "performance": {
+    "memory": {
+      "maxHeapSize": "2GB",
+      "heapRatio": 0.8,
+      "garbageCollection": {
+        "frequency": 60000,
+        "type": "incremental"
+      }
+    },
+    "cpu": {
+      "maxUsage": 80,
+      "throttling": {
+        "enabled": false,
+        "threshold": 90
+      }
+    },
+    "io": {
+      "maxConcurrentConnections": 1000,
+      "connectionTimeout": 30000,
+      "keepAliveTimeout": 60000
+    }
+  },
+  "backup": {
+    "enabled": true,
+    "interval": "0 2 * * *",
+    "retention": {
+      "daily": 7,
+      "weekly": 4,
+      "monthly": 12
+    },
+    "compression": true,
+    "encryption": false,
+    "storage": {
+      "local": "./backups",
+      "remote": {
+        "enabled": false,
+        "provider": "s3",
+        "bucket": "roblox-backups"
+      }
+    }
+  },
+  "testing": {
+    "enabled": true,
+    "mockClients": {
+      "enabled": true,
+      "minClients": 2,
+      "maxClients": 10,
+      "behaviorScript": "scripts/mock_client_behavior.js"
+    },
+    "loadTesting": {
+      "enabled": false,
+      "concurrentPlayers": 50,
+      "duration": 300000,
+      "rampUpTime": 60000
+    },
+    "unitTests": {
+      "enabled": true,
+      "coverage": {
+        "enabled": true,
+        "threshold": 80
+      }
+    }
+  },
+  "localization": {
+    "default": "de",
+    "supported": ["de", "en", "fr", "es"],
+    "timezone": "Europe/Vienna",
+    "dateFormat": "DD.MM.YYYY",
+    "timeFormat": "HH:mm:ss"
+  },
+  "development": {
+    "hotReload": {
+      "enabled": true,
+      "watchPaths": ["./game", "./scripts"],
+      "ignorePaths": ["node_modules", "logs", "*.log"]
+    },
+    "debug": {
+      "enabled": true,
+      "level": "verbose",
+      "console": true,
+      "remote": false
+    },
+    "profiling": {
+      "enabled": false,
+      "interval": 60000,
+      "output": "profile"
+    }
+  },
+  "extensions": {
+    "enabled": false,
+    "loadPath": "./extensions",
+    "autoLoad": true,
+    "whitelist": [],
+    "blacklist": []
+  },
+  "plugins": {
+    "enabled": true,
+    "loadPath": "./plugins",
+    "autoLoad": true,
+    "config": {
+      "chat": {
+        "enabled": true,
+        "moderation": true,
+        "filters": ["spam", "inappropriate"]
+      },
+      "economy": {
+        "enabled": true,
+        "startingCredits": 1000,
+        "rewardMultiplier": 1.0
+      },
+      "achievements": {
+        "enabled": true,
+        "unlockNotification": true
+      }
+    }
+  }
+}

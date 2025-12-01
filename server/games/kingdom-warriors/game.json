@@ -1,0 +1,364 @@
+{
+  "id": "kingdom-warriors",
+  "name": "Königreich der letzten Krieger",
+  "version": "1.0.0",
+  "description": "Ein episches Mittelalter-Strategiespiel mit Ressourcen-Management, Base Building und Echtzeit-Kampf",
+  "author": "Medieval Game Development Guild",
+  "category": "strategy",
+  "tags": ["strategy", "medieval", "rts", "base-building", "resource-management", "campaign", "multiplayer"],
+  "maxPlayers": 8,
+  "minPlayers": 2,
+  "sessionTimeout": 7200,
+  "gameMode": "kingdom-warfare",
+  "maps": ["forgotten-kingdom", "dragons-lair", "ancient-battlefield", "mystic-forest", "shadow-realm"],
+  "gameplay": {
+    "resourceTypes": [
+      {
+        "id": "gold",
+        "name": "Gold",
+        "description": "Hauptwährung für Gebäude und Einheiten",
+        "icon": "💰",
+        "maxStorage": 10000,
+        "baseIncome": 10,
+        "incomePerBuilding": 5
+      },
+      {
+        "id": "wood",
+        "name": "Holz",
+        "description": "Bau-Ressource für Gebäude",
+        "icon": "🪵",
+        "maxStorage": 5000,
+        "baseIncome": 8,
+        "incomePerBuilding": 3
+      },
+      {
+        "id": "stone",
+        "name": "Stein",
+        "description": "Verteidigungs-Ressource",
+        "icon": "🗿",
+        "maxStorage": 3000,
+        "baseIncome": 5,
+        "incomePerBuilding": 2
+      },
+      {
+        "id": "food",
+        "name": "Nahrung",
+        "description": "Ernährt Einheiten und Bevölkerung",
+        "icon": "🍖",
+        "maxStorage": 2000,
+        "baseIncome": 12,
+        "consumptionPerUnit": 1
+      }
+    ],
+    "victoryConditions": [
+      {
+        "type": "domination",
+        "name": "Vorherrschaft",
+        "description": "Zerstöre alle gegnerischen Hauptburgen",
+        "condition": "destroy_all_enemy_castles"
+      },
+      {
+        "type": "conquest",
+        "name": "Eroberung",
+        "description": "Kontrolliere 75% der Karte für 5 Minuten",
+        "condition": "control_75_percent_for_5min",
+        "duration": 300
+      },
+      {
+        "type": "annihilation",
+        "name": "Auslöschung",
+        "description": "Eliminiere alle gegnerischen Einheiten",
+        "condition": "eliminate_all_enemy_units"
+      },
+      {
+        "type": "survival",
+        "name": "Überleben",
+        "description": "Überlebe 45 Minuten Angriffe",
+        "condition": "survive_45_minutes",
+        "duration": 2700
+      }
+    ],
+    "buildingTypes": [
+      {
+        "id": "castle",
+        "name": "Hauptburg",
+        "description": "Zentrale Verteidigungsstruktur",
+        "cost": {"gold": 1000, "stone": 500},
+        "health": 5000,
+        "defense": 100,
+        "productionTime": 300,
+        "unlocks": ["town_hall", "barracks", "blacksmith"],
+        "isMainBuilding": true
+      },
+      {
+        "id": "town_hall",
+        "name": "Rathaus",
+        "description": "Verwaltungsgebäude für Bevölkerungswachstum",
+        "cost": {"gold": 500, "wood": 300},
+        "health": 1500,
+        "defense": 25,
+        "productionTime": 120,
+        "populationCapacity": 50,
+        "populationGrowth": 2
+      },
+      {
+        "id": "barracks",
+        "name": "Kaserne",
+        "description": "Ausbildungsstätte für Militäreinheiten",
+        "cost": {"gold": 300, "wood": 200},
+        "health": 1000,
+        "defense": 30,
+        "productionTime": 90,
+        "unlocks": ["footman", "archer", "knight", "catapult"]
+      },
+      {
+        "id": "blacksmith",
+        "name": "Schmiede",
+        "description": "Verbessert Waffen und Rüstungen",
+        "cost": {"gold": 400, "stone": 100},
+        "health": 800,
+        "defense": 20,
+        "productionTime": 60,
+        "upgradeBonus": 1.2,
+        "unlocks": ["weapon_upgrade", "armor_upgrade"]
+      },
+      {
+        "id": "farm",
+        "name": "Farm",
+        "description": "Produziert Nahrung für die Bevölkerung",
+        "cost": {"gold": 200, "wood": 150},
+        "health": 600,
+        "defense": 15,
+        "productionTime": 45,
+        "foodProduction": 15
+      },
+      {
+        "id": "mine",
+        "name": "Mine",
+        "description": "Gewinnt Gold und Stein",
+        "cost": {"gold": 300, "wood": 100},
+        "health": 700,
+        "defense": 25,
+        "productionTime": 75,
+        "goldProduction": 8,
+        "stoneProduction": 5
+      },
+      {
+        "id": "lumber_mill",
+        "name": "Sägewerk",
+        "description": "Produziert Holz",
+        "cost": {"gold": 250, "stone": 50},
+        "health": 500,
+        "defense": 20,
+        "productionTime": 60,
+        "woodProduction": 12
+      },
+      {
+        "id": "watchtower",
+        "name": "Wachturm",
+        "description": "Erkennt Feinde und bietet Fernkampf",
+        "cost": {"gold": 350, "stone": 200},
+        "health": 1200,
+        "defense": 50,
+        "productionTime": 100,
+        "range": 200,
+        "attackDamage": 35
+      }
+    ],
+    "unitTypes": [
+      {
+        "id": "footman",
+        "name": "Fußsoldat",
+        "description": "Grundlegende Nahkampf-Einheit",
+        "cost": {"gold": 100, "food": 5},
+        "health": 150,
+        "attack": 25,
+        "defense": 15,
+        "speed": 16,
+        "range": 5,
+        "productionTime": 30,
+        "unitClass": "melee"
+      },
+      {
+        "id": "archer",
+        "name": "Bogenschütze",
+        "description": "Fernkampf-Einheit",
+        "cost": {"gold": 120, "food": 4},
+        "health": 100,
+        "attack": 30,
+        "defense": 10,
+        "speed": 14,
+        "range": 150,
+        "productionTime": 25,
+        "unitClass": "ranged"
+      },
+      {
+        "id": "knight",
+        "name": "Ritter",
+        "description": "Schwere Kavallerie-Einheit",
+        "cost": {"gold": 300, "food": 15},
+        "health": 400,
+        "attack": 60,
+        "defense": 40,
+        "speed": 24,
+        "range": 8,
+        "productionTime": 90,
+        "unitClass": "cavalry"
+      },
+      {
+        "id": "catapult",
+        "name": "Belagerungsmaschine",
+        "description": "Zerstört Gebäude aus der Ferne",
+        "cost": {"gold": 500, "wood": 200, "stone": 100},
+        "health": 200,
+        "attack": 100,
+        "defense": 20,
+        "speed": 8,
+        "range": 250,
+        "productionTime": 180,
+        "unitClass": "siege",
+        "buildingDamage": 2.5
+      },
+      {
+        "id": "mage",
+        "name": "Magier",
+        "description": "Magische Fernkampf-Einheit",
+        "cost": {"gold": 200, "food": 8},
+        "health": 80,
+        "attack": 45,
+        "defense": 8,
+        "speed": 12,
+        "range": 180,
+        "productionTime": 60,
+        "unitClass": "magic",
+        "specialAbility": "fireball"
+      }
+    ],
+    "factions": [
+      {
+        "id": "valorian_empire",
+        "name": "Valorianisches Reich",
+        "description": "Ehrenhafte Krieger mit starker Verteidigung",
+        "color": "#4A90E2",
+        "bonus": {"defense": 1.15, "unitProduction": 1.1},
+        "uniqueUnits": ["paladin"],
+        "startResources": {"gold": 2000, "wood": 800, "stone": 400, "food": 400}
+      },
+      {
+        "id": "shadow_clan",
+        "name": "Schatten-Clan",
+        "description": "Tückische Kämpfer mit erhöhtem Schaden",
+        "color": "#8E44AD",
+        "bonus": {"attack": 1.2, "speed": 1.1},
+        "uniqueUnits": ["assassin"],
+        "startResources": {"gold": 1800, "wood": 600, "stone": 300, "food": 350}
+      },
+      {
+        "id": "iron_dwarves",
+        "name": "Eisen-Zwerge",
+        "description": "Robuste Verteidiger mit starken Gebäuden",
+        "color": "#95A5A6",
+        "bonus": {"buildingHealth": 1.25, "resourceProduction": 1.15},
+        "uniqueUnits": ["berserker"],
+        "startResources": {"gold": 1500, "wood": 1200, "stone": 800, "food": 300}
+      },
+      {
+        "id": "nature_guardians",
+        "name": "Natur-Wächter",
+        "description": "Magische Kämpfer mit Heilungs-Fähigkeiten",
+        "color": "#27AE60",
+        "bonus": {"healing": 1.3, "foodProduction": 1.2},
+        "uniqueUnits": ["druid"],
+        "startResources": {"gold": 1600, "wood": 1000, "stone": 350, "food": 500}
+      }
+    ]
+  },
+  "techTree": {
+    "ages": [
+      {
+        "id": "dark_age",
+        "name": "Dark Age",
+        "description": "Grundlegende Technologien",
+        "prerequisite": null,
+        "technologies": [
+          {
+            "id": "basic_farming",
+            "name": "Grundlegende Landwirtschaft",
+            "cost": {"gold": 100},
+            "effect": "food_production +20%",
+            "researchTime": 30
+          },
+          {
+            "id": "basic_mining",
+            "name": "Grundlegender Bergbau",
+            "cost": {"gold": 120},
+            "effect": "gold_stone_production +15%",
+            "researchTime": 45
+          }
+        ]
+      },
+      {
+        "id": "feudal_age",
+        "name": "Feudalzeit",
+        "description": "Militärische Verbesserungen",
+        "prerequisite": "basic_farming",
+        "technologies": [
+          {
+            "id": "steel_weapons",
+            "name": "Stahlwaffen",
+            "cost": {"gold": 200, "stone": 50},
+            "effect": "unit_attack +25%",
+            "researchTime": 90
+          },
+          {
+            "id": "castle_fortification",
+            "name": "Burgenbefestigung",
+            "cost": {"gold": 300, "stone": 200},
+            "effect": "building_defense +30%",
+            "researchTime": 120
+          }
+        ]
+      }
+    ]
+  },
+  "plugins": ["resource-manager", "tech-tree", "diplomacy-system", "ai-commander", "weather-system", "soundtrack-manager"],
+  "analytics": {
+    "trackEvents": [
+      "building_constructed",
+      "unit_trained",
+      "resource_collected",
+      "enemy_killed",
+      "building_destroyed",
+      "technology_researched",
+      "victory_achieved",
+      "campaign_progress"
+    ],
+    "trackMetrics": [
+      "avg_building_time",
+      "resource_efficiency",
+      "combat_effectiveness",
+      "economic_growth",
+      "tech_progression"
+    ]
+  },
+  "localization": {
+    "supportedLanguages": ["en", "de", "fr", "es"],
+    "defaultLanguage": "de",
+    "strings": {
+      "en": {
+        "game_title": "Kingdom of the Last Warriors",
+        "game_description": "Epic medieval strategy with resource management and real-time combat",
+        "victory_condition": "Achieve victory through conquest, domination, or survival",
+        "resources": "Resources: Gold, Wood, Stone, Food",
+        "factions": "Choose your faction and forge your kingdom"
+      },
+      "de": {
+        "game_title": "Königreich der letzten Krieger",
+        "game_description": "Episches Mittelalter-Strategiespiel mit Ressourcen-Management und Echtzeit-Kampf",
+        "victory_condition": "Erreiche den Sieg durch Eroberung, Vorherrschaft oder Überleben",
+        "resources": "Ressourcen: Gold, Holz, Stein, Nahrung",
+        "factions": "Wähle deine Fraktion und schmiede dein Königreich"
+      }
+    }
+  }
+}

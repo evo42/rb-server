@@ -1,0 +1,72 @@
+{
+  "name": "roblox-game-manager",
+  "version": "1.0.0",
+  "description": "Multi-Game Management System für Roblox Development",
+  "main": "manager.js",
+  "scripts": {
+    "start": "node manager.js",
+    "dev": "nodemon manager.js",
+    "test": "jest",
+    "lint": "eslint *.js",
+    "setup": "npm install",
+    "logs": "pm2 logs",
+    "restart": "pm2 restart all",
+    "stop": "pm2 stop all",
+    "health": "curl http://localhost:8081/health"
+  },
+  "keywords": [
+    "roblox",
+    "game-manager",
+    "multi-game",
+    "development",
+    "testing",
+    "deployment"
+  ],
+  "author": "Roblox Game Manager Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "compression": "^1.7.4",
+    "dotenv": "^16.3.1",
+    "winston": "^3.10.0",
+    "pg": "^8.11.3",
+    "redis": "^4.6.8",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.0",
+    "joi": "^17.9.2",
+    "archiver": "^5.3.1",
+    "unzipper": "^0.10.14",
+    "fs-extra": "^11.1.1",
+    "chokidar": "^3.5.3",
+    "lodash": "^4.17.21",
+    "semver": "^7.5.4",
+    "axios": "^1.5.0",
+    "ws": "^8.13.0",
+    "node-cron": "^3.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "jest": "^29.6.2",
+    "eslint": "^8.45.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/roblox-game-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/roblox-game-manager/issues"
+  },
+  "homepage": "https://github.com/your-org/roblox-game-manager#readme"
+}

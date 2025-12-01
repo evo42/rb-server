@@ -1,0 +1,116 @@
+# Environment Variables
+.env
+.env.local
+.env.production
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Game Data
+game_data/
+backups/
+*.rdb
+*.aof
+
+# SSL Certificates
+config/nginx/ssl/*.pem
+config/nginx/ssl/*.key
+config/nginx/ssl/*.crt
+
+# Temporary files
+tmp/
+temp/
+
+# Database dumps
+*.sql
+*.dump
+
+# Monitoring data
+monitoring_data/
+logging_data/
+
+# Redis dump
+dump.rdb
+
+# Docker volumes
+postgres_data/
+redis_data/
+logs/
+game_data/
+nginx_logs/
+
+# Testing
+.coverage
+.pytest_cache/
+.tox/
+__pycache__/
+
+# Build artifacts
+dist/
+build/
+*.tar.gz
+
+# Custom game files (exclude from version control)
+/game/scripts/
+/game/models/
+/game/assets/
+
+# Local configuration overrides
+config/local/
+config/production/
+
+# Development files
+.devcontainer/
+.vscode/settings.json

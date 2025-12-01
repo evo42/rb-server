@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Game Manager - Multi-Game Development Platform</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-gamepad"></i>
+                <span>Game Manager</span>
+            </div>
+
+            <div class="nav-menu">
+                <a href="#dashboard" class="nav-link active" data-tab="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="#games" class="nav-link" data-tab="games">
+                    <i class="fas fa-dice"></i>
+                    Games
+                </a>
+                <a href="#repository" class="nav-link" data-tab="repository">
+                    <i class="fas fa-store"></i>
+                    Repository
+                </a>
+                <a href="#plugins" class="nav-link" data-tab="plugins">
+                    <i class="fas fa-puzzle-piece"></i>
+                    Plugins
+                </a>
+                <a href="#analytics" class="nav-link" data-tab="analytics">
+                    <i class="fas fa-chart-line"></i>
+                    Analytics
+                </a>
+                <a href="#settings" class="nav-link" data-tab="settings">
+                    <i class="fas fa-cog"></i>
+                    Einstellungen
+                </a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="btn btn-primary" id="createGameBtn">
+                    <i class="fas fa-plus"></i>
+                    Neues Game
+                </button>
+                <div class="user-menu">
+                    <i class="fas fa-user-circle user-avatar"></i>
+                    <span class="user-name">Developer</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="dashboard-header">
+                <h1>Dashboard</h1>
+                <p>Überblick über Ihre Games und System-Status</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue">
+                        <i class="fas fa-dice"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalGames">0</h3>
+                        <p>Gesamte Games</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-green">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="activeGames">0</h3>
+                        <p>Aktive Games</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-purple">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalPlayers">0</h3>
+                        <p>Aktive Spieler</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-orange">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalDownloads">0</h3>
+                        <p>Downloads</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Aktive Games</h3>
+                        <button class="btn btn-sm btn-outline">Alle anzeigen</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="activeGamesList" class="game-list">
+                            <!-- Wird dynamisch gefüllt -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>System Status</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="systemStatus" class="status-list">
+                            <!-- Wird dynamisch gefüllt -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Games Tab -->
+        <div id="games" class="tab-content">
+            <div class="content-header">
+                <h1>Game-Verwaltung</h1>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="gameSearch" placeholder="Games durchsuchen...">
+                    </div>
+                    <select id="gameFilter" class="select">
+                        <option value="all">Alle Games</option>
+                        <option value="active">Aktive</option>
+                        <option value="inactive">Inaktive</option>
+                        <option value="draft">Entwurf</option>
+                    </select>
+                    <button class="btn btn-primary" id="createGameBtn2">
+                        <i class="fas fa-plus"></i>
+                        Neues Game
+                    </button>
+                </div>
+            </div>
+
+            <div id="gamesGrid" class="games-grid">
+                <!-- Games werden hier dynamisch angezeigt -->
+            </div>
+        </div>
+
+        <!-- Repository Tab -->
+        <div id="repository" class="tab-content">
+            <div class="content-header">
+                <h1>Game Repository</h1>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="repoSearch" placeholder="Packages durchsuchen...">
+                    </div>
+                    <select id="categoryFilter" class="select">
+                        <option value="all">Alle Kategorien</option>
+                        <option value="game">Games</option>
+                        <option value="utility">Utilities</option>
+                        <option value="framework">Frameworks</option>
+                    </select>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-upload"></i>
+                        Package hochladen
+                    </button>
+                </div>
+            </div>
+
+            <div id="repositoryGrid" class="packages-grid">
+                <!-- Repository-Packages werden hier angezeigt -->
+            </div>
+        </div>
+
+        <!-- Plugins Tab -->
+        <div id="plugins" class="tab-content">
+            <div class="content-header">
+                <h1>Plugin-Management</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-puzzle-piece"></i>
+                        Plugin erstellen
+                    </button>
+                </div>
+            </div>
+
+            <div id="pluginsGrid" class="plugins-grid">
+                <!-- Plugins werden hier angezeigt -->
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <div class="content-header">
+                <h1>Analytics & Monitoring</h1>
+                <div class="header-actions">
+                    <select id="timeRange" class="select">
+                        <option value="24h">Letzte 24 Stunden</option>
+                        <option value="7d">Letzte 7 Tage</option>
+                        <option value="30d">Letzte 30 Tage</option>
+                        <option value="90d">Letzte 90 Tage</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Spieler-Aktivität</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="playerChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Game-Performance</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="performanceChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="content-header">
+                <h1>Einstellungen</h1>
+            </div>
+
+            <div class="settings-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Server-Konfiguration</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="serverSettingsForm">
+                            <div class="form-group">
+                                <label>Server Name</label>
+                                <input type="text" class="input" id="serverName" placeholder="Mein Roblox Server">
+                            </div>
+                            <div class="form-group">
+                                <label>Max. Spieler pro Game</label>
+                                <input type="number" class="input" id="maxPlayers" value="50" min="1" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label>Log Level</label>
+                                <select class="select" id="logLevel">
+                                    <option value="DEBUG">Debug</option>
+                                    <option value="INFO">Info</option>
+                                    <option value="WARN">Warning</option>
+                                    <option value="ERROR">Error</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Speichern</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Developer Tools</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-item">
+                            <label>Hot Reload</label>
+                            <label class="switch">
+                                <input type="checkbox" id="hotReload" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label>Debug Mode</label>
+                            <label class="switch">
+                                <input type="checkbox" id="debugMode">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label>Auto-Save</label>
+                            <label class="switch">
+                                <input type="checkbox" id="autoSave" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+
+    <!-- Create Game Modal -->
+    <div id="createGameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Neues Game erstellen</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createGameForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Game Name</label>
+                            <input type="text" class="input" id="gameName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Version</label>
+                            <input type="text" class="input" id="gameVersion" value="1.0.0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Beschreibung</label>
+                        <textarea class="textarea" id="gameDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Kategorie</label>
+                            <select class="select" id="gameCategory">
+                                <option value="game">Game</option>
+                                <option value="utility">Utility</option>
+                                <option value="framework">Framework</option>
+                                <option value="other">Andere</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Max. Spieler</label>
+                            <input type="number" class="input" id="gameMaxPlayers" value="50" min="1" max="100">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags (kommagetrennt)</label>
+                        <input type="text" class="input" id="gameTags" placeholder="multiplayer, action, puzzle">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline modal-cancel">Abbrechen</button>
+                <button class="btn btn-primary" id="createGameSubmit">Erstellen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Detail Modal -->
+    <div id="gameDetailModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="detailGameName">Game Details</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="game-detail-header">
+                    <div class="game-detail-info">
+                        <h3 id="detailGameTitle"></h3>
+                        <p id="detailGameDescription"></p>
+                        <div class="game-detail-meta">
+                            <span class="badge" id="detailGameVersion"></span>
+                            <span class="badge badge-outline" id="detailGameAuthor"></span>
+                            <span class="badge" id="detailGameStatus"></span>
+                        </div>
+                    </div>
+                    <div class="game-detail-actions">
+                        <button class="btn btn-success" id="startGameBtn">
+                            <i class="fas fa-play"></i>
+                            Starten
+                        </button>
+                        <button class="btn btn-outline" id="editGameBtn">
+                            <i class="fas fa-edit"></i>
+                            Bearbeiten
+                        </button>
+                        <button class="btn btn-danger" id="deleteGameBtn">
+                            <i class="fas fa-trash"></i>
+                            Löschen
+                        </button>
+                    </div>
+                </div>
+
+                <div class="game-detail-tabs">
+                    <div class="tab-nav">
+                        <button class="tab-btn active" data-detail-tab="overview">Übersicht</button>
+                        <button class="tab-btn" data-detail-tab="assets">Assets</button>
+                        <button class="tab-btn" data-detail-tab="plugins">Plugins</button>
+                        <button class="tab-btn" data-detail-tab="analytics">Analytics</button>
+                        <button class="tab-btn" data-detail-tab="logs">Logs</button>
+                    </div>
+
+                    <div class="tab-content active" id="detail-overview">
+                        <div class="detail-grid">
+                            <div class="detail-stat">
+                                <h4>Spieler</h4>
+                                <span id="detailPlayerCount">0</span>
+                            </div>
+                            <div class="detail-stat">
+                                <h4>Uptime</h4>
+                                <span id="detailUptime">00:00:00</span>
+                            </div>
+                            <div class="detail-stat">
+                                <h4>Downloads</h4>
+                                <span id="detailDownloads">0</span>
+                            </div>
+                            <div class="detail-stat">
+                                <h4>Rating</h4>
+                                <span id="detailRating">0.0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="detail-assets">
+                        <div id="assetsList" class="assets-list">
+                            <!-- Assets werden hier angezeigt -->
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="detail-plugins">
+                        <div id="pluginsList" class="plugins-list">
+                            <!-- Plugins werden hier angezeigt -->
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="detail-analytics">
+                        <canvas id="gameAnalyticsChart" width="400" height="200"></canvas>
+                    </div>
+
+                    <div class="tab-content" id="detail-logs">
+                        <div id="gameLogs" class="logs-viewer">
+                            <!-- Logs werden hier angezeigt -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Lade...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/games.js"></script>
+    <script src="js/repository.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

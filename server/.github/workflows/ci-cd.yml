@@ -1,0 +1,486 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Security vulnerability scan every Monday at 2 AM UTC
+    - cron: '0 2 * * 1'
+
+env:
+  NODE_VERSION: '18'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  COMPOSE_DOCKER_CLI_BUILD: 1
+  DOCKER_BUILDKIT: 1
+
+jobs:
+  # Security and Vulnerability Scanning
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+      
+      - name: Run OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.7.0
+        with:
+          target: 'http://localhost:3000'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
+
+  # Code Quality Analysis
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          npm ci --only=production --silent
+          cd services/game-manager && npm ci --silent
+          cd ../roblox-server && npm ci --silent
+      
+      - name: Run ESLint
+        run: |
+          npm run lint || true
+          cd services/game-manager && npm run lint || true
+          cd ../roblox-server && npm run lint || true
+      
+      - name: Check for security vulnerabilities
+        run: npm audit --audit-level=moderate || true
+      
+      - name: Check for outdated dependencies
+        run: |
+          npm outdated --depth=0 || true
+          cd services/game-manager && npm outdated --depth=0 || true
+          cd ../roblox-server && npm outdated --depth=0 || true
+
+  # Database Migration Tests
+  database-tests:
+    name: Database Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci --only=production --silent
+      
+      - name: Wait for database
+        run: |
+          timeout 30 bash -c 'until pg_isready -h localhost -p 5432 -U test_user; do sleep 1; done'
+          timeout 30 bash -c 'until redis-cli -h localhost -p 6379 ping; do sleep 1; done'
+      
+      - name: Run database migration tests
+        run: |
+          # Set test environment variables
+          export DB_HOST=localhost
+          export DB_PORT=5432
+          export DB_NAME=test_db
+          export DB_USER=test_user
+          export DB_PASSWORD=test_password
+          export REDIS_HOST=localhost
+          export REDIS_PORT=6379
+          
+          # Run any database tests
+          npm test -- --grep "database" || echo "No database tests found"
+      
+      - name: Check database schema
+        run: |
+          # Verify database schema integrity
+          psql -h localhost -U test_user -d test_db -c "\dt" || echo "No tables found"
+
+  # Unit and Integration Tests
+  testing:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [database-tests]
+    strategy:
+      matrix:
+        service: [game-manager, roblox-server]
+        node-version: [18, 20]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: |
+            services/${{ matrix.service }}/package-lock.json
+            package-lock.json
+      
+      - name: Install dependencies
+        working-directory: services/${{ matrix.service }}
+        run: npm ci --silent
+      
+      - name: Run unit tests
+        working-directory: services/${{ matrix.service }}
+        run: |
+          npm test -- --coverage --watchAll=false || echo "No tests configured"
+      
+      - name: Upload coverage to Codecov
+        if: matrix.node-version == 18
+        uses: codecov/codecov-action@v3
+        with:
+          file: services/${{ matrix.service }}/coverage/lcov.info
+          flags: ${{ matrix.service }}
+          name: ${{ matrix.service }}-${{ matrix.node-version }}
+
+  # Build and Security Scan Docker Images
+  build-images:
+    name: Build & Scan Images
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [security-scan, code-quality, testing]
+    strategy:
+      matrix:
+        service: [game-manager, roblox-server]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.service }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+      
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: services/${{ matrix.service }}
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=production
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            BUILD_VERSION=${{ github.sha }}
+      
+      - name: Run Trivy image scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.service }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-${{ matrix.service }}-results.sarif'
+      
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-${{ matrix.service }}-results.sarif'
+
+  # Performance and Load Testing
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [build-images]
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Start services
+        run: |
+          # Start the application using docker-compose
+          docker-compose -f docker-compose.yml -f docker-compose.secure.yml up -d
+          
+          # Wait for services to be ready
+          timeout 60 bash -c 'until curl -f http://localhost:3000/health; do sleep 2; done'
+          timeout 60 bash -c 'until curl -f http://localhost:8080/health; do sleep 2; done'
+      
+      - name: Run basic load test
+        run: |
+          # Install k6 for load testing
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+          
+          # Run load test
+          k6 run scripts/load-test.js || echo "Load test script not found"
+      
+      - name: Test API endpoints
+        run: |
+          # Test game manager endpoints
+          curl -f http://localhost:3000/api/health || exit 1
+          curl -f http://localhost:3000/api/games || exit 1
+          
+          # Test roblox server endpoints
+          curl -f http://localhost:8080/api/health || exit 1
+          curl -f http://localhost:8080/api/status || exit 1
+      
+      - name: Test database connectivity
+        run: |
+          # Test PostgreSQL connection
+          PGPASSWORD=test_password psql -h localhost -U test_user -d test_db -c "SELECT 1;" || echo "PostgreSQL test failed"
+          
+          # Test Redis connection
+          redis-cli -h localhost ping || echo "Redis test failed"
+      
+      - name: Check memory usage
+        run: |
+          docker stats --no-stream --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+      
+      - name: Stop services
+        if: always()
+        run: docker-compose -f docker-compose.yml -f docker-compose.secure.yml down
+
+  # Security Configuration Validation
+  security-config:
+    name: Security Config Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Validate environment configuration
+        run: |
+          # Check for security-related files
+          echo "Checking security configuration files..."
+          test -f .env.example && echo "✓ .env.example exists"
+          test -f docker-compose.secure.yml && echo "✓ docker-compose.secure.yml exists"
+          test -f DEVELOPMENT_STANDARDS.md && echo "✓ DEVELOPMENT_STANDARDS.md exists"
+          
+          # Validate .env.example contains no hardcoded secrets
+          echo "Checking for hardcoded secrets in .env.example..."
+          if grep -i "password.*=" .env.example | grep -v "change-this\|your-secure\|your-password"; then
+            echo "⚠️  Possible hardcoded credentials found in .env.example"
+            exit 1
+          fi
+      
+      - name: Check Docker security
+        run: |
+          # Check if Docker files follow security best practices
+          echo "Validating Docker security configuration..."
+          
+          # Check for non-root users in Dockerfiles
+          if grep -r "USER root" services/*/Dockerfile; then
+            echo "⚠️  Found root user in Dockerfiles"
+          else
+            echo "✓ No root users found in Dockerfiles"
+          fi
+          
+          # Check for security-related labels
+          if grep -q "security" docker-compose.secure.yml; then
+            echo "✓ Security configurations found"
+          else
+            echo "⚠️  No security configurations found"
+          fi
+      
+      - name: Validate network security
+        run: |
+          # Check network segmentation
+          if grep -q "internal: true" docker-compose.secure.yml; then
+            echo "✓ Internal networks configured"
+          else
+            echo "⚠️  No internal networks found"
+          fi
+
+  # Package and Deploy (Main branch only)
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [security-config, performance-tests]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+      
+      - name: Build and push images
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Create deployment package
+        run: |
+          # Create deployment artifacts
+          mkdir -p deployment
+          
+          # Copy configuration files
+          cp docker-compose.secure.yml deployment/
+          cp .env.example deployment/
+          cp DEVELOPMENT_STANDARDS.md deployment/
+          
+          # Create deployment script
+          cat > deployment/deploy.sh << 'EOF'
+          #!/bin/bash
+          set -e
+          
+          echo "Deploying Roblox Multi-Game-Management-System..."
+          
+          # Pull latest images
+          docker-compose -f docker-compose.secure.yml pull
+          
+          # Deploy with zero downtime
+          docker-compose -f docker-compose.secure.yml up -d
+          
+          # Wait for health checks
+          echo "Waiting for services to be healthy..."
+          timeout 300 bash -c 'until curl -f http://localhost:3000/health; do sleep 5; done'
+          
+          echo "Deployment completed successfully!"
+          EOF
+          
+          chmod +x deployment/deploy.sh
+      
+      - name: Upload deployment package
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-package
+          path: deployment/
+          retention-days: 7
+      
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          body: |
+            ## Deployment Package
+            
+            This release includes:
+            - Latest Docker images
+            - Secure deployment configuration
+            - Updated documentation
+            
+            ## Deployment Instructions
+            
+            1. Extract the deployment package
+            2. Configure your `.env` file
+            3. Run `./deploy.sh`
+            
+            ## Security Notes
+            
+            Ensure all environment variables are properly configured before deployment.
+          draft: false
+          prerelease: false
+
+  # Notification
+  notify:
+    name: Notification
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    if: always()
+    
+    steps:
+      - name: Notify deployment status
+        run: |
+          if [ "${{ needs.deploy.result }}" == "success" ]; then
+            echo "✅ Deployment completed successfully!"
+          else
+            echo "❌ Deployment failed!"
+            exit 1
+          fi

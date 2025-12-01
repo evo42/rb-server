@@ -1,0 +1,684 @@
+version: '3.8'
+
+# Production-Grade Secure Roblox Server Environment
+# This configuration includes enterprise-level security hardening
+
+networks:
+  roblox-secure-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "true"
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+      com.docker.network.driver.mtu: "1500"
+
+volumes:
+  postgres-secure-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/roblox-secure/data/postgres
+  redis-secure-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/roblox-secure/data/redis
+  nginx-secure-logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/roblox-secure/logs/nginx
+  roblox-secure-logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /opt/roblox-secure/logs/roblox
+
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  redis_password:
+    file: ./secrets/redis_password.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+  nginx_cert:
+    file: ./secrets/nginx_cert.pem
+  nginx_key:
+    file: ./secrets/nginx_key.pem
+
+configs:
+  nginx_config:
+    file: ./config/nginx/nginx.secure.conf
+  prometheus_config:
+    file: ./config/monitoring/prometheus.yml
+  grafana_config:
+    file: ./config/monitoring/grafana-datasources.yml
+
+services:
+  # PostgreSQL Database with Security Hardening
+  postgres-secure:
+    image: postgres:15-alpine
+    container_name: roblox-postgres-secure
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-roblox_games}
+      POSTGRES_USER: ${DB_USER:-roblox_user}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-secure-data:/var/lib/postgresql/data/pgdata
+      - ./database/init-secure.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      roblox-secure-network:
+        ipv4_address: 172.20.0.10
+    secrets:
+      - postgres_password
+    configs:
+      - source: prometheus_config
+        target: /etc/postgresql/postgresql.conf
+    command: >
+      postgres
+      -c config_file=/etc/postgresql/postgresql.conf
+      -c log_destination=stderr
+      -c logging_collector=on
+      -c log_directory=/var/log/postgresql
+      -c shared_preload_libraries=pg_stat_statements
+      -c pg_stat_statements.track=all
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c maintenance_work_mem=64MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - MKNOD
+      - NET_BIND_SERVICE
+      - SETGID
+      - SETUID
+    read_only: false
+    tmpfs:
+      - /tmp:size=100m,uid=1000,gid=1000
+    ulimits:
+      memlock: soft -1 hard -1
+      nofile: soft 131072 hard 131072
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-roblox_user} -d ${DB_NAME:-roblox_games}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  # Redis Cache with Security Hardening
+  redis-secure:
+    image: redis:7-alpine
+    container_name: roblox-redis-secure
+    restart: unless-stopped
+    volumes:
+      - redis-secure-data:/data
+    networks:
+      roblox-secure-network:
+        ipv4_address: 172.20.0.11
+    secrets:
+      - redis_password
+    command: >
+      redis-server
+      --requirepass $(cat /run/secrets/redis_password)
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 1gb
+      --maxmemory-policy allkeys-lru
+      --tcp-keepalive 300
+      --timeout 0
+      --tcp-backlog 511
+      --databases 16
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+      --stop-writes-on-bgsave-error yes
+      --rdbcompression yes
+      --rdbchecksum yes
+      --slave-read-only yes
+      --maxclients 10000
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+    read_only: false
+    tmpfs:
+      - /tmp:size=100m,uid=1000,gid=1000
+    ulimits:
+      memlock: soft -1 hard -1
+      nofile: soft 65536 hard 65536
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  # Game Manager Service with Security Hardening
+  game-manager-secure:
+    build:
+      context: ./services/game-manager
+      dockerfile: Dockerfile.secure
+      args:
+        NODE_ENV: production
+        BUILD_DATE: ${BUILD_DATE:-}
+        VCS_REF: ${VCS_REF:-}
+    image: roblox/game-manager-secure:${IMAGE_TAG:-latest}
+    container_name: roblox-game-manager-secure
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      DB_HOST: postgres-secure
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-roblox_games}
+      DB_USER: ${DB_USER:-roblox_user}
+      DB_PASSWORD_FILE: /run/secrets/postgres_password
+      REDIS_HOST: redis-secure
+      REDIS_PORT: 6379
+      REDIS_PASSWORD_FILE: /run/secrets/redis_password
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
+      LOG_LEVEL: info
+      RATE_LIMIT_WINDOW: 15
+      RATE_LIMIT_MAX: 100
+      ENABLE_METRICS: true
+      ENABLE_HEALTH_CHECK: true
+      MAX_CONCURRENT_GAMES: 10
+      GAME_TIMEOUT: 3600
+      BACKUP_RETENTION_DAYS: 30
+    volumes:
+      - ./games:/app/games:ro
+      - ./logs/game-manager:/app/logs
+    networks:
+      roblox-secure-network:
+        ipv4_address: 172.20.0.20
+    secrets:
+      - postgres_password
+      - redis_password
+      - jwt_secret
+    depends_on:
+      postgres-secure:
+        condition: service_healthy
+      redis-secure:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    user: "1001:1001"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - MKNOD
+      - SETGID
+      - SETUID
+    read_only: true
+    tmpfs:
+      - /tmp:size=100m,uid=1001,gid=1001
+      - /app/logs:size=100m,uid=1001,gid=1001
+    ulimits:
+      memlock: soft -1 hard -1
+      nofile: soft 65536 hard 65536
+      nproc: 8192
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  # Roblox Game Server with Security Hardening
+  roblox-server-secure:
+    build:
+      context: ./services/roblox-server
+      dockerfile: Dockerfile.secure
+      args:
+        NODE_ENV: production
+        BUILD_DATE: ${BUILD_DATE:-}
+        VCS_REF: ${VCS_REF:-}
+    image: roblox/roblox-server-secure:${IMAGE_TAG:-latest}
+    container_name: roblox-server-secure
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      GAME_MANAGER_URL: http://game-manager-secure:8080
+      REDIS_HOST: redis-secure
+      REDIS_PORT: 6379
+      REDIS_PASSWORD_FILE: /run/secrets/redis_password
+      LUA_PATH: /app/lua/?.lua;/app/modules/?.lua
+      LOG_LEVEL: info
+      MAX_PLAYERS: 20
+      GAME_TIMEOUT: 3600
+      ENABLE_METRICS: true
+      ENABLE_DEBUG: false
+      MEMORY_LIMIT: 512MB
+      CPU_LIMIT: 1.0
+    volumes:
+      - ./game:/app/game:ro
+      - ./logs/roblox:/app/logs
+    networks:
+      roblox-secure-network:
+        ipv4_address: 172.20.0.30
+    secrets:
+      - redis_password
+    depends_on:
+      game-manager-secure:
+        condition: service_healthy
+      redis-secure:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    user: "1002:1002"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - MKNOD
+      - SETGID
+      - SETUID
+    read_only: true
+    tmpfs:
+      - /tmp:size=100m,uid=1002,gid=1002
+      - /app/logs:size=100m,uid=1002,gid=1002
+    ulimits:
+      memlock: soft -1 hard -1
+      nofile: soft 32768 hard 32768
+      nproc: 4096
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  # Nginx Reverse Proxy with Security Hardening
+  nginx-secure:
+    image: nginx:alpine
+    container_name: roblox-nginx-secure
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - nginx-secure-logs:/var/log/nginx
+      - ./config/nginx/nginx.secure.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx/sites:/etc/nginx/sites-enabled:ro
+      - ./static:/var/www/static:ro
+    networks:
+      - roblox-secure-network
+    secrets:
+      - nginx_cert
+      - nginx_key
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    user: "101:101"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - MKNOD
+      - NET_BIND_SERVICE
+      - SETGID
+      - SETUID
+    read_only: false
+    ulimits:
+      memlock: soft -1 hard -1
+      nofile: soft 65536 hard 65536
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+  # Monitoring Stack - Prometheus
+  prometheus-secure:
+    image: prom/prometheus:latest
+    container_name: roblox-prometheus-secure
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-secure-data:/prometheus
+    networks:
+      - roblox-secure-network
+    configs:
+      - source: prometheus_config
+        target: /etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    user: "65534:65534"
+    cap_drop:
+      - ALL
+    read_only: true
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  # Monitoring Stack - Grafana
+  grafana-secure:
+    image: grafana/grafana:latest
+    container_name: roblox-grafana-secure
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-secure_password_123}
+      GF_USERS_ALLOW_SIGN_UP: false
+      GF_SERVER_DOMAIN: ${DOMAIN:-localhost}
+      GF_INSTALL_PLUGINS: grafana-piechart-panel,grafana-worldmap-panel
+      GF_SECURITY_DISABLE_GRAVATAR: true
+      GF_ANALYTICS_REPORTING_ENABLED: false
+      GF_ANALYTICS_CHECK_FOR_UPDATES: false
+      GF_AUTH_ANONYMOUS_ENABLED: false
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_SECURITY_ALLOW_EMBEDDING: false
+    volumes:
+      - grafana-secure-data:/var/lib/grafana
+      - ./config/monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - roblox-secure-network
+    configs:
+      - source: grafana_config
+        target: /etc/grafana/provisioning/datasources/prometheus.yml
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    user: "472:472"
+    cap_drop:
+      - ALL
+    read_only: true
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
+  # Log Management - ELK Stack
+  elasticsearch-secure:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: roblox-elasticsearch-secure
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=true
+      - xpack.security.transport.ssl.enabled=true
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-elastic_password_123}
+    volumes:
+      - elasticsearch-secure-data:/usr/share/elasticsearch/data
+    networks:
+      - roblox-secure-network
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    user: "1000:1000"
+    cap_drop:
+      - ALL
+    read_only: true
+    ulimits:
+      memlock: soft -1 hard -1
+      nofile: soft 65536 hard 65536
+      nproc: 4096
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  logstash-secure:
+    image: docker.elastic.co/logstash/logstash:8.8.0
+    container_name: roblox-logstash-secure
+    restart: unless-stopped
+    volumes:
+      - ./config/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./config/logstash/pipelines:/usr/share/logstash/pipeline:ro
+    networks:
+      - roblox-secure-network
+    depends_on:
+      - elasticsearch-secure
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    user: "1000:1000"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - MKNOD
+      - SETGID
+      - SETUID
+    read_only: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9600/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  kibana-secure:
+    image: docker.elastic.co/kibana/kibana:8.8.0
+    container_name: roblox-kibana-secure
+    restart: unless-stopped
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch-secure:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD:-elastic_password_123}
+    networks:
+      - roblox-secure-network
+    depends_on:
+      - elasticsearch-secure
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    user: "1000:1000"
+    cap_drop:
+      - ALL
+    read_only: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5601/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+

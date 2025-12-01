@@ -1,0 +1,185 @@
+{
+  "name": "kingdom-warriors-game",
+  "version": "1.0.0",
+  "description": "Königreich der letzten Krieger - Ein episches Mittelalter-Strategiespiel",
+  "main": "game/main.lua",
+  "scripts": {
+    "start": "node services/game-manager/manager.js start kingdom-warriors",
+    "stop": "node services/game-manager/manager.js stop kingdom-warriors",
+    "restart": "node services/game-manager/manager.js restart kingdom-warriors",
+    "status": "node services/game-manager/manager.js status kingdom-warriors",
+    "test": "node services/game-manager/manager.js test kingdom-warriors",
+    "test:unit": "echo 'Running unit tests for Kingdom Warriors...' && npm run test:mocha",
+    "test:integration": "echo 'Running integration tests...' && npm run test:multiplayer",
+    "test:performance": "echo 'Running performance benchmarks...' && npm run test:load",
+    "test:load": "echo 'Load testing Kingdom Warriors...' && node scripts/load-test.js kingdom-warriors",
+    "test:mocha": "mocha tests/**/*.test.js --timeout 10000",
+    "test:multiplayer": "node scripts/multiplayer-test.js kingdom-warriors",
+    "benchmark": "node scripts/benchmark.js kingdom-warriors",
+    "lint": "eslint game/**/*.lua && jsonlint game.json",
+    "validate": "node scripts/validate-game.js kingdom-warriors",
+    "build": "echo 'Building Kingdom Warriors game package...' && npm run validate",
+    "package": "node scripts/package-game.js kingdom-warriors",
+    "deploy:dev": "npm run build && npm run test:performance",
+    "deploy:prod": "npm run test && npm run package",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:watch\"",
+    "dev:server": "node services/game-manager/manager.js dev kingdom-warriors",
+    "dev:watch": "chokidar \"game/**/*\" --command \"npm run validate\"",
+    "docs:generate": "node scripts/generate-docs.js kingdom-warriors",
+    "analytics:dashboard": "node scripts/analytics-dashboard.js kingdom-warriors",
+    "backup": "node scripts/backup-game.js kingdom-warriors",
+    "restore": "node scripts/restore-game.js kingdom-warriors"
+  },
+  "keywords": [
+    "roblox",
+    "game",
+    "strategy",
+    "medieval",
+    "rts",
+    "base-building",
+    "multiplayer",
+    "kingdom-warriors",
+    "german",
+    " Mittelalter",
+    "Ressourcen-Management"
+  ],
+  "author": "Medieval Game Development Guild",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ikaria/roblox-server/games/kingdom-warriors"
+  },
+  "bugs": {
+    "url": "https://github.com/ikaria/roblox-server/issues"
+  },
+  "homepage": "https://github.com/ikaria/roblox-server/games/kingdom-warriors#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "roblox": {
+    "gameId": "kingdom-warriors",
+    "gameName": "Königreich der letzten Krieger",
+    "apiVersion": "2.0",
+    "minPlayers": 2,
+    "maxPlayers": 8,
+    "targetFps": 60,
+    "scriptTimeout": 30,
+    "memoryLimit": 512,
+    "enabledPlugins": [
+      "resource-manager",
+      "tech-tree",
+      "diplomacy-system",
+      "ai-commander",
+      "weather-system",
+      "soundtrack-manager"
+    ]
+  },
+  "dependencies": {
+    "express": "^4.18.0",
+    "cors": "^2.8.5",
+    "socket.io": "^4.0.0",
+    "dotenv": "^16.0.0",
+    "winston": "^3.8.0",
+    "uuid": "^9.0.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "mocha": "^10.0.0",
+    "chai": "^4.3.0",
+    "eslint": "^8.0.0",
+    "jsonlint": "^1.6.3",
+    "concurrently": "^7.0.0",
+    "chokidar": "^3.5.0",
+    "axios": "^1.0.0",
+    "socket.io-client": "^4.0.0",
+    "lodash": "^4.17.0",
+    "moment": "^2.29.0"
+  },
+  "test": {
+    "coverage": {
+      "threshold": {
+        "global": {
+          "branches": 80,
+          "functions": 80,
+          "lines": 80,
+          "statements": 80
+        }
+      }
+    },
+    "timeout": 30000,
+    "retries": 3
+  },
+  "config": {
+    "port": 3002,
+    "websocketPort": 3003,
+    "metricsPort": 3004,
+    "adminPort": 3005,
+    "logLevel": "info",
+    "maxConcurrentGames": 4,
+    "memoryLimit": "256MB",
+    "cpuLimit": "50%"
+  },
+  "metrics": {
+    "enabled": true,
+    "interval": 5000,
+    "retention": "7d",
+    "export": {
+      "prometheus": true,
+      "influxdb": false,
+      "statsd": false
+    }
+  },
+  "security": {
+    "rateLimiting": {
+      "enabled": true,
+      "windowMs": 60000,
+      "maxRequests": 100
+    },
+    "cors": {
+      "origin": ["http://localhost:3000", "http://localhost:8080"],
+      "credentials": true
+    },
+    "authentication": {
+      "required": true,
+      "methods": ["jwt", "api-key"]
+    }
+  },
+  "monitoring": {
+    "healthCheck": {
+      "enabled": true,
+      "interval": 30000
+    },
+    "alerts": {
+      "enabled": true,
+      "thresholds": {
+        "memory": 80,
+        "cpu": 85,
+        "latency": 1000
+      }
+    }
+  },
+  "localization": {
+    "default": "de",
+    "supported": ["de", "en", "fr", "es"],
+    "fallback": "en"
+  },
+  "features": {
+    "crossPlay": true,
+    "voiceChat": false,
+    "moderation": true,
+    "analytics": true,
+    "telemetry": true
+  },
+  "deployment": {
+    "docker": {
+      "image": "ikaria/roblox-game:kingdom-warriors",
+      "tag": "latest"
+    },
+    "scaling": {
+      "minInstances": 1,
+      "maxInstances": 5,
+      "targetCpu": 70
+    }
+  }
+}

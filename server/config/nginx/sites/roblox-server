@@ -1,0 +1,195 @@
+# Roblox Server nginx Site-Konfiguration
+# Hauptserver für Roblox Game Server Kommunikation
+
+server {
+    listen 80;
+    server_name localhost roblox-server localhost:80;
+
+    # Security - Rate Limiting
+    limit_req zone=general burst=20 nodelay;
+    limit_conn addr 10;
+
+    # Health Check Endpoint
+    location /health {
+        access_log off;
+        return 200 "healthy\n";
+        add_header Content-Type text/plain;
+    }
+
+    # Status Page
+    location /nginx-status {
+        stub_status on;
+        access_log off;
+        allow 127.0.0.1;
+        allow 172.20.0.0/16;  # Docker network
+        deny all;
+    }
+
+    # Roblox Server API Routes
+    location /api/ {
+        # Rate Limiting für API
+        limit_req zone=api burst=10 nodelay;
+
+        proxy_pass http://roblox_backend;
+        proxy_cache_bypass $http_upgrade;
+
+        # API-spezifische Headers
+        proxy_set_header Accept-Encoding "";
+        add_header X-Cache-Status $upstream_cache_status;
+
+        # Cache-Control für GET-Requests
+        location ~* ^/api/(status|players|health) {
+            proxy_pass http://roblox_backend;
+            expires 30s;
+            add_header Cache-Control "public, no-cache";
+        }
+    }
+
+    # WebSocket Connections für Real-time Gaming
+    location /socket.io/ {
+        proxy_pass http://roblox_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # WebSocket Timeouts
+        proxy_connect_timeout 7d;
+        proxy_send_timeout 7d;
+        proxy_read_timeout 7d;
+
+        # Buffer-Einstellungen für große Packets
+        proxy_buffering off;
+        proxy_request_buffering off;
+    }
+
+    # Authentication Endpoints
+    location /auth/ {
+        limit_req zone=login burst=5 nodelay;
+        proxy_pass http://roblox_backend;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Admin Interface (falls vorhanden)
+    location /admin/ {
+        # Admin-spezifisches Rate Limiting
+        limit_req zone=api burst=5 nodelay;
+
+        # Zugriff nur aus lokalem Netzwerk
+        allow 127.0.0.1;
+        allow 172.20.0.0/16;
+        deny all;
+
+        proxy_pass http://roblox_backend;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Static Files (Game Assets, etc.)
+    location /static/ {
+        alias /var/www/static/;
+
+        # CORS Headers für Game Assets
+        add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
+        add_header Access-Control-Allow-Headers "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range";
+
+        # Cache-Control für statische Inhalte
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+
+        # Gzip für Text-Dateien
+        location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+            gzip_static on;
+        }
+    }
+
+    # Game-Specific Endpoints
+    location /game/ {
+        # Game-spezifische Weiterleitung
+        proxy_pass http://roblox_backend;
+        proxy_cache_bypass $http_upgrade;
+
+        # CORS für Game Client
+        add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS";
+        add_header Access-Control-Allow-Headers "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range";
+    }
+
+    # Lobbies und Sessions
+    location /lobby/ {
+        proxy_pass http://roblox_backend;
+        proxy_cache_bypass $http_upgrade;
+
+        # Erweiterte Timeouts für Lobby-Operationen
+        proxy_connect_timeout 30s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+
+    # Default Route
+    location / {
+        proxy_pass http://roblox_backend;
+        proxy_cache_bypass $http_upgrade;
+
+        # Server-Info als Fallback
+        add_header X-Server "Roblox-Server-nginx" always;
+        add_header X-Upstream $upstream_addr always;
+    }
+
+    # Block unwanted HTTP methods
+    if ($request_method !~ ^(GET|HEAD|POST|PUT|DELETE|OPTIONS)$ ) {
+        return 405;
+    }
+
+    # Error Pages
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+}
+
+# HTTPS Server (falls SSL konfiguriert)
+server {
+    listen 443 ssl http2;
+    server_name localhost roblox-server;
+
+    # SSL-Zertifikate
+    ssl_certificate /etc/nginx/ssl/cert.pem;
+    ssl_certificate_key /etc/nginx/ssl/key.pem;
+
+    # SSL Security Headers
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Frame-Options DENY always;
+    add_header X-Content-Type-Options nosniff always;
+
+    # Gleiche Location-Blocks wie HTTP Server
+    # ... (identisch mit HTTP Server Blocks)
+
+    location / {
+        proxy_pass http://roblox_backend;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+# Development Server (nur für lokale Entwicklung)
+server {
+    listen 8080;
+    server_name localhost;
+
+    # Development-spezifische Einstellungen
+    add_header X-Debug-Mode "true" always;
+
+    location / {
+        proxy_pass http://roblox_backend;
+        proxy_cache_bypass $http_upgrade;
+
+        # Erweiterte Headers für Development
+        proxy_set_header X-Development "true";
+        proxy_set_header X-Debug-ID $request_id;
+    }
+}
