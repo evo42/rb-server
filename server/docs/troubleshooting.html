@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting - Roblox Multi-Game System</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --danger-color: #e63946;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #fafafa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        nav {
+            background-color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .problem {
+            background-color: #f8d7da;
+            border-left: 4px solid var(--danger-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: var(--border-radius);
+        }
+        
+        .solution {
+            background-color: #d4edda;
+            border-left: 4px solid var(--success-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: var(--border-radius);
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: var(--border-radius);
+        }
+        
+        .tip {
+            background-color: #cce5ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: var(--border-radius);
+        }
+        
+        .accordion {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            margin: 1rem 0;
+        }
+        
+        .accordion-header {
+            padding: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: #e9ecef;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+        }
+        
+        .accordion-content {
+            padding: 1rem;
+            display: none;
+        }
+        
+        .accordion.active .accordion-content {
+            display: block;
+        }
+        
+        .steps-list {
+            counter-reset: step-counter;
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .steps-list li {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .steps-list li:before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Troubleshooting Guide - Roblox Multi-Game System</h1>
+            <p>Common issues and solutions for the Roblox Multi-Game Server</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <a href="./index.html" class="nav-link">Home</a>
+                <a href="#startup-issues" class="nav-link">Startup Issues</a>
+                <a href="#network-issues" class="nav-link">Network Issues</a>
+                <a href="#database-issues" class="nav-link">Database Issues</a>
+                <a href="#game-server-issues" class="nav-link">Game Server Issues</a>
+                <a href="#nginx-issues" class="nav-link">Nginx Issues</a>
+                <a href="#performance-issues" class="nav-link">Performance Issues</a>
+                <a href="#troubleshooting-tools" class="nav-link">Tools</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section id="startup-issues">
+            <h2>Startup Issues</h2>
+            
+            <div class="problem">
+                <h3>Container Won't Start / Health Check Fails</h3>
+                <p>Problem: The docker services don't start properly or show as "unhealthy"</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Check the container logs for specific error messages:</li>
+                    <div class="code-block">
+docker compose logs roblox-server
+docker compose logs nginx
+docker compose logs postgres
+docker compose logs redis
+                    </div>
+                    
+                    <li>Verify that required ports aren't already in use:</li>
+                    <div class="code-block">
+# Check if ports are in use
+sudo lsof -i :8081,80,443,27015,27016,5432,6379
+                    </div>
+                    
+                    <li>Check if all required files exist and have correct permissions:</li>
+                    <div class="code-block">
+# Verify file permissions
+ls -la config/
+ls -la games/
+                    </div>
+                    
+                    <li>If using a .env file, ensure all required environment variables are set:</li>
+                    <div class="code-block">
+# Check environment variables
+cat .env
+                    </div>
+                </ol>
+            </div>
+            
+            <div class="problem">
+                <h3>Syntax Error in Server JavaScript</h3>
+                <p>Problem: Error message like "SyntaxError: missing ) after argument list" when starting the game server</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <p>This is a JavaScript syntax error in the server code. This was fixed in the original codebase, but if encountered again:</p>
+                <ol class="steps-list">
+                    <li>Find the exact line number from the error message</li>
+                    <li>Go to the file in the services directory:</li>
+                    <div class="code-block">
+cd services/roblox-server/
+# Look for the file mentioned in the error
+                    </div>
+                    
+                    <li>Check for missing parentheses, brackets, or other syntax errors</li>
+                    <li>Fix the code and rebuild the container:</li>
+                    <div class="code-block">
+docker compose build --no-cache roblox-server
+docker compose up -d roblox-server
+                    </div>
+                </ol>
+            </div>
+            
+            <div class="problem">
+                <h3>SSL Certificate Errors</h3>
+                <p>Problem: Nginx fails to start due to missing or invalid SSL certificates</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Create placeholder or self-signed certificates:</li>
+                    <div class="code-block">
+# Create SSL directory if it doesn't exist
+mkdir -p config/nginx/ssl
+
+# Generate self-signed certificates
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout config/nginx/ssl/key.pem \
+  -out config/nginx/ssl/cert.pem \
+  -subj "/C=DE/ST=NRW/L=Local/O=RobloxServer/CN=localhost"
+                    </div>
+                    
+                    <li>Verify certificates are properly created:</li>
+                    <div class="code-block">
+ls -la config/nginx/ssl/
+                    </div>
+                    
+                    <li>Restart the nginx service:</li>
+                    <div class="code-block">
+docker compose restart nginx
+                    </div>
+                </ol>
+            </div>
+        </section>
+        
+        <section id="network-issues">
+            <h2>Network Issues</h2>
+            
+            <div class="problem">
+                <h3>Cannot Access Web Interface</h3>
+                <p>Problem: Cannot reach the web interface at http://localhost:8081</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Check if all services are running:</li>
+                    <div class="code-block">
+docker compose ps
+                    </div>
+                    
+                    <li>Verify that ports are properly mapped and listening:</li>
+                    <div class="code-block">
+netstat -tulpn | grep :8081
+                    </div>
+                    
+                    <li>Check nginx configuration files for errors:</li>
+                    <div class="code-block">
+docker compose exec nginx cat /etc/nginx/nginx.conf
+docker compose exec nginx cat /etc/nginx/sites-enabled/roblox-server
+                    </div>
+                    
+                    <li>Verify the reverse proxy configuration is correct:</li>
+                    <div class="code-block">
+# Check if nginx can reach the backend
+docker compose exec nginx wget --spider http://roblox-server:8080/health
+                    </div>
+                </ol>
+            </div>
+            
+            <div class="problem">
+                <h3>Game Server Not Responding</h3>
+                <p>Problem: Game server API endpoints return errors or timeouts</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Check if the game server service is running:</li>
+                    <div class="code-block">
+docker compose ps
+                    </div>
+                    
+                    <li>Verify the game server is accessible internally:</li>
+                    <div class="code-block">
+# From within the roblox-server container
+docker compose exec roblox-server curl http://localhost:8080/health
+                    </div>
+                    
+                    <li>Test the API directly:</li>
+                    <div class="code-block">
+curl -v http://localhost:10000/api/health
+                    </div>
+                    
+                    <li>Check nginx proxy configuration:</li>
+                    <div class="code-block">
+docker compose exec nginx cat /etc/nginx/sites-enabled/roblox-server
+                    </div>
+                </ol>
+            </div>
+        </section>
+        
+        <section id="database-issues">
+            <h2>Database Issues</h2>
+            
+            <div class="problem">
+                <h3>Database Connection Failed</h3>
+                <p>Problem: Game server shows errors about connecting to PostgreSQL database</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Verify that the PostgreSQL container is running:</li>
+                    <div class="code-block">
+docker compose ps
+                    </div>
+                    
+                    <li>Check database logs for errors:</li>
+                    <div class="code-block">
+docker compose logs postgres
+                    </div>
+                    
+                    <li>Test database connection from the game server container:</li>
+                    <div class="code-block">
+docker compose exec roblox-server env | grep DB
+docker compose exec roblox-server psql -h postgres -U roblox_user -d roblox_game -c "SELECT 1;"
+                    </div>
+                    
+                    <li>Verify database credentials in .env file are correct:</li>
+                    <div class="code-block">
+cat .env | grep DB
+                    </div>
+                </ol>
+            </div>
+            
+            <div class="problem">
+                <h3>Database Tables Not Created</h3>
+                <p>Problem: Missing database tables cause runtime errors</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Check if database initialization scripts ran correctly:</li>
+                    <div class="code-block">
+docker compose logs postgres
+                    </div>
+                    
+                    <li>Manually connect to the database and verify structure:</li>
+                    <div class="code-block">
+docker compose exec -it postgres psql -U roblox_user -d roblox_game
+                    </div>
+                    
+                    <li>Run initialization scripts manually if needed:</li>
+                    <div class="code-block">
+# Inside the database container
+\i /docker-entrypoint-initdb.d/init.sql
+                    </div>
+                    
+                    <li>Restart the game server to reconnect:</li>
+                    <div class="code-block">
+docker compose restart roblox-server
+                    </div>
+                </ol>
+            </div>
+        </section>
+        
+        <section id="game-server-issues">
+            <h2>Game Server Issues</h2>
+            
+            <div class="problem">
+                <h3>Game Server Crashes on Startup</h3>
+                <p>Problem: The game server container crashes or exits immediately after starting</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Check the detailed logs for the exact crash reason:</li>
+                    <div class="code-block">
+docker compose logs --tail 100 roblox-server
+                    </div>
+                    
+                    <li>Verify Node.js dependencies were properly installed:</li>
+                    <div class="code-block">
+docker compose exec roblox-server ls -la node_modules/
+                    </div>
+                    
+                    <li>Check if required configuration files exist:</li>
+                    <div class="code-block">
+docker compose exec roblox-server ls -la configs/
+docker compose exec roblox-server cat config/server.json
+                    </div>
+                    
+                    <li>Test the server entry point:</li>
+                    <div class="code-block">
+docker compose exec roblox-server node server.js
+                    </div>
+                </ol>
+            </div>
+            
+            <div class="problem">
+                <h3>High Memory Usage</h3>
+                <p>Problem: Game server consumes excessive memory</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Monitor current memory usage:</li>
+                    <div class="code-block">
+docker stats
+                    </div>
+                    
+                    <li>Check for memory leaks in the application logs:</li>
+                    <div class="code-block">
+docker compose logs roblox-server | grep -i "memory\|heap\|allocation"
+                    </div>
+                    
+                    <li>Review the game logic for efficient resource management:</li>
+                    <p>Look for proper cleanup of objects, listeners, and timers in the Lua and JavaScript code</p>
+                    
+                    <li>Consider limiting memory usage via Docker:</li>
+                    <div class="code-block">
+# In docker-compose.yml
+services:
+  roblox-server:
+    # ... other settings ...
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+                    </div>
+                </ol>
+            </div>
+        </section>
+        
+        <section id="nginx-issues">
+            <h2>Nginx Issues</h2>
+            
+            <div class="problem">
+                <h3>404 Errors for Static Files</h3>
+                <p>Problem: Nginx returns 404 errors for static content like CSS, JS, or images</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Verify the static file volumes are properly mapped:</li>
+                    <div class="code-block">
+# Check the volumes in docker-compose.yml
+grep -A 10 "nginx:" docker-compose.yml
+                    </div>
+                    
+                    <li>Check if files exist in the nginx container:</li>
+                    <div class="code-block">
+docker compose exec nginx ls -la /var/www/static/
+docker compose exec nginx ls -la /var/www/static/css/
+docker compose exec nginx ls -la /var/www/static/js/
+                    </div>
+                    
+                    <li>Verify the nginx configuration for static file serving:</li>
+                    <div class="code-block">
+docker compose exec nginx cat /etc/nginx/sites-enabled/roblox-server
+                    </div>
+                    
+                    <li>Test direct access to static files:</li>
+                    <div class="code-block">
+curl -I http://localhost:8081/static/css/styles.css
+                    </div>
+                </ol>
+            </div>
+            
+            <div class="problem">
+                <h3>WebSocket Connection Problems</h3>
+                <p>Problem: WebSocket connections fail or are interrupted</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Check nginx configuration for WebSocket support:</li>
+                    <div class="code-block">
+docker compose exec nginx cat /etc/nginx/sites-enabled/roblox-server | grep -A 10 -B 10 "Upgrade\|Connection"
+                    </div>
+                    
+                    <li>Verify WebSocket configuration:</li>
+                    <div class="code-block">
+# Correct WebSocket configuration in nginx
+location /socket.io/ {
+    proxy_pass http://roblox_backend;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+                    </div>
+                    
+                    <li>Test WebSocket connection manually:</li>
+                    <div class="code-block">
+# Use a WebSocket client to test connection
+# Or check browser console for WebSocket errors
+                    </div>
+                </ol>
+            </div>
+        </section>
+        
+        <section id="performance-issues">
+            <h2>Performance Issues</h2>
+            
+            <div class="problem">
+                <h3>Slow Response Times</h3>
+                <p>Problem: API responses are slow or the interface feels sluggish</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Check system resource usage:</li>
+                    <div class="code-block">
+docker stats
+                    </div>
+                    
+                    <li>Monitor network traffic:</li>
+                    <div class="code-block">
+# Monitor connections to the server
+netstat -i
+                    </div>
+                    
+                    <li>Review database queries for optimization:</li>
+                    <div class="code-block">
+# Look for slow queries in application logs
+docker compose logs roblox-server | grep -i "slow\|timeout"
+                    </div>
+                    
+                    <li>Enable and configure caching:</li>
+                    <div class="code-block">
+# Check if Redis is properly configured and being used
+docker compose exec redis redis-cli info
+                    </div>
+                </ol>
+            </div>
+            
+            <div class="problem">
+                <h3>High CPU Usage</h3>
+                <p>Problem: System or specific containers use excessive CPU</p>
+            </div>
+            
+            <div class="solution">
+                <h4>Solution:</h4>
+                <ol class="steps-list">
+                    <li>Identify the high CPU process:</li>
+                    <div class="code-block">
+docker stats --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+                    </div>
+                    
+                    <li>Check for infinite loops or inefficient algorithms:</li>
+                    <div class="code-block">
+docker compose logs roblox-server
+                    </div>
+                    
+                    <li>Limit CPU usage per container if needed:</li>
+                    <div class="code-block">
+# In docker-compose.yml
+services:
+  roblox-server:
+    # ... other settings ...
+    deploy:
+      resources:
+        limits:
+          cpus: '0.80'
+        reservations:
+          cpus: '0.25'
+                    </div>
+                    
+                    <li>Optimize game logic for better efficiency:</li>
+                    <p>Review code for unnecessary computations, excessive event firing, or inefficient data structures.</p>
+                </ol>
+            </div>
+        </section>
+        
+        <section id="troubleshooting-tools">
+            <h2>Troubleshooting Tools and Commands</h2>
+            
+            <h3>Essential Diagnostic Commands</h3>
+            <div class="code-block">
+# Check all container statuses
+docker compose ps
+
+# View detailed logs for all services
+docker compose logs
+
+# View logs for specific service
+docker compose logs SERVICE_NAME
+
+# Follow logs in real-time
+docker compose logs -f
+
+# Monitor resource usage
+docker stats
+
+# Execute commands in a running container
+docker compose exec SERVICE_NAME COMMAND
+
+# Run a one-off command in a service
+docker compose run SERVICE_NAME COMMAND
+
+# Check container details
+docker inspect CONTAINER_NAME
+            </div>
+            
+            <h3>Health Check Commands</h3>
+            <div class="code-block">
+# Check system health endpoint
+curl http://localhost:8081/api/health
+
+# Check individual service health
+curl http://localhost:10000/health
+
+# Check database connection
+docker compose exec postgres pg_isready -U roblox_user
+
+# Check Redis connection
+docker compose exec redis redis-cli ping
+            </div>
+            
+            <h3>Networking Diagnostics</h3>
+            <div class="code-block">
+# Check if ports are open
+netstat -tulpn | grep :PORT
+
+# Test connections between containers
+docker compose exec nginx wget --spider http://roblox-server:8080/health
+
+# Check DNS resolution between containers
+docker compose exec roblox-server nslookup postgres
+
+# Check network connectivity
+docker compose exec roblox-server ping postgres
+            </div>
+            
+            <h3>Cleaning and Resetting</h3>
+            <div class="code-block">
+# Stop all services
+docker compose down
+
+# Stop and remove containers, networks, volumes, and images
+docker compose down -v --remove-orphans
+
+# Clean up unused Docker resources
+docker system prune -a
+
+# Remove specific container
+docker rm CONTAINER_NAME
+
+# Remove specific volume
+docker volume rm VOLUME_NAME
+            </div>
+            
+            <h3>Performance Monitoring</h3>
+            <div class="code-block">
+# Monitor system resource usage
+docker stats --all
+
+# Monitor specific container
+docker stats CONTAINER_NAME
+
+# Monitor with more detail
+docker stats --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.BlockIO}}"
+
+# Check Docker system info
+docker info
+
+# Check Docker system events
+docker events --since 1h
+            </div>
+            
+            <h3>Debugging with Interactive Shell</h3>
+            <div class="code-block">
+# Enter a running container
+docker compose exec -it roblox-server /bin/bash
+docker compose exec -it postgres /bin/bash
+docker compose exec -it nginx /bin/sh
+
+# View running processes
+docker top CONTAINER_NAME
+
+# View container environment
+docker compose exec roblox-server env
+
+# Check file system
+docker compose exec roblox-server ls -la /
+docker compose exec roblox-server find / -name "*.js" 2>/dev/null
+            </div>
+            
+            <div class="tip">
+                <h4>Helpful Debugging Approaches</h4>
+                <ul>
+                    <li><strong>Process of Elimination</strong>: Turn off services one by one to isolate the problem</li>
+                    <li><strong>Check Dependencies</strong>: Ensure dependent services are running before dependent ones</li>
+                    <li><strong>Review Changes</strong>: If something worked before, check what has changed recently</li>
+                    <li><strong>Use Official Docker Tools</strong>: Docker provides excellent diagnostic tools</li>
+                    <li><strong>Consult Logs Chronologically</strong>: Look at the timestamp order of events in logs</li>
+                    <li><strong>Restart Services in Order</strong>: Sometimes just restarting in the right order helps</li>
+                </ul>
+            </div>
+            
+            <div class="warning">
+                <h4>Important Notes</h4>
+                <ul>
+                    <li>Always backup important data before troubleshooting major issues</li>
+                    <li>Test fixes in a separate environment if dealing with production systems</li>
+                    <li>Check all configuration files for syntax errors before applying</li>
+                    <li>Remember that container names in docker-compose are prefixed with project name</li>
+                    <li>Some changes require rebuilding containers rather than just restarting</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Roblox Multi-Game System - Troubleshooting Guide</p>
+            <p>© 2025 Roblox Game Development Team</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Accordion functionality for troubleshooting sections
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const accordion = header.parentElement;
+                accordion.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

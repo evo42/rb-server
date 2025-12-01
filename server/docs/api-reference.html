@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - Roblox Multi-Game System</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #fafafa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        nav {
+            background-color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .endpoint {
+            background: #e9ecef;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 1rem 0;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+        
+        .get { background-color: #d4edda; color: #155724; }
+        .post { background-color: #cce5ff; color: #004085; }
+        .put { background-color: #fff3cd; color: #856404; }
+        .delete { background-color: #f8d7da; color: #721c24; }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>API Reference - Roblox Multi-Game System</h1>
+            <p>Complete REST API and WebSocket documentation</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <a href="./index.html" class="nav-link">Home</a>
+                <a href="#rest-api" class="nav-link">REST API</a>
+                <a href="#websocket" class="nav-link">WebSocket</a>
+                <a href="#authentication" class="nav-link">Authentication</a>
+                <a href="#examples" class="nav-link">Examples</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section id="rest-api">
+            <h2>REST API Endpoints</h2>
+            
+            <h3>Game Management</h3>
+            
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <h4>/api/games</h4>
+                <p>List all available games in the system</p>
+                
+                <h5>Parameters:</h5>
+                <ul>
+                    <li><code>limit</code> (optional) - Number of games to return (default: 20)</li>
+                    <li><code>offset</code> (optional) - Number of games to skip (default: 0)</li>
+                    <li><code>category</code> (optional) - Filter by game category</li>
+                    <li><code>search</code> (optional) - Search term for game names/descriptions</li>
+                </ul>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "games": [
+    {
+      "id": "string",
+      "name": "string",
+      "version": "string",
+      "description": "string",
+      "author": "string",
+      "category": "string",
+      "tags": ["string"],
+      "status": "string",
+      "createdAt": "timestamp",
+      "updatedAt": "timestamp",
+      "isActive": "boolean"
+    }
+  ],
+  "count": "number",
+  "total": "number"
+}
+                </div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <h4>/api/games</h4>
+                <p>Create a new game in the system</p>
+                
+                <h5>Request Body:</h5>
+                <div class="code-block">
+{
+  "name": "string (required)",
+  "version": "string (default: 1.0.0)",
+  "description": "string",
+  "author": "string",
+  "category": "string",
+  "tags": ["string"],
+  "maxPlayers": "number (default: 10)",
+  "settings": "object"
+}
+                </div>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "message": "Game successfully registered",
+  "game": { ...game_object }
+}
+                </div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <h4>/api/games/{id}</h4>
+                <p>Get details for a specific game</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "game": { ...game_object },
+  "isActive": "boolean",
+  "instance": { ...instance_object_if_active }
+}
+                </div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <h4>/api/games/{id}/start</h4>
+                <p>Start an instance of a game</p>
+                
+                <h5>Request Body:</h5>
+                <div class="code-block">
+{
+  "maxPlayers": "number",
+  "map": "string",
+  "difficulty": "string",
+  "settings": { ...custom_settings }
+}
+                </div>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "message": "Game successfully started",
+  "instanceId": "string",
+  "status": { ...instance_status }
+}
+                </div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <h4>/api/games/{id}/stop</h4>
+                <p>Stop an instance of a game</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "message": "Game successfully stopped"
+}
+                </div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="method delete">DELETE</div>
+                <h4>/api/games/{id}</h4>
+                <p>Remove a game from the system</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "message": "Game successfully removed"
+}
+                </div>
+            </div>
+            
+            <h3>Game Instance Management</h3>
+            
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <h4>/api/instances</h4>
+                <p>List all active game instances</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "instances": [
+    {
+      "instanceId": "string",
+      "gameId": "string",
+      "gameName": "string",
+      "status": "string",
+      "uptime": "number (ms)",
+      "players": "number",
+      "maxPlayers": "number",
+      "stats": { ...stats_object }
+    }
+  ],
+  "count": "number"
+}
+                </div>
+            </div>
+            
+            <h3>Player Management</h3>
+            
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <h4>/api/players/join</h4>
+                <p>Player joins a game</p>
+                
+                <h5>Request Body:</h5>
+                <div class="code-block">
+{
+  "gameId": "string",
+  "username": "string",
+  "playerData": { ...additional_data }
+}
+                </div>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "playerId": "string",
+  "sessionId": "string",
+  "gameId": "string",
+  "message": "Successfully joined game"
+}
+                </div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <h4>/api/players/leave</h4>
+                <p>Player leaves a game</p>
+                
+                <h5>Request Body:</h5>
+                <div class="code-block">
+{
+  "playerId": "string",
+  "reason": "string"
+}
+                </div>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "message": "Successfully left game"
+}
+                </div>
+            </div>
+            
+            <h3>System Information</h3>
+            
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <h4>/api/health</h4>
+                <p>System health check</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "status": "healthy|unhealthy",
+  "service": "string",
+  "version": "string",
+  "uptime": "number (seconds)",
+  "activeGames": "number",
+  "totalGames": "number",
+  "timestamp": "timestamp"
+}
+                </div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <h4>/api/stats</h4>
+                <p>System statistics</p>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "server": "string",
+  "games": {
+    "total": "number",
+    "active": "number",
+    "categories": { ...category_counts }
+  },
+  "players": {
+    "total": "number",
+    "online": "number",
+    "peakToday": "number"
+  },
+  "system": {
+    "memory": { ...memory_usage },
+    "cpu": { ...cpu_usage },
+    "disk": { ...disk_usage }
+  }
+}
+                </div>
+            </div>
+            
+            <h3>Repository Management</h3>
+            
+            <div class="endpoint">
+                <div class="method get">GET</div>
+                <h4>/api/repository/packages</h4>
+                <p>Search and list packages in repository</p>
+                
+                <h5>Parameters:</h5>
+                <ul>
+                    <li><code>type</code> (optional) - Filter by package type (game/plugin)</li>
+                    <li><code>search</code> (optional) - Search term</li>
+                    <li><code>limit</code> (optional) - Number of results to return</li>
+                </ul>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "packages": [
+    {
+      "id": "string",
+      "name": "string",
+      "version": "string",
+      "type": "string",
+      "author": "string",
+      "downloads": "number",
+      "rating": "number",
+      "description": "string"
+    }
+  ],
+  "count": "number"
+}
+                </div>
+            </div>
+        </section>
+        
+        <section id="websocket">
+            <h2>WebSocket Events</h2>
+            
+            <p>The system uses WebSocket for real-time communication between clients and servers.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Direction</th>
+                        <th>Parameters</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>connect</td>
+                        <td>Server → Client</td>
+                        <td>{sessionId}</td>
+                        <td>Client successfully connected to WebSocket</td>
+                    </tr>
+                    <tr>
+                        <td>disconnect</td>
+                        <td>Server → Client</td>
+                        <td>{reason}</td>
+                        <td>Client disconnected from WebSocket</td>
+                    </tr>
+                    <tr>
+                        <td>games_list</td>
+                        <td>Server → Client</td>
+                        <td>{games: [game_objects]}</td>
+                        <td>Update of available games in the system</td>
+                    </tr>
+                    <tr>
+                        <td>game_started</td>
+                        <td>Server → Client</td>
+                        <td>{gameId, instanceId, details}</td>
+                        <td>Notification when a game instance starts</td>
+                    </tr>
+                    <tr>
+                        <td>game_stopped</td>
+                        <td>Server → Client</td>
+                        <td>{gameId, reason}</td>
+                        <td>Notification when a game instance stops</td>
+                    </tr>
+                    <tr>
+                        <td>game_status</td>
+                        <td>Server → Client</td>
+                        <td>{status_object}</td>
+                        <td>Real-time status updates for active games</td>
+                    </tr>
+                    <tr>
+                        <td>player_joined</td>
+                        <td>Server → Client</td>
+                        <td>{player_object}</td>
+                        <td>Notification when a new player joins a game</td>
+                    </tr>
+                    <tr>
+                        <td>player_left</td>
+                        <td>Server → Client</td>
+                        <td>{playerId, reason}</td>
+                        <td>Notification when a player leaves a game</td>
+                    </tr>
+                    <tr>
+                        <td>player_moved</td>
+                        <td>Server → Client</td>
+                        <td>{playerId, position, rotation}</td>
+                        <td>Player position/rotation update</td>
+                    </tr>
+                    <tr>
+                        <td>player_action</td>
+                        <td>Client → Server</td>
+                        <td>{action, data}</td>
+                        <td>Player performing an action in-game</td>
+                    </tr>
+                    <tr>
+                        <td>chat_message</td>
+                        <td>Bi-directional</td>
+                        <td>{playerId, username, message, timestamp}</td>
+                        <td>Chat message between players</td>
+                    </tr>
+                    <tr>
+                        <td>game_event</td>
+                        <td>Server → Client</td>
+                        <td>{eventType, eventData}</td>
+                        <td>Generic game-specific events</td>
+                    </tr>
+                    <tr>
+                        <td>error</td>
+                        <td>Server → Client</td>
+                        <td>{message, code}</td>
+                        <td>Error notifications from the server</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Connection Example</h3>
+            <div class="code-block">
+const socket = io('http://localhost:8080', {
+  withCredentials: true,
+  extraHeaders: {
+    "Authorization": "Bearer YOUR_JWT_TOKEN"
+  }
+});
+
+socket.on('connect', () => {
+  console.log('Connected to game server');
+});
+
+socket.on('games_list', (data) => {
+  console.log('Available games:', data.games);
+});
+
+socket.on('game_started', (data) => {
+  console.log('Game started:', data.instanceId);
+});
+
+// Join a game
+socket.emit('player_join', {
+  gameId: 'game-id-123',
+  username: 'player-name'
+});
+
+// Send chat message
+socket.emit('chat_message', {
+  message: 'Hello, world!'
+});
+            </div>
+        </section>
+        
+        <section id="authentication">
+            <h2>Authentication</h2>
+            
+            <p>The API uses JWT (JSON Web Token) for authentication. All authenticated endpoints require a valid JWT in the Authorization header.</p>
+            
+            <h3>Getting a Token</h3>
+            <div class="endpoint">
+                <div class="method post">POST</div>
+                <h4>/api/auth/login</h4>
+                
+                <h5>Request Body:</h5>
+                <div class="code-block">
+{
+  "username": "string",
+  "password": "string"
+}
+                </div>
+                
+                <h5>Response:</h5>
+                <div class="code-block">
+{
+  "token": "jwt_token_string",
+  "expiresIn": "seconds",
+  "user": { ...user_object }
+}
+                </div>
+            </div>
+            
+            <h3>Using the Token</h3>
+            <p>Include the token in the Authorization header for authenticated requests:</p>
+            <div class="code-block">
+curl -X GET http://localhost:8081/api/games \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json"
+            </div>
+        </section>
+        
+        <section id="examples">
+            <h2>API Usage Examples</h2>
+            
+            <h3>Creating and Starting a Game</h3>
+            <div class="code-block">
+// 1. Create a new game
+curl -X POST http://localhost:8081/api/games \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "My New Game",
+    "version": "1.0.0",
+    "description": "An amazing new multiplayer game",
+    "category": "strategy",
+    "maxPlayers": 8
+  }'
+
+// 2. Start the game (replace GAME_ID with the returned ID)
+curl -X POST http://localhost:8081/api/games/GAME_ID/start \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "maxPlayers": 6,
+    "map": "desert-arena"
+  }'
+            </div>
+            
+            <h3>Getting System Stats</h3>
+            <div class="code-block">
+curl -X GET http://localhost:8081/api/stats \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json"
+            </div>
+            
+            <h3>Searching for Games</h3>
+            <div class="code-block">
+// Get all games
+curl -X GET "http://localhost:8081/api/games" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+// Search for strategy games
+curl -X GET "http://localhost:8081/api/games?category=strategy" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+// Search with pagination
+curl -X GET "http://localhost:8081/api/games?limit=10&offset=20" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Roblox Multi-Game System - API Documentation</p>
+            <p>© 2025 Roblox Game Development Team</p>
+        </div>
+    </footer>
+</body>
+</html>

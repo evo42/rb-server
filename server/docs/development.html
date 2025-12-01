@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Guide - Roblox Multi-Game System</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #fafafa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        nav {
+            background-color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .dev-card {
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .dev-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        
+        .dev-card h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #e9ecef;
+        }
+        
+        .feature-card h5 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .workflow-step {
+            display: flex;
+            margin: 1.5rem 0;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .alert {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: var(--border-radius);
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            border-left: 4px solid #0c5460;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Development Guide - Roblox Multi-Game System</h1>
+            <p>Complete guide for developers contributing to the system</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <a href="./index.html" class="nav-link">Home</a>
+                <a href="#environment" class="nav-link">Environment</a>
+                <a href="#code-structure" class="nav-link">Code Structure</a>
+                <a href="#development-workflow" class="nav-link">Workflow</a>
+                <a href="#game-development" class="nav-link">Game Development</a>
+                <a href="#api-documentation" class="nav-link">API</a>
+                <a href="#testing" class="nav-link">Testing</a>
+                <a href="#deployment" class="nav-link">Deployment</a>
+                <a href="#contributing" class="nav-link">Contributing</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section id="environment">
+            <h2>Development Environment</h2>
+            
+            <p>Setting up your development environment for contributing to the Roblox Multi-Game System.</p>
+            
+            <div class="dev-card">
+                <h4>Prerequisites</h4>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h5>Required Software</h5>
+                        <ul>
+                            <li><strong>Docker:</strong> Version 20.10 or higher</li>
+                            <li><strong>Docker Compose:</strong> Version 2.0 or higher</li>
+                            <li><strong>Git:</strong> Version control system</li>
+                            <li><strong>Node.js:</strong> Version 18 or higher for development tools</li>
+                            <li><strong>NPM:</strong> Node Package Manager</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>Recommended Tools</h5>
+                        <ul>
+                            <li><strong>Editor:</strong> VS Code with Docker extension</li>
+                            <li><strong>Terminal:</strong> Integrated terminal in editor</li>
+                            <li><strong>Browser:</strong> Chrome/Firefox for debugging</li>
+                            <li><strong>API Client:</strong> Postman or Insomnia</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>System Requirements</h5>
+                        <ul>
+                            <li><strong>OS:</strong> Linux, macOS, or Windows with WSL2</li>
+                            <li><strong>CPU:</strong> 4+ cores recommended</li>
+                            <li><strong>RAM:</strong> 8GB minimum, 16GB recommended</li>
+                            <li><strong>Disk:</strong> 50GB free space</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Setup Instructions</h4>
+                
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <h5>Clone the Repository</h5>
+                        <div class="code-block">
+# Clone the repository
+git clone &lt;repository-url&gt;
+cd rb-server/server
+
+# Set up SSH keys for Git (recommended)
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+ssh-add ~/.ssh/id_rsa
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <h5>Configure Environment</h5>
+                        <div class="code-block">
+# Copy environment file
+cp .env.example .env
+
+# Edit environment variables (see .env.example for descriptions)
+nano .env
+
+# For development, you might want to override these:
+export DB_PASSWORD=dev_password
+export REDIS_PASSWORD=dev_redis_password
+export JWT_SECRET=dev_secret_key
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <h5>Start Development Environment</h5>
+                        <div class="code-block">
+# Build and start all services for development
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+# Or use the development script if available
+./start.sh start-dev
+
+# Build services (if you made changes)
+docker compose build
+
+# Start services
+docker compose up -d
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div>
+                        <h5>Verify Setup</h5>
+                        <div class="code-block">
+# Check that all services are running
+docker compose ps
+
+# View logs to make sure services are healthy
+docker compose logs
+
+# Access the system in your browser
+# Web Interface: http://localhost:8081
+# API: http://localhost:8081/api/health
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="code-structure">
+            <h2>Code Structure</h2>
+            
+            <p>Understanding the project organization and directory structure.</p>
+            
+            <div class="dev-card">
+                <h4>Directory Structure</h4>
+                <div class="code-block">
+rb-server/
+├── game/                         # Legacy main game directory
+│   ├── assets/                   # Game assets
+│   ├── modules/                  # Shared modules
+│   ├── scripts/                  # Game scripts (Lua)
+│   └── main.lua                  # Main game entry point
+├── games/                        # Multi-game system directory
+│   ├── kingdom-warriors/         # Kingdom Warriors game directory
+│   │   ├── assets/               # Game-specific assets
+│   │   ├── buildings/            # Building modules
+│   │   ├── campaigns/            # Campaign data
+│   │   ├── config/               # Game configuration
+│   │   ├── modules/              # Game-specific modules
+│   │   ├── scripts/              # Game-specific scripts
+│   │   ├── units/                # Unit definitions
+│   │   ├── .dockerignore         # Docker ignore rules
+│   │   ├── deploy.sh             # Deployment script
+│   │   ├── Dockerfile            # Game container configuration
+│   │   ├── game.json             # Game metadata
+│   │   ├── package.json          # Node.js dependencies
+│   │   ├── PROJECT_OVERVIEW.md   # Project overview
+│   │   └── README.md             # Game documentation
+│   └── lernblox-school-battle/   # LernBlox game directory
+│       ├── assets/               # Game assets
+│       ├── config/               # Configuration
+│       ├── modules/              # Modules
+│       ├── scripts/              # Scripts
+│       ├── game.json             # Game metadata
+│       ├── README.md             # Game documentation
+│       └── TRANSFORMATION_SUMMARY.md # Migration summary
+├── services/                     # Core services
+│   ├── game-manager/             # Game management service
+│   │   ├── config.js             # Configuration
+│   │   ├── manager.js            # Main game manager logic
+│   │   ├── repository.js         # Package repository handler
+│   │   └── package.json          # Dependencies
+│   └── roblox-server/            # Original game server
+│       ├── Dockerfile            # Container setup
+│       ├── package.json          # Node.js dependencies
+│       ├── package.secure.json   # Security-related dependencies
+│       ├── server.js             # Main server application
+│       └── node_modules/         # Installed dependencies
+├── web-interface/                # Web UI
+│   ├── css/                      # Stylesheets
+│   ├── js/                       # JavaScript files
+│   └── index.html                # Main UI
+├── docs/                         # Documentation
+│   └── index.html                # Main documentation
+├── config/                       # System configuration
+│   ├── nginx/                    # Nginx configuration
+│   │   ├── nginx.conf            # Main configuration
+│   │   ├── sites/                # Virtual host configurations
+│   │   └── ssl/                  # SSL certificates
+│   ├── redis.conf                # Redis configuration
+│   └── server.json               # Server configuration
+├── database/                     # Database configurations
+│   ├── init.sql                  # Initialization script
+│   └── migrations/               # Schema migration files
+├── scripts/                      # Utility scripts
+│   ├── test-server.sh            # Server testing
+│   ├── dependency-security-scanner.js # Security scanner
+│   ├── ci-cd-security-pipeline.js   # CI/CD pipeline
+│   └── ...                       # Other utility scripts
+├── start.sh                      # Main startup script
+├── docker-compose.yml            # Main Docker Compose configuration
+├── docker-compose.prod.yml       # Production configuration
+├── docker-compose.secure.yml     # Security enhancements
+└── ...
+                </div>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Technology Stack</h4>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h5>Backend</h5>
+                        <ul>
+                            <li><strong>Language:</strong> Node.js (main server), Lua (game logic)</li>
+                            <li><strong>Framework:</strong> Express.js for API</li>
+                            <li><strong>Database:</strong> PostgreSQL</li>
+                            <li><strong>Cache:</strong> Redis</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>Frontend</h5>
+                        <ul>
+                            <li><strong>Language:</strong> JavaScript ES6+</li>
+                            <li><strong>Framework:</strong> Plain JavaScript (no framework)</li>
+                            <li><strong>CSS:</strong> Pure CSS with modern features</li>
+                            <li><strong>Templating:</strong> HTML templates</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>Infrastructure</h5>
+                        <ul>
+                            <li><strong>Containerization:</strong> Docker</li>
+                            <li><strong>Orchestration:</strong> Docker Compose</li>
+                            <li><strong>Reverse Proxy:</strong> Nginx</li>
+                            <li><strong>Process Management:</strong> PM2</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="development-workflow">
+            <h2>Development Workflow</h2>
+            
+            <p>Step-by-step process for developing new features and fixing issues.</p>
+            
+            <div class="dev-card">
+                <h4>General Development Workflow</h4>
+                
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <h5>Create Feature Branch</h5>
+                        <p>Always create your work in a branch based on the main branch:</p>
+                        <div class="code-block">
+# Update your local main branch
+git checkout main
+git pull origin main
+
+# Create a feature branch
+git checkout -b feature/my-new-feature
+# OR
+git checkout -b fix/issue-description
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <h5>Make Changes</h5>
+                        <p>Follow coding standards and write clean, maintainable code:</p>
+                        <ul>
+                            <li>Use meaningful variable and function names</li>
+                            <li>Write concise, informative comments</li>
+                            <li>Follow existing code style and patterns</li>
+                            <li>Write unit tests for new functionality</li>
+                            <li>Update documentation as needed</li>
+                        </ul>
+                        
+                        <div class="code-block">
+// Example of good function documentation
+/**
+ * Calculate player score based on actions
+ * @param {Object} player - Player object with stats
+ * @param {Array} actions - Array of actions performed
+ * @returns {number} Calculated score
+ */
+function calculatePlayerScore(player, actions) {
+  // Implementation here
+  return score;
+}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <h5>Test Locally</h5>
+                        <p>Run comprehensive local tests:</p>
+                        <div class="code-block">
+# Run tests in development environment
+./start.sh test
+
+# Run specific service tests
+docker compose exec roblox-server npm test
+
+# Check for security vulnerabilities
+npm audit
+
+# Lint code
+npm run lint
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div>
+                        <h5>Commit Changes</h5>
+                        <p>Write clear, descriptive commit messages:</p>
+                        <div class="code-block">
+# Format: type(scope): brief description
+git add .
+git commit -m "feat(game-manager): add player score calculation"
+
+# Or for fixes:
+git commit -m "fix(game-logic): resolve race condition in player movement"
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">5</div>
+                    <div>
+                        <h5>Push and Create PR</h5>
+                        <div class="code-block">
+# Push your branch to remote
+git push origin feature/my-new-feature
+
+# Create a pull request through GitHub UI
+# - Provide detailed description
+# - Link related issues
+# - Tag reviewers
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Code Review Guidelines</h4>
+                
+                <h5>When Reviewing Others' Code</h5>
+                <ul>
+                    <li>Check for security vulnerabilities</li>
+                    <li>Verify input validation and sanitization</li>
+                    <li>Assess performance implications</li>
+                    <li>Ensure proper error handling</li>
+                    <li>Confirm code follows established patterns</li>
+                    <li>Verify tests cover edge cases</li>
+                </ul>
+                
+                <h5>When Having Your Code Reviewed</h5>
+                <ul>
+                    <li>Provide context in the PR description</li>
+                    <li>Link to related issues or designs</li>
+                    <li>Explain the problem being solved</li>
+                    <li>Highlight any potential concerns</li>
+                    <li>Respond promptly to review comments</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="game-development">
+            <h2>Game Development</h2>
+            
+            <p>Creating and integrating new games into the multi-game system.</p>
+            
+            <div class="dev-card">
+                <h4>Game Development Process</h4>
+                
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <h5>Create Game Directory</h5>
+                        <p>Set up the directory structure for your new game:</p>
+                        <div class="code-block">
+mkdir games/my-awesome-game
+cd games/my-awesome-game
+
+# Create the standard structure
+mkdir assets modules scripts config
+touch README.md game.json Dockerfile
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <h5>Define Game Metadata</h5>
+                        <p>Create a <code>game.json</code> file with game information:</p>
+                        <div class="code-block">
+{
+  "id": "my-awesome-game",
+  "name": "My Awesome Game",
+  "version": "1.0.0",
+  "description": "A description of the game",
+  "author": "Your Name",
+  "category": "puzzle",  // strategy, puzzle, adventure, etc.
+  "tags": ["multiplayer", "puzzle", "casual"],
+  "maxPlayers": 4,
+  "minPlayers": 1,
+  "estimatedDuration": 30,
+  "languages": ["en", "de"],
+  "settings": {
+    "defaultMap": "default-map",
+    "sessionTimeout": 3600,
+    "gameRules": {
+      // Custom game-specific rules
+    }
+  },
+  "dependencies": [],
+  "compatibility": {
+    "minSystemVersion": "1.0.0",
+    "maxSystemVersion": "2.0.0"
+  }
+}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <h5>Develop Game Logic</h5>
+                        <p>Create the main game logic in <code>scripts/main.lua</code>:</p>
+                        <div class="code-block">
+local game = {}
+
+function game.init()
+  print("Initializing My Awesome Game...")
+  
+  -- Setup game state
+  game.state = {
+    players = {},
+    assets = {},
+    settings = json.load("/app/config/settings.json"),
+    events = EventQueue:new()
+  }
+  
+  return game.state
+end
+
+function game.startSession(sessionConfig)
+  local session = {
+    id = generateId(),
+    startTime = os.time(),
+    settings = sessionConfig,
+    players = {},
+    state = "active"
+  }
+  
+  -- Notify subscribers
+  game.state.events:push("game_started", session)
+  
+  return session
+end
+
+function game.processEvent(event)
+  if event.type == "player_join" then
+    return game.handlePlayerJoin(event.data)
+  elseif event.type == "player_action" then
+    return game.handlePlayerAction(event.data)
+  end
+  
+  return false
+end
+
+function game.handlePlayerJoin(data)
+  local player = {
+    id = data.playerId,
+    name = data.name,
+    position = data.position,
+    joinedTime = os.time()
+  }
+  
+  game.state.players[player.id] = player
+  game.state.events:push("player_joined", player)
+  
+  return player
+end
+
+function game.handlePlayerAction(data)
+  local player = game.state.players[data.playerId]
+  if not player then
+    return {error = "Player not found"}
+  end
+  
+  -- Process action based on type
+  if data.action == "move" then
+    player.position = data.position
+  elseif data.action == "interact" then
+    -- Handle interaction
+  end
+  
+  game.state.events:push("player_action", {
+    playerId = data.playerId,
+    action = data.action,
+    position = player.position
+  })
+  
+  return {success = true}
+end
+
+return game
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div>
+                        <h5>Create Docker Configuration</h5>
+                        <p>Create a <code>Dockerfile</code> for your game:</p>
+                        <div class="code-block">
+FROM node:18-alpine
+
+# Install Lua and dependencies
+RUN apk add --no-cache \
+    lua5.3 \
+    lua5.3-dev \
+    luarocks \
+    curl \
+    git
+
+# Install Lua modules - adjust as needed
+RUN luarocks install lua-cjson
+RUN luarocks install luasocket
+
+WORKDIR /app
+
+# Copy game files
+COPY . .
+
+# Install Node.js packages if needed
+RUN npm install
+
+# Expose game port (adjust as needed)
+EXPOSE 27015
+
+# Health check endpoint (adjust path as needed)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+# Start the game
+CMD ["node", "server.js"]
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">5</div>
+                    <div>
+                        <h5>Test Your Game</h5>
+                        <p>Thoroughly test your game before integration:</p>
+                        <div class="code-block">
+# Build your game container
+docker build -t game-my-awesome-game:1.0.0 .
+
+# Test in isolation
+docker run --rm -p 27015:27015 game-my-awesome-game:1.0.0
+
+# Run game-specific tests
+./scripts/test-game.sh my-awesome-game
+
+# Run multiplayer simulation
+./scripts/test-multiclient.sh --game=my-awesome-game --clients=4
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workflow-step">
+                    <div class="step-number">6</div>
+                    <div>
+                        <h5>Register with Game Manager</h5>
+                        <p>Integrate your game with the game manager:</p>
+                        <div class="code-block">
+# Register your game with the system
+curl -X POST http://localhost:8081/api/games \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "name": "My Awesome Game",
+    "version": "1.0.0",
+    "description": "A description of the game",
+    "category": "puzzle",
+    "maxPlayers": 4
+  }'
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Game Asset Guidelines</h4>
+                
+                <h5>Image Assets</h5>
+                <ul>
+                    <li><strong>Format:</strong> Use WebP for photographs, PNG for graphics</li>
+                    <li><strong>Compression:</strong> Optimize with tools like ImageOptim</li>
+                    <li><strong>Size:</strong> Keep below 1MB per image when possible</li>
+                    <li><strong>Resolution:</strong> Provide multiple resolutions for different devices</li>
+                </ul>
+                
+                <h5>Audio Assets</h5>
+                <ul>
+                    <li><strong>Format:</strong> Use OGG (Vorbis) for music, WAV for SFX</li>
+                    <li><strong>Compression:</strong> Use VBR (Variable Bitrate) at 128-256 kbps</li>
+                    <li><strong>Volume:</strong> Normalize to ensure balanced audio</li>
+                </ul>
+                
+                <h5>Model Assets</h5>
+                <ul>
+                    <li><strong>Format:</strong> Use OBJ or GLTF for 3D models</li>
+                    <li><strong>Polygons:</strong> Keep models low-poly (under 10k triangles)</li>
+                    <li><strong>UV Mapping:</strong> Ensure proper UV unwrapping</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="api-documentation">
+            <h2>API Documentation</h2>
+            
+            <p>Complete API reference for system and game interactions.</p>
+            
+            <div class="dev-card">
+                <h4>Authentication API</h4>
+                
+                <h5>Login</h5>
+                <div class="code-block">
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "username": "string (required)",
+  "password": "string (required)"
+}
+
+Response:
+{
+  "token": "jwt_token_string",
+  "expiresIn": 86400,
+  "user": {
+    "id": "string",
+    "username": "string",
+    "role": "string",
+    "permissions": ["string"]
+  }
+}
+                </div>
+                
+                <h5>Token Validation</h5>
+                <div class="code-block">
+GET /api/auth/verify
+Authorization: Bearer YOUR_JWT_TOKEN
+
+Response:
+{
+  "valid": true,
+  "user": {
+    "id": "string",
+    "username": "string",
+    "role": "string"
+  },
+  "expiresIn": 86300
+}
+                </div>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Game Management API</h4>
+                
+                <h5>Create Game</h5>
+                <div class="code-block">
+POST /api/games
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "name": "My Game",
+  "version": "1.0.0",
+  "description": "Game description",
+  "author": "Author Name",
+  "category": "strategy",
+  "maxPlayers": 8,
+  "tags": ["multiplayer", "strategy"],
+  "settings": {
+    "defaultMap": "default-map",
+    "timeLimit": 1800
+  }
+}
+                </div>
+                
+                <h5>Get Game Details</h5>
+                <div class="code-block">
+GET /api/games/{gameId}
+Authorization: Bearer YOUR_JWT_TOKEN
+
+Response:
+{
+  "game": {
+    "id": "string",
+    "name": "string",
+    "version": "string",
+    "description": "string",
+    "author": "string",
+    "category": "string",
+    "tags": ["string"],
+    "maxPlayers": "number",
+    "settings": "object",
+    "status": "string"
+  },
+  "instance": {
+    // Current instance info if running
+  }
+}
+                </div>
+                
+                <h5>Start Game Instance</h5>
+                <div class="code-block">
+POST /api/games/{gameId}/start
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+
+{
+  "maxPlayers": 6,
+  "map": "desert-battlefield",
+  "difficulty": "normal",
+  "settings": {
+    "resourcesMultiplier": 1.0,
+    "buildTimeMultiplier": 1.0
+  }
+}
+                </div>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Real-Time Communication</h4>
+                
+                <h5>WebSocket Connection</h5>
+                <div class="code-block">
+const socket = io('ws://localhost:8080', {
+  withCredentials: true,
+  extraHeaders: {
+    "Authorization": "Bearer YOUR_JWT_TOKEN"
+  }
+});
+
+socket.on('connect', () => {
+  console.log('Connected to game server');
+});
+
+socket.on('games_list', (data) => {
+  console.log('Available games:', data.games);
+});
+
+socket.on('player_joined', (player) => {
+  console.log('New player:', player.username);
+});
+
+socket.emit('player_action', {
+  action: 'move',
+  position: {x: 10, y: 20, z: 5}
+});
+                </div>
+            </div>
+        </section>
+        
+        <section id="testing">
+            <h2>Testing</h2>
+            
+            <p>Comprehensive testing strategies for ensuring quality and reliability.</p>
+            
+            <div class="dev-card">
+                <h4>Test Architecture</h4>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h5>Unit Tests</h5>
+                        <p>Test individual functions and modules</p>
+                        <ul>
+                            <li>Isolated functionality testing</li>
+                            <li>Quick execution and feedback</li>
+                            <li>High code coverage targets</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>Integration Tests</h5>
+                        <p>Test service interactions</p>
+                        <ul>
+                            <li>API endpoint validation</li>
+                            <li>Database operations</li>
+                            <li>Service communication</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>End-to-End Tests</h5>
+                        <p>Test complete user workflows</p>
+                        <ul>
+                            <li>Full game scenarios</li>
+                            <li>Multi-service workflows</li>
+                            <li>User journey validation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Running Tests</h4>
+                
+                <h5>Unit Tests</h5>
+                <div class="code-block">
+# Run all unit tests
+npm test
+
+# Run tests for specific module
+npm test -- --testMatch="**/tests/unit/**/game-manager.test.js"
+
+# Run tests with coverage
+npm run test:coverage
+                </div>
+                
+                <h5>Integration Tests</h5>
+                <div class="code-block">
+# Run integration tests (requires running services)
+./scripts/test-server.sh integration
+
+# Or run specific integration test
+docker compose exec roblox-server npm run test:integration
+                </div>
+                
+                <h5>Load Testing</h5>
+                <div class="code-block">
+# Run load test with Artillery
+artillery run tests/load/basic-load-test.yml
+
+# Or use custom script
+./scripts/load-test.sh --users=100 --duration=300
+                </div>
+                
+                <h5>Security Scanning</h5>
+                <div class="code-block">
+# Run dependency security scan
+node scripts/dependency-security-scanner.js
+
+# Run Docker image security scan
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+  aquasec/trivy image server-roblox-server
+
+# Run static code analysis
+npm run lint:security
+                </div>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Mock Services for Testing</h4>
+                
+                <p>Create mock versions of external dependencies:</p>
+                <div class="code-block">
+// Example mock for database operations
+const mockDb = {
+  query: jest.fn((sql, params) => {
+    if (sql.includes('SELECT * FROM players')) {
+      return Promise.resolve([{ id: 1, name: 'Test Player' }]);
+    }
+    return Promise.resolve([]);
+  }),
+  
+  execute: jest.fn((sql, params) => {
+    return Promise.resolve({ affectedRows: 1 });
+  })
+};
+
+// In your tests
+jest.mock('../services/database', () => ({
+  getDatabase: () => mockDb
+}));
+
+describe('Player Service', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+  
+  test('should get player by ID', async () => {
+    const player = await getPlayerById(1);
+    expect(player.name).toBe('Test Player');
+    expect(mockDb.query).toHaveBeenCalled();
+  });
+});
+                </div>
+            </div>
+        </section>
+        
+        <section id="deployment">
+            <h2>Deployment</h2>
+            
+            <p>Processes and tools for deploying to different environments.</p>
+            
+            <div class="dev-card">
+                <h4>Deployment Environments</h4>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h5>Development</h5>
+                        <ul>
+                            <li>Local Docker environment</li>
+                            <li>Hot reloading enabled</li>
+                            <li>Verbose logging</li>
+                            <li>Less security restrictions</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>Staging</h5>
+                        <ul>
+                            <li>Production-like environment</li>
+                            <li>Security features enabled</li>
+                            <li>Performance monitoring</li>
+                            <li>Feature flag testing</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>Production</h5>
+                        <ul>
+                            <li>Full security protocols</li>
+                            <li>Scalability features</li>
+                            <li>Disaster recovery</li>
+                            <li>Monitoring and alerts</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Deployment Commands</h4>
+                
+                <h5>Development Deployment</h5>
+                <div class="code-block">
+# Start development environment
+./start.sh start-dev
+
+# Or manually
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+# View development logs
+./start.sh logs -f
+                </div>
+                
+                <h5>Production Deployment</h5>
+                <div class="code-block">
+# Full production deployment
+./start.sh start-prod
+
+# Or with specific compose files
+docker compose -f docker-compose.prod.yml -f docker-compose.secure.yml up -d
+
+# With monitoring
+docker compose -f docker-compose.prod.yml --profile monitoring up -d
+
+# Blue-green deployment
+docker compose -f docker-compose.blue.yml up -d
+                </div>
+                
+                <h5>Rollback Procedure</h5>
+                <div class="code-block">
+# Check previous deployment
+docker images
+
+# Rollback to previous version
+docker compose down
+docker compose -f docker-compose.prod.yml up -d
+
+# Or rollback specific service
+docker compose down roblox-server
+docker compose up -d roblox-server --build
+                </div>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Deployment Best Practices</h4>
+                
+                <h5>Before Deployment</h5>
+                <ul>
+                    <li>Run all test suites</li>
+                    <li>Validate environment configurations</li>
+                    <li>Check resource requirements</li>
+                    <li>Review security scan results</li>
+                    <li>Prepare rollback plan</li>
+                </ul>
+                
+                <h5>During Deployment</h5>
+                <ul>
+                    <li>Monitor deployment progress</li>
+                    <li>Perform smoke tests</li>
+                    <li>Check service health</li>
+                    <li>Monitor resource usage</li>
+                    <li>Verify connectivity</li>
+                </ul>
+                
+                <h5>After Deployment</h5>
+                <ul>
+                    <li>Run post-deployment tests</li>
+                    <li>Monitor application performance</li>
+                    <li>Verify user functionality</li>
+                    <li>Update documentation if needed</li>
+                    <li>Analyze deployment metrics</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="contributing">
+            <h2>Contributing</h2>
+            
+            <p>Guidelines for contributing to the project as a team member.</p>
+            
+            <div class="alert alert-info">
+                <h4>Community Guidelines</h4>
+                <p>Always follow respectful and inclusive communication. Ensure all contributions benefit the community and maintain code quality standards.</p>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Code Standards</h4>
+                
+                <h5>JavaScript/Node.js</h5>
+                <ul>
+                    <li>Use ES6+ features appropriately</li>
+                    <li>Follow Airbnb JavaScript style guide</li>
+                    <li>Use JSDoc for complex functions</li>
+                    <li>Prefer const/let over var</li>
+                    <li>Use camelCase for variables/functions</li>
+                    <li>Use PascalCase for classes/constructors</li>
+                </ul>
+                
+                <h5>Lua</h5>
+                <ul>
+                    <li>Use snake_case for variables/functions</li>
+                    <li>Prefer local variables over globals</li>
+                    <li>Comment complex algorithms</li>
+                    <li>Follow common Lua patterns and idioms</li>
+                </ul>
+                
+                <h5>Shell Scripts</h5>
+                <ul>
+                    <li>Use POSIX-compatible syntax</li>
+                    <li>Include proper error handling</li>
+                    <li>Document arguments and usage</li>
+                    <li>Use consistent indentation (2 spaces)</li>
+                </ul>
+            </div>
+            
+            <div class="dev-card">
+                <h4>Documentation Standards</h4>
+                
+                <h5>Code Comments</h5>
+                <ul>
+                    <li>Explain <em>why</em>, not <em>what</em> the code does</li>
+                    <li>Document complex algorithms and business logic</li>
+                    <li>Mark temporary solutions with TODO comments</li>
+                    <li>Reference related issues or tickets</li>
+                </ul>
+                
+                <h5>External Documentation</h5>
+                <ul>
+                    <li>Update README files when changing public interfaces</li>
+                    <li>Create or update API documentation</li>
+                    <li>Provide examples for new features</li>
+                    <li>Include troubleshooting information</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Roblox Multi-Game System - Development Guide</p>
+            <p>© 2025 Roblox Game Development Team</p>
+        </div>
+    </footer>
+</body>
+</html>
