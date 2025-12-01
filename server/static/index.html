@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>rb.kdlk.net – Roblox Game Server & Melon_Football</title>
+    <meta name="description" content="Landing page for rb.kdlk.net – Roblox multi‑game server stack with Docker, PostgreSQL, Redis and Nginx. Featuring the Melon_Football (Melone151) YouTube channel." />
+    <style>
+        :root {
+            --bg: #050816;
+            --bg-alt: #090f1f;
+            --accent: #ff7a3c;
+            --accent-soft: rgba(255,122,60,0.16);
+            --primary: #4f46e5;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --border: #1f2937;
+            --card: #0b1120;
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-pill: 999px;
+            --shadow-soft: 0 22px 45px rgba(15,23,42,0.75);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            background: radial-gradient(circle at top, #111827 0, #020617 40%, #000 100%);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            backdrop-filter: blur(18px);
+            background: radial-gradient(circle at top left, rgba(79,70,229,0.18), transparent 55%),
+                        linear-gradient(to bottom, rgba(15,23,42,0.9), rgba(15,23,42,0.8));
+            border-bottom: 1px solid rgba(148,163,184,0.15);
+        }
+
+        .nav-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 12px;
+            background: radial-gradient(circle at 30% 30%, #f97316, #ea580c 45%, #b91c1c 80%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 30px rgba(248,113,22,0.55);
+            font-weight: 800;
+            color: #0b1120;
+            font-size: 18px;
+        }
+
+        .brand-text-main {
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #e5e7eb;
+        }
+
+        .brand-text-sub {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .tagline-chip {
+            padding: 6px 12px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(148,163,184,0.35);
+            background: radial-gradient(circle at top left, rgba(96,165,250,0.24), transparent 55%);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 30%, #22c55e, #16a34a 70%);
+            box-shadow: 0 0 0 4px rgba(34,197,94,0.25);
+        }
+
+        main {
+            flex: 1;
+        }
+
+        .hero {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 42px 18px 32px;
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2.7fr);
+            gap: 32px;
+            align-items: center;
+        }
+
+        @media (max-width: 880px) {
+            .hero {
+                grid-template-columns: minmax(0, 1fr);
+                padding-top: 32px;
+            }
+        }
+
+        .hero-title {
+            font-size: clamp(2.1rem, 2.7vw + 1rem, 3rem);
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            margin-bottom: 14px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(120deg, #f97316, #facc15, #22c55e);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero-subtitle {
+            color: var(--muted);
+            font-size: 0.98rem;
+            max-width: 34rem;
+        }
+
+        .hero-subtitle strong {
+            color: #e5e7eb;
+            font-weight: 600;
+        }
+
+        .hero-actions {
+            margin-top: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: var(--radius-pill);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            cursor: pointer;
+            padding: 10px 16px;
+            text-decoration: none;
+            transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #f97316);
+            color: #0b1120;
+            box-shadow: 0 16px 35px rgba(248,113,22,0.55);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 22px 45px rgba(248,113,22,0.75);
+        }
+
+        .btn-ghost {
+            border-color: rgba(148,163,184,0.45);
+            background: radial-gradient(circle at top left, rgba(148,163,184,0.12), transparent 55%);
+            color: var(--text);
+        }
+
+        .btn-ghost:hover {
+            border-color: rgba(248,250,252,0.78);
+            background: radial-gradient(circle at top left, rgba(148,163,184,0.2), transparent 60%);
+        }
+
+        .pill-meta {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.75rem;
+        }
+
+        .pill {
+            padding: 4px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.5);
+            color: var(--muted);
+            background: rgba(15,23,42,0.7);
+        }
+
+        .card {
+            background: radial-gradient(circle at top left, rgba(79,70,229,0.24), transparent 60%),
+                        linear-gradient(145deg, rgba(15,23,42,0.98), rgba(15,23,42,0.92));
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(148,163,184,0.35);
+            box-shadow: var(--shadow-soft);
+            padding: 18px 18px 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 0 0, rgba(244,114,182,0.16), transparent 55%),
+                        radial-gradient(circle at 100% 100%, rgba(56,189,248,0.14), transparent 55%);
+            opacity: 0.7;
+        }
+
+        .card-inner { position: relative; z-index: 1; }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 8px;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #e5e7eb;
+        }
+
+        .chip {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(148,163,184,0.5);
+            color: var(--muted);
+            background: rgba(15,23,42,0.8);
+        }
+
+        .yt-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .yt-handle {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .yt-description {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-top: 10px;
+        }
+
+        .yt-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 0.78rem;
+        }
+
+        .badge {
+            padding: 3px 9px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.85);
+            border: 1px solid rgba(148,163,184,0.45);
+            color: var(--muted);
+        }
+
+        .badge.accent {
+            border-color: rgba(248,113,22,0.8);
+            color: #fed7aa;
+            background: rgba(30,64,175,0.7);
+        }
+
+        .grid {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 18px 40px;
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.5fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 960px) {
+            .grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .section-title {
+            font-size: 1rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .section-heading {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .section-body {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .stack-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .stack-item {
+            display: grid;
+            grid-template-columns: 14px minmax(0, 1fr);
+            column-gap: 10px;
+            row-gap: 2px;
+            padding: 7px 0;
+            border-bottom: 1px solid rgba(31,41,55,0.7);
+        }
+
+        .stack-item:last-child { border-bottom: none; }
+
+        .stack-bullet {
+            margin-top: 3px;
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #4f46e5, #22c55e);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.45);
+        }
+
+        .stack-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #9ca3af;
+        }
+
+        .stack-text {
+            font-size: 0.88rem;
+            color: var(--text);
+        }
+
+        .stack-note {
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .columns-2 {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 14px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 720px) {
+            .columns-2 { grid-template-columns: minmax(0, 1fr); }
+        }
+
+        .mini-card {
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(148,163,184,0.4);
+            background: linear-gradient(135deg, rgba(15,23,42,0.96), rgba(15,23,42,0.9));
+            padding: 10px 11px 9px;
+        }
+
+        .mini-title {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+
+        .mini-body {
+            font-size: 0.86rem;
+            color: var(--muted);
+        }
+
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.82rem;
+            background: rgba(15,23,42,0.9);
+            border-radius: 6px;
+            padding: 1px 5px;
+            border: 1px solid rgba(31,41,55,0.9);
+        }
+
+        .command-list { margin-top: 8px; }
+        .command-item { margin-bottom: 4px; font-size: 0.86rem; }
+
+        footer {
+            border-top: 1px solid rgba(31,41,55,0.9);
+            padding: 14px 18px 18px;
+            font-size: 0.78rem;
+            color: #6b7280;
+            text-align: center;
+            background: radial-gradient(circle at bottom, rgba(30,64,175,0.45), transparent 55%);
+        }
+
+        .footer-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header>
+        <div class="nav-inner">
+            <div class="brand">
+                <div class="brand-logo">M</div>
+                <div>
+                    <div class="brand-text-main">rb.kdlk.net</div>
+                    <div class="brand-text-sub">Roblox multi‑game server & Melon_Football hub</div>
+                </div>
+            </div>
+            <div class="tagline-chip">
+                <span class="tag-dot"></span>
+                <span>Online • Dockerized Roblox backend with Postgres &amp; Redis</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div>
+                <p class="section-title">Welcome</p>
+                <h1 class="hero-title">Home of <span>Melon_Football (Melone151)</span> &amp; the rb.kdlk.net Roblox server stack</h1>
+                <p class="hero-subtitle">
+                    This host runs a <strong>containerized Roblox backend</strong> used to manage and monitor
+                    custom games. It is built with <strong>Node.js</strong>, <strong>PostgreSQL</strong>,
+                    <strong>Redis</strong> and <strong>nginx</strong>, orchestrated via <strong>Docker&nbsp;Compose</strong>.
+                </p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="https://youtube.com/@Melone151" target="_blank" rel="noreferrer">
+                        <span>Visit the YouTube channel</span>
+                    </a>
+                    <a class="btn btn-ghost" href="#stack">
+                        <span>View server &amp; project setup</span>
+                    </a>
+                </div>
+                <div class="pill-meta">
+                    <span class="pill">Single‑game and multi‑game Roblox backend</span>
+                    <span class="pill">PostgreSQL 15 • Redis 7 • Nginx reverse proxy</span>
+                    <span class="pill">Docker Compose prod stack with optional monitoring</span>
+                </div>
+            </div>
+
+            <aside>
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-head">
+                            <div class="card-title">Featured creator</div>
+                            <span class="chip">YouTube • Gaming &amp; Football</span>
+                        </div>
+                        <div class="yt-name">Melon_Football</div>
+                        <div class="yt-handle">youtube.com/@Melone151</div>
+                        <p class="yt-description">
+                            The <strong>Melon_Football</strong> channel (also known as <strong>Melone151</strong>)
+                            publishes football‑themed content and gameplay videos. This page links the channel
+                            with the underlying Roblox server project that powers experiments and custom game modes.
+                        </p>
+                        <div class="yt-meta">
+                            <span class="badge accent">Primary media hub for rb.kdlk.net</span>
+                            <span class="badge">Shorts, highlights &amp; game experiments</span>
+                            <span class="badge">Hosted by K42 / self‑hosted infrastructure</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <section id="stack" class="grid">
+            <article>
+                <p class="section-title">Project overview</p>
+                <h2 class="section-heading">What runs on rb.kdlk.net?</h2>
+                <p class="section-body">
+                    This server hosts a <strong>Roblox-compatible multiplayer backend</strong> designed for
+                    running and managing custom game experiences. The stack is split into services for the
+                    game logic, persistence and routing, all bundled via Docker and documented in the
+                    deployment guide that ships with the project.
+                </p>
+                <ul class="stack-list">
+                    <li class="stack-item">
+                        <div class="stack-bullet"></div>
+                        <div>
+                            <div class="stack-label">Game server</div>
+                            <div class="stack-text">
+                                Node.js/Express application exposing an HTTP API and WebSocket endpoints for
+                                Roblox game instances. Health checks are served on <code>/health</code>.
+                            </div>
+                            <div class="stack-note">Container name: <code>roblox-game-server</code> (dev) / <code>roblox-game-server-prod</code> (prod).</div>
+                        </div>
+                    </li>
+                    <li class="stack-item">
+                        <div class="stack-bullet"></div>
+                        <div>
+                            <div class="stack-label">Data &amp; caching</div>
+                            <div class="stack-text">
+                                <strong>PostgreSQL&nbsp;15</strong> stores player profiles, sessions and
+                                game state, while <strong>Redis&nbsp;7</strong> provides low‑latency caching
+                                and transient session data with persistence enabled.
+                            </div>
+                            <div class="stack-note">Database and cache live in dedicated Docker volumes for persistence across restarts.</div>
+                        </div>
+                    </li>
+                    <li class="stack-item">
+                        <div class="stack-bullet"></div>
+                        <div>
+                            <div class="stack-label">Edge &amp; routing</div>
+                            <div class="stack-text">
+                                An <strong>nginx reverse proxy</strong> terminates HTTP/HTTPS, exposes this
+                                landing page on <code>/</code> for <code>rb.kdlk.net</code>, serves static
+                                assets from <code>/var/www/static</code> and forwards API and WebSocket
+                                traffic to the backend.
+                            </div>
+                        </div>
+                    </li>
+                    <li class="stack-item">
+                        <div class="stack-bullet"></div>
+                        <div>
+                            <div class="stack-label">Monitoring &amp; extras</div>
+                            <div class="stack-text">
+                                Optional <strong>Prometheus</strong>, <strong>Grafana</strong> and
+                                <strong>Loki</strong> services can be enabled via Docker Compose profiles for
+                                metrics, dashboards and centralized logs.
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </article>
+
+            <article>
+                <p class="section-title">Server setup</p>
+                <h2 class="section-heading">How the host is configured</h2>
+                <p class="section-body">
+                    The production instance is deployed from the Git repository into
+                    <code>/opt/rb-server</code> on the host and started using the
+                    <code>docker-compose.prod.yml</code> file. Configuration is driven through an
+                    environment file (for example <code>.env.production</code>) rather than hard‑coded
+                    secrets.
+                </p>
+
+                <div class="columns-2">
+                    <div class="mini-card">
+                        <div class="mini-title">Core services</div>
+                        <div class="mini-body">
+                            <div>• <strong>roblox-server</strong> – HTTP + WebSocket API (port <code>8080</code> inside the network).</div>
+                            <div>• <strong>postgres</strong> – game database (port <code>5432</code>).</div>
+                            <div>• <strong>redis</strong> – cache &amp; session store (port <code>6379</code>).</div>
+                            <div>• <strong>nginx</strong> – public entrypoint for <code>rb.kdlk.net</code>.</div>
+                        </div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-title">Persistent volumes</div>
+                        <div class="mini-body">
+                            <div>• <code>postgres_data</code> – PostgreSQL data directory.</div>
+                            <div>• <code>redis_data</code> – Redis append‑only file and snapshots.</div>
+                            <div>• <code>game_data</code> – game‑specific state.</div>
+                            <div>• <code>nginx_logs</code> – access &amp; error logs at the edge.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mini-card" style="margin-top:12px;">
+                    <div class="mini-title">Deployment flow (git &amp; Docker)</div>
+                    <div class="mini-body">
+                        <p>Typical update workflow for this host:</p>
+                        <div class="command-list">
+                            <div class="command-item"><code>ssh deploy@rb.kdlk.net</code></div>
+                            <div class="command-item"><code>cd /opt/rb-server</code></div>
+                            <div class="command-item"><code>git pull</code> &mdash; fetch latest changes (including this landing page)</div>
+                            <div class="command-item"><code>cd server &amp;&amp; docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build</code></div>
+                        </div>
+                        <p style="margin-top:6px;">
+                            Health checks for the stack run through nginx on <code>/health</code>, while the
+                            landing page you are viewing is served as a static file from the
+                            <code>static/index.html</code> path inside the repository.
+                        </p>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <div>
+                Roblox multi‑game backend &copy; <span id="year">2025</span> &mdash; Infrastructure operated by K42 / self‑hosted stack.
+            </div>
+            <div class="footer-meta">
+                <span>Landing page: <code>static/index.html</code> inside the rb‑server project.</span>
+                <span>Edge: nginx container from <code>docker-compose.prod.yml</code>.</span>
+                <span>Media hub: <a href="https://youtube.com/@Melone151" target="_blank" rel="noreferrer" style="color:#e5e7eb;">@Melone151</a></span>
+            </div>
+        </div>
+        <script>
+            document.getElementById('year').textContent = new Date().getFullYear().toString();
+        </script>
+    </footer>
+</div>
+</body>
+</html>

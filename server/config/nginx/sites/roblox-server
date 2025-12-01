@@ -129,6 +129,16 @@ server {
         proxy_read_timeout 60s;
     }
 
+    # Serve landing page for rb.kdlk.net on root path
+    # The dedicated "=/" location only matches the exact "/" URL and lets
+    # all other paths (e.g. /api, /socket.io, /game) continue to use the
+    # proxy-based default route below.
+    location = / {
+        root /var/www/static;
+        try_files /index.html =404;
+        add_header X-Server "Roblox-Server-nginx" always;
+    }
+
     # Default Route
     location / {
         proxy_pass http://roblox_backend;
