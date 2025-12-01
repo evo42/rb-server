@@ -16,26 +16,26 @@
             --border-radius: 8px;
             --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: var(--dark-color);
             background-color: #fafafa;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        
+
         header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
@@ -43,17 +43,17 @@
             text-align: center;
             box-shadow: var(--box-shadow);
         }
-        
+
         header h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
         }
-        
+
         header p {
             font-size: 1.2rem;
             opacity: 0.9;
         }
-        
+
         nav {
             background-color: white;
             padding: 1rem 0;
@@ -62,14 +62,14 @@
             top: 0;
             z-index: 100;
         }
-        
+
         .nav-container {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 1rem;
         }
-        
+
         .nav-link {
             text-decoration: none;
             color: var(--dark-color);
@@ -77,16 +77,16 @@
             border-radius: var(--border-radius);
             transition: all 0.3s ease;
         }
-        
+
         .nav-link:hover, .nav-link.active {
             background-color: var(--primary-color);
             color: white;
         }
-        
+
         main {
             padding: 2rem 0;
         }
-        
+
         section {
             margin-bottom: 3rem;
             background: white;
@@ -94,19 +94,24 @@
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
         }
-        
+
         h2 {
             color: var(--primary-color);
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--accent-color);
         }
-        
+
         h3 {
             color: var(--secondary-color);
             margin: 1.5rem 0 1rem;
         }
-        
+
+        h4 {
+            color: var(--secondary-color);
+            margin: 1rem 0 0.5rem;
+        }
+
         .architecture-diagram {
             background-color: #f0f8ff;
             padding: 1.5rem;
@@ -114,7 +119,7 @@
             margin: 1.5rem 0;
             border-left: 4px solid var(--accent-color);
         }
-        
+
         .architecture-diagram pre {
             overflow-x: auto;
             padding: 1rem;
@@ -122,14 +127,14 @@
             border-radius: var(--border-radius);
             border: 1px solid #e9ecef;
         }
-        
+
         .component-card {
             display: flex;
             flex-wrap: wrap;
             gap: 1.5rem;
             margin: 1.5rem 0;
         }
-        
+
         .component {
             flex: 1;
             min-width: 300px;
@@ -138,12 +143,12 @@
             border-radius: var(--border-radius);
             border: 1px solid #e9ecef;
         }
-        
+
         .component h4 {
             color: var(--secondary-color);
             margin-bottom: 0.5rem;
         }
-        
+
         .code-block {
             background-color: #f8f9fa;
             padding: 1rem;
@@ -153,13 +158,13 @@
             overflow-x: auto;
             margin: 1rem 0;
         }
-        
+
         .step {
             display: flex;
             margin: 1rem 0;
             align-items: flex-start;
         }
-        
+
         .step-number {
             background-color: var(--primary-color);
             color: white;
@@ -173,31 +178,31 @@
             margin-right: 1rem;
             font-weight: bold;
         }
-        
+
         .game-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-top: 1.5rem;
         }
-        
+
         .game-card {
             border: 1px solid #e9ecef;
             border-radius: var(--border-radius);
             padding: 1.5rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .game-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
-        
+
         .game-card h4 {
             color: var(--secondary-color);
             margin-bottom: 0.5rem;
         }
-        
+
         .badge {
             display: inline-block;
             padding: 0.25rem 0.5rem;
@@ -207,15 +212,60 @@
             font-size: 0.8rem;
             margin: 0.25rem;
         }
-        
+
         .badge-success {
             background-color: #4cc9f0;
         }
-        
+
         .badge-warning {
             background-color: #f72585;
         }
-        
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-card h5 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
         footer {
             background-color: var(--dark-color);
             color: white;
@@ -223,20 +273,24 @@
             padding: 2rem 0;
             margin-top: 3rem;
         }
-        
+
         @media (max-width: 768px) {
             .component-card {
                 flex-direction: column;
             }
-            
+
             .nav-container {
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .nav-link {
                 width: 100%;
                 text-align: center;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -248,7 +302,7 @@
             <p>Comprehensive guide to understanding and managing the multi-game server platform</p>
         </div>
     </header>
-    
+
     <nav>
         <div class="container">
             <div class="nav-container">
@@ -258,15 +312,17 @@
                 <a href="#compilation" class="nav-link">Compilation</a>
                 <a href="#deployment" class="nav-link">Deployment</a>
                 <a href="#api" class="nav-link">API</a>
+                <a href="#development" class="nav-link">Development</a>
+                <a href="#troubleshooting" class="nav-link">Troubleshooting</a>
             </div>
         </div>
     </nav>
-    
+
     <main class="container">
         <section id="overview">
             <h2>System Overview</h2>
-            <p>The Roblox Multi-Game Management System is a containerized platform that allows for the development, testing, and deployment of multiple Roblox games simultaneously. The system provides a web interface for game management, real-time analytics, and a plugin architecture for extending functionality.</p>
-            
+            <p>The Roblox Multi-Game Management System is a comprehensive, containerized platform that enables the development, testing, and deployment of multiple Roblox games simultaneously. The system provides an intuitive web interface for game management, real-time analytics, and an extensible plugin architecture for enhanced functionality.</p>
+
             <div class="architecture-diagram">
                 <h3>System Architecture Overview</h3>
                 <pre>
@@ -299,22 +355,47 @@
 └─────────────────────────────────────────────────────────────┘
                 </pre>
             </div>
-            
+
             <h3>Key Features</h3>
-            <ul>
-                <li>Multi-Game Management System with centralized game registry</li>
-                <li>Game Lifecycle Management from creation to deletion</li>
-                <li>Package Management with dependency resolution</li>
-                <li>Plugin Architecture for extending functionality</li>
-                <li>Modern Web UI with real-time dashboard</li>
-                <li>Analytics and Performance Monitoring</li>
-                <li>Secure Package Signing and Validation</li>
-            </ul>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h5>Multi-Game Management</h5>
+                    <p>Centralized registry for multiple game management</p>
+                </div>
+                <div class="feature-card">
+                    <h5>Game Lifecycle</h5>
+                    <p>Full lifecycle from creation to deletion</p>
+                </div>
+                <div class="feature-card">
+                    <h5>Package Management</h5>
+                    <p>Dependency resolution and versioning</p>
+                </div>
+                <div class="feature-card">
+                    <h5>Plugin Architecture</h5>
+                    <p>Extensible functionality with plugins</p>
+                </div>
+                <div class="feature-card">
+                    <h5>Web Dashboard</h5>
+                    <p>Modern UI with real-time metrics</p>
+                </div>
+                <div class="feature-card">
+                    <h5>Analytics</h5>
+                    <p>Performance and usage monitoring</p>
+                </div>
+                <div class="feature-card">
+                    <h5>Security</h5>
+                    <p>Package signing and validation</p>
+                </div>
+                <div class="feature-card">
+                    <h5>Scalability</h5>
+                    <p>Horizontal and vertical scaling</p>
+                </div>
+            </div>
         </section>
-        
+
         <section id="architecture">
             <h2>System Architecture</h2>
-            
+
             <h3>Core Services</h3>
             <div class="component-card">
                 <div class="component">
@@ -325,9 +406,13 @@
                         <li>Controls game lifecycle (start/stop)</li>
                         <li>Provides real-time event system</li>
                         <li>Handles game instance management</li>
+                        <li>Coordinates multi-game interactions</li>
+                        <li>Manages resource allocation and scheduling</li>
                     </ul>
+                    <p><strong>Location:</strong> services/game-manager/</p>
+                    <p><strong>Technology:</strong> Node.js with Express.js and Socket.io</p>
                 </div>
-                
+
                 <div class="component">
                     <h4>Roblox Game Server</h4>
                     <p>Primary game server that handles multiplayer sessions and game logic execution.</p>
@@ -336,9 +421,13 @@
                         <li>Executes game scripts and logic</li>
                         <li>Manages in-game assets and resources</li>
                         <li>Connects to database for persistent data</li>
+                        <li>Supports real-time player interactions</li>
+                        <li>Implements game-specific rules and mechanics</li>
                     </ul>
+                    <p><strong>Location:</strong> services/roblox-server/</p>
+                    <p><strong>Technology:</strong> Node.js with Socket.io for real-time communication</p>
                 </div>
-                
+
                 <div class="component">
                     <h4>Database (PostgreSQL)</h4>
                     <p>Persistent storage for player data, game states, and session information.</p>
@@ -347,9 +436,13 @@
                         <li>Maintains game state data</li>
                         <li>Keeps session and authentication info</li>
                         <li>Manages game configurations and metadata</li>
+                        <li>Provides transaction support for game operations</li>
+                        <li>Handles user management and permissions</li>
                     </ul>
+                    <p><strong>Connection:</strong> localhost:5433 (default mapping)</p>
+                    <p><strong>Database:</strong> roblox_game</p>
                 </div>
-                
+
                 <div class="component">
                     <h4>Caching (Redis)</h4>
                     <p>High-performance caching for frequently accessed data and session storage.</p>
@@ -358,9 +451,13 @@
                         <li>Stores temporary game state</li>
                         <li>Provides pub/sub messaging</li>
                         <li>Accelerates API responses</li>
+                        <li>Manages game instance states</li>
+                        <li>Handles real-time event propagation</li>
                     </ul>
+                    <p><strong>Connection:</strong> localhost:6380 (default mapping)</p>
+                    <p><strong>Features:</strong> Pub/Sub, Transactions, Key-Value storage</p>
                 </div>
-                
+
                 <div class="component">
                     <h4>Web Interface (nginx)</h4>
                     <p>Modern web interface for game management and administration.</p>
@@ -369,290 +466,1148 @@
                         <li>Game creation and configuration tools</li>
                         <li>Analytics and performance monitoring</li>
                         <li>Package repository browser</li>
+                        <li>Plugin and extension management</li>
+                        <li>Real-time event visualization</li>
                     </ul>
+                    <p><strong>Port:</strong> 8081 (default mapping)</p>
+                    <p><strong>Technology:</strong> nginx reverse proxy with HTML/JS/CSS</p>
                 </div>
             </div>
-            
-            <h3>Directory Structure</h3>
+
+            <h3>Complete Directory Structure</h3>
             <div class="code-block">
 roblox-server/
-├── services/
-│   ├── game-manager/          # Multi-Game Management Service
-│   │   ├── manager.js         # Haupt-Management-Service
-│   │   ├── repository.js      # Repository & Plugin System
-│   │   └── package.json       # Node.js Dependencies
-│   └── roblox-server/         # Original Game Server
-├── games/                     # Game Storage Directory
-│   ├── {game-id-1}/
-│   │   ├── scripts/
-│   │   ├── modules/
+├── game/                        # Main game directory (legacy)
+│   ├── assets/
+│   ├── modules/
+│   ├── scripts/
+│   └── main.lua
+├── games/                       # Multi-game directory
+│   ├── kingdom-warriors/
 │   │   ├── assets/
-│   │   └── config/
-│   └── {game-id-2}/
-├── plugins/                   # Plugin Directory
-├── repository/                # Package Repository
-├── web-interface/             # Modern Web UI
-└── docs/                      # Documentation
+│   │   ├── buildings/
+│   │   ├── campaigns/
+│   │   ├── config/
+│   │   ├── modules/
+│   │   ├── scripts/
+│   │   ├── units/
+│   │   ├── .dockerignore
+│   │   ├── deploy.sh
+│   │   ├── Dockerfile
+│   │   ├── game.json
+│   │   ├── package.json
+│   │   ├── PROJECT_OVERVIEW.md
+│   │   └── README.md
+│   └── lernblox-school-battle/
+│       ├── assets/
+│       ├── config/
+│       ├── modules/
+│       ├── scripts/
+│       ├── game.json
+│       ├── README.md
+│       └── TRANSFORMATION_SUMMARY.md
+├── services/
+│   ├── game-manager/
+│   │   ├── config.js
+│   │   ├── manager.js
+│   │   ├── package.json
+│   │   ├── repository.js
+│   │   └── node_modules/ (auto-generated)
+│   └── roblox-server/
+│       ├── Dockerfile
+│       ├── package-lock.json
+│       ├── package.json
+│       ├── package.secure.json
+│       ├── server.js
+│       └── node_modules/ (auto-generated)
+├── web-interface/
+│   ├── css/
+│   │   └── styles.css
+│   ├── js/
+│   │   ├── api.js
+│   │   ├── analytics.js
+│   │   ├── dashboard.js
+│   │   ├── games.js
+│   │   ├── main.js
+│   │   ├── plugins.js
+│   │   ├── repository.js
+│   │   └── ui.js
+│   └── index.html
+├── docs/                        # Documentation directory
+│   └── index.html               # This file
+├── config/
+│   ├── nginx/
+│   │   ├── nginx.conf
+│   │   ├── sites/
+│   │   │   └── roblox-server
+│   │   └── ssl/ (auto-generated with certificates)
+│   ├── redis.conf
+│   └── server.json
+├── database/
+│   ├── init.sql
+│   └── migrations/
+├── scripts/
+│   ├── ci-cd-security-pipeline.js
+│   ├── dependency-security-scanner.js
+│   ├── dependency-update-manager.js
+│   ├── license-compliance-checker.js
+│   ├── test-server.sh
+│   └── ...
+├── start.sh                     # Main startup script
+├── docker-compose.yml
+├── docker-compose.prod.yml
+├── docker-compose.secure.yml
+└── ...
             </div>
         </section>
-        
+
         <section id="games">
-            <h2>Game Management</h2>
-            
-            <h3>Available Games</h3>
-            <div class="game-grid">
-                <div class="game-card">
-                    <h4>Kingdom of the Last Warriors</h4>
-                    <p>An epic medieval strategy game with resource management and real-time combat.</p>
-                    <div class="game-meta">
-                        <span class="badge">Strategy</span>
-                        <span class="badge">Medieval</span>
-                        <span class="badge">Multiplayer</span>
+            <h2>Game Management & Details</h2>
+
+            <h3>Game Repository</h3>
+            <p>The system supports multiple games simultaneously through a modular game repository system. Each game is self-contained with its own assets, configurations, and dependencies.</p>
+
+            <h3>Detailed Game Information</h3>
+
+            <div class="game-card">
+                <h4>Kingdom of the Last Warriors</h4>
+                <p>An epic medieval strategy game with resource management and real-time combat.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h5>Game Overview</h5>
+                        <ul>
+                            <li><strong>Category:</strong> Strategy/Medieval/RTS</li>
+                            <li><strong>Players:</strong> 2-8</li>
+                            <li><strong>Duration:</strong> 45 minutes</li>
+                            <li><strong>Language Support:</strong> EN, DE, FR, ES</li>
+                        </ul>
                     </div>
-                    <p><strong>Players:</strong> 2-8 | <strong>Duration:</strong> 45 min</p>
-                </div>
-                
-                <div class="game-card">
-                    <h4>LernBlox School Battle</h4>
-                    <p>Educational quiz game for students with questions from multiple school subjects.</p>
-                    <div class="game-meta">
-                        <span class="badge">Educational</span>
-                        <span class="badge">Quiz</span>
-                        <span class="badge">Multiplayer</span>
+
+                    <div class="feature-card">
+                        <h5>Fraktionen (Factions)</h5>
+                        <ul>
+                            <li><strong>Valorianisches Reich:</strong> Strong defense, +15% defense, +10% unit production</li>
+                            <li><strong>Schatten-Clan:</strong> High damage, +20% attack, +10% speed</li>
+                            <li><strong>Eisen-Zwerge:</strong> Strong buildings, +25% building health, +15% resource production</li>
+                            <li><strong>Natur-Wächter:</strong> Healing abilities, +30% healing, +20% food production</li>
+                        </ul>
                     </div>
-                    <p><strong>Players:</strong> 1-10 | <strong>Subjects:</strong> 8 categories</p>
+
+                    <div class="feature-card">
+                        <h5>Ressourcen-System</h5>
+                        <ul>
+                            <li><strong>Gold:</strong> Main currency (10/min base income)</li>
+                            <li><strong>Holz:</strong> Construction resource (8/min base income)</li>
+                            <li><strong>Stein:</strong> Defense resource (5/min base income)</li>
+                            <li><strong>Nahrung:</strong> Population resource (12/min base income)</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h5>Gameplay Features</h5>
+                        <ul>
+                            <li>Real-time combat with tactical units</li>
+                            <li>Advanced resource management</li>
+                            <li>Multiple research trees</li>
+                            <li>Cooperative and competitive modes</li>
+                            <li>Dynamic terrain modification</li>
+                        </ul>
+                    </div>
                 </div>
+
+                <h5>Building Types</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Building</th>
+                            <th>Cost</th>
+                            <th>Health</th>
+                            <th>Special</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Castle (Hauptburg)</td>
+                            <td>1000 Gold, 500 Stone</td>
+                            <td>5000</td>
+                            <td>Game-ending structure</td>
+                        </tr>
+                        <tr>
+                            <td>Rathaus</td>
+                            <td>500 Gold, 300 Wood</td>
+                            <td>1500</td>
+                            <td>+50 population capacity</td>
+                        </tr>
+                        <tr>
+                            <td>Farm</td>
+                            <td>200 Gold, 150 Wood</td>
+                            <td>600</td>
+                            <td>+15 food/min</td>
+                        </tr>
+                        <tr>
+                            <td>Wachturm</td>
+                            <td>350 Gold, 200 Stone</td>
+                            <td>1200</td>
+                            <td>200 range, 35 damage</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Unit Types</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Unit</th>
+                            <th>Cost</th>
+                            <th>Health</th>
+                            <th>Damage</th>
+                            <th>Special</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Fußsoldat</td>
+                            <td>100 Gold, 5 Nahrung</td>
+                            <td>150</td>
+                            <td>25</td>
+                            <td>Near combat, 5 range</td>
+                        </tr>
+                        <tr>
+                            <td>Bogenschütze</td>
+                            <td>120 Gold, 4 Nahrung</td>
+                            <td>100</td>
+                            <td>30</td>
+                            <td>Ranged, 150 range</td>
+                        </tr>
+                        <tr>
+                            <td>Ritter</td>
+                            <td>300 Gold, 15 Nahrung</td>
+                            <td>400</td>
+                            <td>60</td>
+                            <td>Cavalry, 24 speed</td>
+                        </tr>
+                        <tr>
+                            <td>Katapult</td>
+                            <td>500 Gold, 200 Wood, 100 Stone</td>
+                            <td>200</td>
+                            <td>100 (2.5x building)</td>
+                            <td>Siege weapon, 250 range</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            
-            <h3>Game Lifecycle</h3>
+
+            <div class="game-card">
+                <h4>LernBlox School Battle</h4>
+                <p>Educational quiz game for students with questions from multiple school subjects.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h5>Game Overview</h5>
+                        <ul>
+                            <li><strong>Category:</strong> Educational/Quiz</li>
+                            <li><strong>Players:</strong> 1-10</li>
+                            <li><strong>Subjects:</strong> 8 categories</li>
+                            <li><strong>Language Support:</strong> DE, EN, ES</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h5>Subject Areas</h5>
+                        <ul>
+                            <li><strong>Mathematik:</strong> Arithmetic, Algebra, Geometry</li>
+                            <li><strong>Englisch:</strong> Grammar, Vocabulary, Reading</li>
+                            <li><strong>Spanisch:</strong> Grammar, Vocabulary, Culture</li>
+                            <li><strong>Geografie:</strong> Countries, Capitals, Landscapes</li>
+                            <li><strong>Geschichte:</strong> Ancient, Medieval, Modern periods</li>
+                            <li><strong>Naturwissenschaften:</strong> Physics, Chemistry, Biology</li>
+                            <li><strong>Literatur:</strong> Authors, Works, Genres</li>
+                            <li><strong>Kunst:</strong> Artists, Movements, Techniques</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h5>Game Mechanics</h5>
+                        <ul>
+                            <li>10 quests per game session</li>
+                            <li>Correct answer: 100 points</li>
+                            <li>Wrong answer: 25 points (consolation)</li>
+                            <li>Perfect score extra: 500 bonus points</li>
+                            <li>Streak bonus multiplier</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h5>Features</h5>
+                        <ul>
+                            <li>Multiplayer educational challenges</li>
+                            <li>Real-time scoring</li>
+                            <li>Progressive difficulty</li>
+                            <li>Adaptive learning paths</li>
+                            <li>Performance analytics</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h5>Points System</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Points</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Correct Answer</td>
+                            <td>100</td>
+                            <td>Full points for correct response</td>
+                        </tr>
+                        <tr>
+                            <td>Wrong Answer</td>
+                            <td>25</td>
+                            <td>Consolation points given</td>
+                        </tr>
+                        <tr>
+                            <td>Perfect Game</td>
+                            <td>500</td>
+                            <td>All 10 questions correct bonus</td>
+                        </tr>
+                        <tr>
+                            <td>Streak Bonus</td>
+                            <td>Multiplier</td>
+                            <td>Consecutive correct answers</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5>Highscore Categories</h5>
+                <ul>
+                    <li><strong>Gesamtpunktzahl:</strong> Total points across all games</li>
+                    <li><strong>Genauigkeitsrate:</strong> Accuracy percentage</li>
+                    <li><strong>Fach-Beherrschung:</strong> Points per subject area</li>
+                    <li><strong>Streak-Rekord:</strong> Longest correct answer sequence</li>
+                </ul>
+            </div>
+
+            <h3>Game Development Process</h3>
             <div class="step">
                 <div class="step-number">1</div>
                 <div>
-                    <h4>Registration</h4>
-                    <p>Games are registered with the system through the API or web interface. Game metadata is stored in the registry.</p>
-                </div>
-            </div>
-            
-            <div class="step">
-                <div class="step-number">2</div>
-                <div>
-                    <h4>Configuration</h4>
-                    <p>Game settings and parameters are configured including player limits, maps, and other game-specific options.</p>
-                </div>
-            </div>
-            
-            <div class="step">
-                <div class="step-number">3</div>
-                <div>
-                    <h4>Instantiation</h4>
-                    <p>A game instance is created when players join. Resources are allocated and the game starts.</p>
-                </div>
-            </div>
-            
-            <div class="step">
-                <div class="step-number">4</div>
-                <div>
-                    <h4>Execution</h4>
-                    <p>The game runs with players interacting and the system tracking events and analytics.</p>
-                </div>
-            </div>
-            
-            <div class="step">
-                <div class="step-number">5</div>
-                <div>
-                    <h4>Termination</h3>
-                    <p>The game instance is stopped when all players leave or session times out. Resources are freed.</p>
-                </div>
-            </div>
-        </section>
-        
-        <section id="compilation">
-            <h2>Game Compilation & Deployment</h2>
-            
-            <h3>Compilation Process</h3>
-            <p>The Roblox Multi-Game System uses a containerized approach for game compilation and deployment. Games are packaged as Docker containers for consistency and portability.</p>
-            
-            <div class="step">
-                <div class="step-number">1</div>
-                <div>
-                    <h4>Game Development</h4>
-                    <p>Games are developed in the <code>/games/{game-name}/</code> directory with:</p>
+                    <h4>Game Creation Setup</h4>
+                    <p>Each game follows a standardized structure with the following directories:</p>
                     <ul>
-                        <li><code>scripts/</code> - Game logic scripts (Lua)</li>
-                        <li><code>modules/</code> - Shared modules and libraries</li>
                         <li><code>assets/</code> - Game assets (images, sounds, models)</li>
                         <li><code>config/</code> - Configuration files</li>
+                        <li><code>modules/</code> - Reusable code components</li>
+                        <li><code>scripts/</code> - Main game logic</li>
                         <li><code>game.json</code> - Game metadata and settings</li>
                     </ul>
                 </div>
             </div>
-            
+
             <div class="step">
                 <div class="step-number">2</div>
                 <div>
-                    <h4>Container Building</h4>
-                    <p>When games are deployed, they are built into Docker containers using the following process:</p>
-                    <pre>docker build -t game-{id}:{version} .</pre>
-                    <p>The Dockerfile in each game directory defines how the game is built and run.</p>
+                    <h4>Configuration Files</h4>
+                    <p>Every game requires a game.json file with essential metadata:</p>
+                    <div class="code-block">
+{
+  "id": "unique-game-id",
+  "name": "Game Name",
+  "version": "1.0.0",
+  "description": "Brief description of the game",
+  "author": "Author Name",
+  "category": "game",
+  "tags": ["multiplayer", "strategy", "puzzle"],
+  "maxPlayers": 8,
+  "settings": {
+    "defaultMap": "default-map",
+    "sessionTimeout": 3600,
+    "gameRules": {}
+  },
+  "dependencies": [],
+  "compatibility": {
+    "minGameVersion": "1.0.0",
+    "maxGameVersion": "2.0.0"
+  }
+}
+                    </div>
                 </div>
             </div>
-            
+
             <div class="step">
                 <div class="step-number">3</div>
                 <div>
-                    <h4>Deployment</h4>
-                    <p>Games are deployed to the system using:</p>
-                    <pre>docker compose up -d</pre>
-                    <p>Or for production:</p>
-                    <pre>docker compose -f docker-compose.prod.yml up -d</pre>
+                    <h4>Development Workflow</h4>
+                    <ol>
+                        <li>Create the game directory and file structure</li>
+                        <li>Develop game logic in Lua scripts</li>
+                        <li>Add assets and configuration files</li>
+                        <li>Test locally using development tools</li>
+                        <li>Package the game as a distributable unit</li>
+                        <li>Register with the Game Manager service</li>
+                        <li>Deploy to production environment</li>
+                    </ol>
                 </div>
             </div>
-            
-            <h3>Build Scripts</h3>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div>
+                    <h4>Game Registration Process</h4>
+                    <p>When a game is added to the system:</p>
+                    <ul>
+                        <li>Metadata is validated against schema</li>
+                        <li>Dependencies are resolved</li>
+                        <li>Assets are verified and cached</li>
+                        <li>Game is registered in the global registry</li>
+                        <li>API endpoints are generated</li>
+                        <li>Database tables are created if needed</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <div>
+                    <h4>Deployment to Players</h4>
+                    <p>Once registered, games can be:</p>
+                    <ul>
+                        <li>Started via API or web interface</li>
+                        <li>Assigned to specific game instances</li>
+                        <li>Connected to by multiple players</li>
+                        <li>Monitored for performance metrics</li>
+                        <li>Updated with new versions</li>
+                        <li>Removed when no longer needed</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="compilation">
+            <h2>Game Compilation & Deployment</h2>
+
+            <h3>Detailed Compilation Process</h3>
+            <p>The Roblox Multi-Game System uses a sophisticated containerized approach for game compilation and deployment. Each game is packaged as a Docker container to ensure consistency, portability, and scalability across different environments.</p>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <h4>Source Code Development</h4>
+                    <p>Game development happens in the dedicated game directory structure:</p>
+                    <ul>
+                        <li><code>scripts/main.lua</code> - Main game logic entry point</li>
+                        <li><code>modules/*.lua</code> - Reusable components and utilities</li>
+                        <li><code>assets/</code> - All game assets (images, sounds, models)</li>
+                        <li><code>config/settings.json</code> - Game-specific configurations</li>
+                        <li><code>Dockerfile</code> - Building instructions for containerization</li>
+                        <li><code>game.json</code> - Game metadata and registry information</li>
+                    </ul>
+                    <p>Development is typically done in Lua with support for custom assets and modules.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <h4>Containerization Process</h4>
+                    <p>Each game gets its own Docker image that includes:</p>
+                    <ul>
+                        <li>Game assets and scripts</li>
+                        <li>Required runtime dependencies</li>
+                        <li>Configuration files</li>
+                        <li>Service entry points</li>
+                        <li>Health check mechanisms</li>
+                        <li>Logging and monitoring tools</li>
+                    </ul>
+                    <p>The Dockerfile template includes:</p>
+                    <div class="code-block">
+# Use appropriate base image (e.g., Node.js or Lua runtime)
+FROM node:18-alpine
+
+# Install dependencies
+RUN apk add --no-cache \
+    lua5.3 \
+    lua5.3-dev \
+    luarocks \
+    curl \
+    git
+
+# Install Lua modules
+RUN luarocks install lua-cjson
+RUN luarocks install lua-crypt
+
+# Set working directory
+WORKDIR /app
+
+# Copy game files
+COPY . .
+
+# Install Node.js packages if needed
+RUN npm install
+
+# Expose game port
+EXPOSE 27015
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:27015/health || exit 1
+
+# Start game
+CMD ["node", "server.js"]
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <h4>Build Process</h4>
+                    <p>The build process involves several validation and compilation steps:</p>
+                    <ol>
+                        <li><strong>Source Validation:</strong> Checks all required files exist and are properly formatted</li>
+                        <li><strong>Asset Optimization:</strong> Compresses images and optimizes assets for performance</li>
+                        <li><strong>Dependency Resolution:</strong> Resolves all required libraries and modules</li>
+                        <li><strong>Container Build:</strong> Creates Docker image with optimized layers</li>
+                        <li><strong>Security Scanning:</strong> Scans for vulnerabilities in dependencies</li>
+                        <li><strong>Signing & Verification:</strong> Signs the game package for authenticity</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div>
+                    <h4>Deployment Pipeline</h4>
+                    <p>Deployment follows a continuous delivery pipeline:</p>
+                    <ul>
+                        <li><strong>Development:</strong> Local development and testing</li>
+                        <li><strong>Staging:</strong> Pre-production environment for validation</li>
+                        <li><strong>Production:</strong> Live environment for players</li>
+                        <li><strong>Blue-Green:</strong> Zero-downtime deployment using parallel environments</li>
+                        <li><strong>Rollback:</strong> Quick rollback capabilities for issues</li>
+                    </ul>
+                    <p>Deployment commands:</p>
+                    <div class="code-block">
+# Build specific game
+docker build -t game-kingdom-warriors:1.0.0 ./games/kingdom-warriors
+
+# Push to registry
+docker push registry.example.com/game-kingdom-warriors:1.0.0
+
+# Deploy with compose
+docker compose -f docker-compose.game.yml up -d kingdom-warriors
+                    </div>
+                </div>
+            </div>
+
+            <h3>Build Scripts & Tools</h3>
             <p>Several scripts are available for managing the build process:</p>
             <ul>
-                <li><code>start.sh</code> - Quick start script for the entire system</li>
-                <li><code>scripts/test-server.sh</code> - Comprehensive testing of the system</li>
+                <li><code>start.sh</code> - Main startup script for the entire system</li>
+                <li><code>scripts/test-server.sh</code> - Comprehensive testing suite for the system</li>
                 <li><code>services/game-manager/manager.js</code> - Core game management functionality</li>
+                <li><code>scripts/ci-cd-security-pipeline.js</code> - Security pipeline tools</li>
+                <li><code>scripts/dependency-security-scanner.js</code> - Security scanning tools</li>
             </ul>
-            
+
             <div class="code-block">
-# Start the development system
+# Start the complete development system
 ./start.sh start
 
-# Run comprehensive tests
+# Run comprehensive system tests
 ./start.sh test
 
-# View logs
+# View system logs
 ./start.sh logs -f
 
 # Build and deploy production
 ./start.sh start-prod
+
+# Clean up containers
+./start.sh clean
+
+# Run security scan
+node scripts/dependency-security-scanner.js
+
+# Run CI/CD pipeline
+node scripts/ci-cd-security-pipeline.js
             </div>
         </section>
-        
+
         <section id="deployment">
             <h2>System Deployment</h2>
-            
-            <h3>Prerequisites</h3>
-            <ul>
-                <li>Docker >= 20.10</li>
-                <li>Docker Compose >= 2.0</li>
-                <li>Mindestens 4GB RAM verfügbar</li>
-            </ul>
-            
-            <h3>Quick Start</h3>
+
+            <h3>Prerequisites & System Requirements</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h5>Software Requirements</h5>
+                    <ul>
+                        <li>Docker >= 20.10</li>
+                        <li>Docker Compose >= 2.0</li>
+                        <li>Node.js >= 16.0 (for development tools)</li>
+                        <li>Git for version control</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Hardware Requirements</h5>
+                    <ul>
+                        <li>CPU: 4 cores recommended</li>
+                        <li>RAM: 8GB minimum, 16GB recommended</li>
+                        <li>Disk: 50GB available space</li>
+                        <li>Network: Stable internet connection</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Operating System</h5>
+                    <ul>
+                        <li>Linux (Ubuntu 20.04+, Debian 10+)</li>
+                        <li>macOS (10.15+)</li>
+                        <li>Windows (WSL2 with Docker Desktop)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Quick Start Installation</h3>
             <div class="code-block">
 # 1. Clone the repository
 git clone &lt;repository-url&gt;
-cd roblox-server
+cd rb-server/server
 
 # 2. Configure environment variables
 cp .env.example .env
-# Edit .env file with appropriate values
+# Edit .env file with appropriate values (passwords, ports, etc.)
 
-# 3. Start the system
-./start.sh start
+# 3. Build and start services
+docker compose build
+docker compose up -d
 
-# 4. Check server status
-./start.sh status
+# 4. Verify system status
+docker compose ps
             </div>
-            
+
             <h3>Production Deployment</h3>
-            <p>For production environments, use the production compose file:</p>
+            <p>For production environments, use the production compose file with enhanced security features:</p>
             <div class="code-block">
 # Production deployment with security features
 docker compose -f docker-compose.prod.yml -f docker-compose.secure.yml up -d
 
-# With monitoring
-docker compose --profile monitoring up -d
+# With monitoring stack
+docker compose -f docker-compose.prod.yml --profile monitoring up -d
 
-# With load balancer
-docker compose --profile load-balancer up -d
+# With load balancing
+docker compose -f docker-compose.prod.yml --profile load-balancer up -d
+
+# Blue-green deployment
+docker compose -f docker-compose.blue.yml up -d
+docker compose -f docker-compose.green.yml up -d
             </div>
-            
-            <h3>Environment Configuration</h3>
-            <p>Key environment variables in <code>.env</code>:</p>
+
+            <h3>Detailed Environment Configuration</h3>
+            <p>All critical parameters are configured through the <code>.env</code> file:</p>
             <div class="code-block">
 # Database Configuration
-DB_PASSWORD=your_secure_password
+DB_HOST=postgres
+DB_PORT=5432
 DB_NAME=roblox_game
 DB_USER=roblox_user
+DB_PASSWORD=your_secure_password
 
 # Redis Configuration
+REDIS_HOST=redis
+REDIS_PORT=6379
 REDIS_PASSWORD=your_redis_password
 
 # Server Configuration
 GAME_MANAGER_PORT=8081
+ROBLOX_SERVER_PORT=27015
+ROBLOX_SERVER_HTTP_PORT=10000
+MAX_PLAYERS=50
 MAX_GAMES=10
-MAX_PLAYERS_PER_GAME=50
+SESSION_TIMEOUT=3600
 
-# Web Interface
+# Security Configuration
+JWT_SECRET=your_secure_jwt_secret
+CORS_ORIGINS=http://localhost:8081,http://localhost:80,https://yourdomain.com
+
+# Web Interface Configuration
 WEB_INTERFACE_ENABLED=true
 WEB_THEME=modern
+SERVER_NAME="Your Roblox Game Server"
+
+# Logging Configuration
+LOG_LEVEL=INFO
+LOG_FORMAT=json
+
+# Performance Configuration
+GAME_SERVER_MEMORY_LIMIT=2g
+GAME_SERVER_CPU_QUOTA=0.8
+            </div>
+
+            <h3>System Scaling Options</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h5>Horizontal Scaling</h5>
+                    <ul>
+                        <li>Multiple game server instances</li>
+                        <li>Load-balanced game routing</li>
+                        <li>Database replica clusters</li>
+                        <li>Redis clustering</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Vertical Scaling</h5>
+                    <ul>
+                        <li>Increased resource allocation</li>
+                        <li>Performance-tuned configurations</li>
+                        <li>Memory-optimized settings</li>
+                        <li>GPU acceleration (if needed)</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Auto-scaling</h3>
+                    <ul>
+                        <li>Load-based scaling rules</li>
+                        <li>Automatic resource adjustment</li>
+                        <li>Threshold-based triggers</li>
+                        <li>Cost-optimized scaling</li>
+                    </ul>
+                </div>
             </div>
         </section>
-        
+
         <section id="api">
             <h2>API Reference</h2>
-            
-            <h3>Game Management Endpoints</h3>
+
+            <h3>Complete API Endpoints</h3>
+            <p>The system provides a comprehensive REST API for game management, player interactions, and administrative functions.</p>
+
+            <h4>Game Management Endpoints</h4>
             <div class="code-block">
-GET    /api/games                 # Alle Games auflisten
-POST   /api/games                 # Neues Game erstellen
-GET    /api/games/{id}            # Game-Details abrufen
-POST   /api/games/{id}/start      # Game starten
-POST   /api/games/{id}/stop       # Game stoppen
-DELETE /api/games/{id}            # Game löschen
-GET    /api/instances             # Aktive Game-Instanzen
-
-# System Information
-GET    /api/health                # System Health Check
-GET    /api/stats                 # System Statistics
-
-# Repository Management
-GET    /api/repository/packages   # Packages durchsuchen
-POST   /api/repository/packages   # Package erstellen
-POST   /api/repository/packages/{id}/install  # Package installieren
-GET    /api/repository/plugins    # Plugins durchsuchen
-POST   /api/repository/plugins    # Plugin erstellen
-POST   /api/repository/plugins/{id}/enable    # Plugin aktivieren
+GET    /api/games                 # List all available games
+POST   /api/games                 # Create/register new game
+GET    /api/games/{id}            # Get specific game details
+POST   /api/games/{id}/start      # Start a game instance
+POST   /api/games/{id}/stop       # Stop a game instance
+PUT    /api/games/{id}            # Update game configuration
+DELETE /api/games/{id}            # Delete/unregister game
+GET    /api/instances             # List active game instances
+GET    /api/instances/{id}        # Get specific instance details
             </div>
-            
+
+            <h4>Player Management Endpoints</h4>
+            <div class="code-block">
+POST   /api/players/join          # Player joins a game
+POST   /api/players/leave         # Player leaves a game
+GET    /api/players               # List all players
+GET    /api/players/{id}          # Get specific player details
+PUT    /api/players/{id}          # Update player information
+POST   /api/players/auth          # Authenticate player
+GET    /api/players/session       # Get player session info
+            </div>
+
+            <h4>System Information Endpoints</h4>
+            <div class="code-block">
+GET    /api/health                # System health check
+GET    /api/stats                 # System statistics
+GET    /api/status                # Detailed system status
+GET    /api/logs                  # System logs (admin only)
+GET    /api/events                # Real-time event stream
+GET    /api/config                # System configuration
+PUT    /api/config                # Update configuration
+            </div>
+
+            <h4>Repository Management Endpoints</h4>
+            <div class="code-block">
+GET    /api/repository/packages   # Search packages
+POST   /api/repository/packages   # Create package
+POST   /api/repository/packages/{id}/install  # Install package
+DELETE /api/repository/packages/{id}         # Remove package
+GET    /api/repository/plugins    # Search plugins
+POST   /api/repository/plugins    # Create plugin
+POST   /api/repository/plugins/{id}/enable   # Enable plugin
+POST   /api/repository/plugins/{id}/disable  # Disable plugin
+            </div>
+
             <h3>Example API Usage</h3>
             <div class="code-block">
 # Create a new game
 curl -X POST http://localhost:8081/api/games \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -d '{
     "name": "My Awesome Game",
     "version": "1.0.0",
-    "description": "A multiplayer game",
-    "category": "game",
-    "maxPlayers": 10
+    "description": "A multiplayer game with amazing features",
+    "category": "strategy",
+    "maxPlayers": 10,
+    "settings": {
+      "defaultMap": "castle-battle",
+      "timeLimit": 1800,
+      "enableChat": true
+    },
+    "tags": ["multiplayer", "strategy", "pvp"]
   }'
 
 # Start a game
-curl -X POST http://localhost:8081/api/games/{gameId}/start \
+curl -X POST http://localhost:8081/api/games/12345/start \
   -H "Content-Type: application/json" \
-  -d '{}'
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "maxPlayers": 8,
+    "map": "desert-arena",
+    "difficulty": "normal",
+    "enableAI": false
+  }'
 
 # Get game status
-curl http://localhost:8081/api/instances
+curl -X GET http://localhost:8081/api/instances \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Install a plugin
+curl -X POST http://localhost:8081/api/repository/plugins/chat-system/enable \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{"gameId": "12345"}'
             </div>
-            
+
             <h3>WebSocket Events</h3>
-            <p>The system uses WebSocket for real-time communication:</p>
+            <p>The system uses WebSocket for real-time communication between clients and servers:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Direction</th>
+                        <th>Parameters</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>connect</td>
+                        <td>Server → Client</td>
+                        <td>sessionId</td>
+                        <td>Client connected to WebSocket</td>
+                    </tr>
+                    <tr>
+                        <td>disconnect</td>
+                        <td>Server → Client</td>
+                        <td>reason</td>
+                        <td>Client disconnected</td>
+                    </tr>
+                    <tr>
+                        <td>games_list</td>
+                        <td>Server → Client</td>
+                        <td>games[]</td>
+                        <td>Update of available games</td>
+                    </tr>
+                    <tr>
+                        <td>game_started</td>
+                        <td>Server → Client</td>
+                        <td>gameId, instanceId</td>
+                        <td>Notification when game starts</td>
+                    </tr>
+                    <tr>
+                        <td>game_stopped</td>
+                        <td>Server → Client</td>
+                        <td>gameId, reason</td>
+                        <td>Notification when game stops</td>
+                    </tr>
+                    <tr>
+                        <td>game_status</td>
+                        <td>Server → Client</td>
+                        <td>status object</td>
+                        <td>Real-time game status updates</td>
+                    </tr>
+                    <tr>
+                        <td>player_joined</td>
+                        <td>Server → Client</td>
+                        <td>player object</td>
+                        <td>New player joined game</td>
+                    </tr>
+                    <tr>
+                        <td>player_left</td>
+                        <td>Server → Client</td>
+                        <td>playerId, reason</td>
+                        <td>Player left game</td>
+                    </tr>
+                    <tr>
+                        <td>chat_message</td>
+                        <td>Server → Client</td>
+                        <td>message object</td>
+                        <td>Chat message from player</td>
+                    </tr>
+                    <tr>
+                        <td>player_moved</td>
+                        <td>Server → Client</td>
+                        <td>position object</td>
+                        <td>Player position update</td>
+                    </tr>
+                    <tr>
+                        <td>error</td>
+                        <td>Server → Client</td>
+                        <td>error object</td>
+                        <td>Error notifications</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="development">
+            <h2>Development Guidelines</h2>
+
+            <h3>Development Workflow</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <h4>Environment Setup</h4>
+                    <p>Set up your development environment with the following steps:</p>
+                    <ul>
+                        <li>Install Docker and Docker Compose</li>
+                        <li>Clone the repository</li>
+                        <li>Set up the environment variables in .env</li>
+                        <li>Build the services using `docker compose build`</li>
+                        <li>Start the development environment</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <h4>Code Structure</h4>
+                    <p>Follow the established code patterns and directory structure:</p>
+                    <ul>
+                        <li>Keep game-logic code in the games/{game-name}/scripts/ directory</li>
+                        <li>Place shared modules in the games/{game-name}/modules/ directory</li>
+                        <li>Store assets in games/{game-name}/assets/</li>
+                        <li>Use consistent naming conventions</li>
+                        <li>Write clear documentation for new features</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <h4>Testing Process</h4>
+                    <p>Implement comprehensive testing at multiple levels:</p>
+                    <ol>
+                        <li>Unit testing for individual components</li>
+                        <li>Integration testing for service interactions</li>
+                        <li>Load testing for performance</li>
+                        <li>Security testing for vulnerabilities</li>
+                        <li>User acceptance testing for features</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div>
+                    <h4>Code Review Process</h4>
+                    <p>Follow the code review workflow:</p>
+                    <ul>
+                        <li>Create feature branches from main</li>
+                        <li>Write descriptive commit messages</li>
+                        <li>Submit pull requests for review</li>
+                        <li>Address feedback from reviewers</li>
+                        <li>Merge after approval</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Development Tools & Scripts</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h5>Testing Tools</h5>
+                    <ul>
+                        <li><code>scripts/test-server.sh</code> - Comprehensive system tests</li>
+                        <li><code>scripts/test-game.sh</code> - Game-specific tests</li>
+                        <li><code>scripts/load-test.sh</code> - Performance testing</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Security Tools</h5>
+                    <ul>
+                        <li><code>scripts/dependency-security-scanner.js</code> - Security scanning</li>
+                        <li><code>scripts/license-compliance-checker.js</code> - License checking</li>
+                        <li>CI/CD security pipelines</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Monitoring Tools</h5>
+                    <ul>
+                        <li>Built-in logging system</li>
+                        <li>Performance metrics collection</li>
+                        <li>Health check endpoints</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Best Practices</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h5>Coding Standards</h5>
+                    <ul>
+                        <li>Follow the existing code style and patterns</li>
+                        <li>Write clear, descriptive comments</li>
+                        <li>Use meaningful variable and function names</li>
+                        <li>Structure code logically with consistent formatting</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Game Development</h5>
+                    <ul>
+                        <li>Optimize game assets for performance</li>
+                        <li>Implement proper error handling</li>
+                        <li>Design scalable game architectures</li>
+                        <li>Ensure secure game logic</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Security</h5>
+                    <ul>
+                        <li>Validate all user inputs</li>
+                        <li>Sanitize data before processing</li>
+                        <li>Use secure authentication methods</li>
+                        <li>Protect against common attacks</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="troubleshooting">
+            <h2>Troubleshooting & Support</h2>
+
+            <h3>Common Issues</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h5>Container Issues</h5>
+                    <ul>
+                        <li>"Container fails to start" - Check logs with `docker compose logs SERVICE_NAME`</li>
+                        <li>"Port already in use" - Check with `lsof -i :PORT` and stop conflicting services</li>
+                        <li>"Image build fails" - Verify Dockerfile syntax and context</li>
+                        <li>"Health check fails" - Service not responding to health endpoint</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Database Issues</h5>
+                    <ul>
+                        <li>"Connection refused" - Database service not running</li>
+                        <li>"Authentication failed" - Check credentials in .env file</li>
+                        <li>"Tables missing" - Database initialization not complete</li>
+                        <li>"Performance issues" - Indexes missing or query optimization needed</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Network Issues</h5>
+                    <ul>
+                        <li>"Service unavailable" - Check Docker network connectivity</li>
+                        <li>"Access denied" - CORS or firewall restrictions</li>
+                        <li>"Timeout errors" - Network latency or service overload</li>
+                        <li>"SSL certificate errors" - Certificate configuration issues</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Diagnostic Commands</h3>
+            <div class="code-block">
+# Check all container status
+docker compose ps
+
+# View logs for specific service
+docker compose logs roblox-server
+docker compose logs nginx
+docker compose logs postgres
+
+# Check system resource usage
+docker stats
+
+# Execute command in running container
+docker compose exec roblox-server bash
+
+# Restart specific service
+docker compose restart roblox-server
+
+# Check configuration
+docker compose config
+
+# View network information
+docker network ls
+docker network inspect server_roblox-network
+            </div>
+
+            <h3>Performance Optimization</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h5>Database Optimization</h5>
+                    <ul>
+                        <li>Regular index maintenance</li>
+                        <li>Query optimization</li>
+                        <li>Connection pooling</li>
+                        <li>Archiving old data</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Game Server Optimization</h3>
+                    <ul>
+                        <li>Asset compression</li>
+                        <li>Code minification</li>
+                        <li>Caching strategies</li>
+                        <li>Resource pooling</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h5>Network Optimization</h5>
+                    <ul>
+                        <li>CDN implementation</li>
+                        <li>Data compression</li>
+                        <li>Efficient serialization</li>
+                        <li>Connection reuse</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Support Resources</h3>
             <ul>
-                <li><code>games_list</code> - Update of available games</li>
-                <li><code>game_started</code> - Notification when a game starts</li>
-                <li><code>game_stopped</code> - Notification when a game stops</li>
-                <li><code>game_status</code> - Real-time game status updates</li>
-                <li><code>error</code> - Error notifications</li>
+                <li><strong>Documentation:</strong> This document and README files</li>
+                <li><strong>Issue Tracker:</strong> GitHub repository issues</li>
+                <li><strong>Community:</strong> Discord or forum channels</li>
+                <li><strong>Direct Support:</strong> Contact development team</li>
             </ul>
         </section>
-    </main>
     
+        <section id="docs-links" class="card">
+            <h2>Detailed Documentation</h2>
+            <p>Select a topic to view the full documentation page:</p>
+            <ul class="docs-links">
+                <li><a href="overview.html">System Overview</a></li>
+                <li><a href="games-guide.html">Games Guide</a></li>
+                <li><a href="deployment.html">Deployment Guide</a></li>
+                <li><a href="development.html">Development Workflow</a></li>
+                <li><a href="api-reference.html">API Reference</a></li>
+                <li><a href="security.html">Security Guidelines</a></li>
+                <li><a href="troubleshooting.html">Troubleshooting Guide</a></li>
+            </ul>
+        </section>
+
+    </main>
+
     <footer>
         <div class="container">
             <p>Roblox Multi-Game System Documentation</p>
@@ -665,15 +1620,15 @@ curl http://localhost:8081/api/instances
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
+
                 const targetId = this.getAttribute('href');
                 const targetElement = document.querySelector(targetId);
-                
+
                 window.scrollTo({
                     top: targetElement.offsetTop - 80,
                     behavior: 'smooth'
                 });
-                
+
                 // Update active nav link
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.classList.remove('active');
@@ -681,23 +1636,23 @@ curl http://localhost:8081/api/instances
                 this.classList.add('active');
             });
         });
-        
+
         // Highlight the current section in the navigation
         window.addEventListener('scroll', () => {
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.nav-link');
-            
+
             let current = '';
-            
+
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
                 const sectionHeight = section.clientHeight;
-                
+
                 if(pageYOffset >= (sectionTop - 100)) {
                     current = section.getAttribute('id');
                 }
             });
-            
+
             navLinks.forEach(link => {
                 link.classList.remove('active');
                 if(link.getAttribute('href') === `#${current}`) {

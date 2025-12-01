@@ -3,7 +3,7 @@
 
 server {
     listen 80;
-    server_name localhost roblox-server localhost:80;
+    server_name rb.kdlk.net roblox.kdlk.net localhost roblox-server;
 
     # Security - Rate Limiting
     limit_req zone=general burst=20 nodelay;
@@ -73,6 +73,22 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
+    # Admin HTML landing page for roblox.kdlk.net
+    location = /admin/ {
+        root /var/www/static;
+        try_files /admin.html =404;
+        add_header X-Server "Roblox-Server-nginx" always;
+    }
+
+    # Admin static assets for /admin/ UI
+    location ^~ /admin/css/ {
+        alias /var/www/static/css/;
+    }
+
+    location ^~ /admin/js/ {
+        alias /var/www/static/js/;
+    }
+
     # Admin Interface (falls vorhanden)
     location /admin/ {
         # Admin-spezifisches Rate Limiting
@@ -106,6 +122,14 @@ server {
         }
     }
 
+    # Direct asset paths for legacy links
+    location /css/ {
+        alias /var/www/static/css/;
+    }
+
+    location /js/ {
+        alias /var/www/static/js/;
+    }
     # Game-Specific Endpoints
     location /game/ {
         # Game-spezifische Weiterleitung
@@ -166,7 +190,7 @@ server {
 # HTTPS Server (falls SSL konfiguriert)
 server {
     listen 443 ssl http2;
-    server_name localhost roblox-server;
+    server_name rb.kdlk.net roblox.kdlk.net localhost roblox-server;
 
     # SSL-Zertifikate
     ssl_certificate /etc/nginx/ssl/cert.pem;
