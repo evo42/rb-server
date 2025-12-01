@@ -57,9 +57,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 RUN npm install -g pm2
 
 # Roblox Server spezifische Lua-Module installieren
-RUN luarocks install --server=https://luarocks.org/dev lua-cjson
-RUN luarocks install --server=https://luarocks.org/dev lua-crypt
-RUN luarocks install --server=https://luarocks.org/dev lua-resty-redis
+RUN luarocks install lua-cjson \
+    && luarocks install luasocket
 
 # Arbeitsverzeichnis erstellen
 WORKDIR /app
@@ -92,4 +91,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 USER roblox
 
 # Container starten
-CMD ["pm2-runtime", "server.js"]
+CMD ["node", "server.js"]
