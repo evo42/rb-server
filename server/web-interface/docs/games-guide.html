@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Guide - Roblox Multi-Game System</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #fafafa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        nav {
+            background-color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .game-card {
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        
+        .game-card h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0.25rem;
+        }
+        
+        .badge-success {
+            background-color: #4cc9f0;
+        }
+        
+        .badge-warning {
+            background-color: #f72585;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #e9ecef;
+        }
+        
+        .feature-card h5 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+        }
+        
+        .resource-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .resource-table th, .resource-table td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        .resource-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Game Guide - Roblox Multi-Game System</h1>
+            <p>Detailed information about all available games and their features</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <a href="./index.html" class="nav-link">Home</a>
+                <a href="#kingdom-warriors" class="nav-link">Kingdom Warriors</a>
+                <a href="#lernblox-battle" class="nav-link">LernBlox Battle</a>
+                <a href="#game-management" class="nav-link">Game Management</a>
+                <a href="#development" class="nav-link">Development</a>
+                <a href="#assets" class="nav-link">Assets</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section id="introduction">
+            <h2>Game System Overview</h2>
+            
+            <p>The Roblox Multi-Game System supports multiple distinct games that can be managed independently. Each game operates as a separate entity with its own:</p>
+            <ul>
+                <li>Game logic and mechanics</li>
+                <li>Asset libraries</li>
+                <li>Configuration parameters</li>
+                <li>Player progression systems</li>
+                <li>Analytics and tracking</li>
+            </ul>
+            
+            <p>Games are designed to be modular and can be added, removed, or updated without affecting other games in the system. The Game Manager ensures proper resource allocation and isolation between different game instances.</p>
+        </section>
+        
+        <section id="kingdom-warriors">
+            <h2>Kingdom of the Last Warriors</h2>
+            
+            <div class="game-card">
+                <h4>Game Overview</h4>
+                <p>An epic medieval strategy game combining resource management, base building, and real-time combat.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h5>Basic Information</h5>
+                        <ul>
+                            <li><strong>Category:</strong> Strategy/Medieval/RTS</li>
+                            <li><strong>Players:</strong> 2-8</li>
+                            <li><strong>Duration:</strong> 45 minutes</li>
+                            <li><strong>Max Players:</strong> 8</li>
+                            <li><strong>Age Range:</strong> 12+</li>
+                            <li><strong>Language:</strong> EN, DE, FR, ES</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>Fraktionen (Factions)</h5>
+                        <ul>
+                            <li><strong>Valorianisches Reich:</strong> Strong defense, +15% defense, +10% unit production</li>
+                            <li><strong>Schatten-Clan:</strong> High damage, +20% attack, +10% speed</li>
+                            <li><strong>Eisen-Zwerge:</strong> Strong buildings, +25% building health, +15% resource production</li>
+                            <li><strong>Natur-Wächter:</strong> Healing abilities, +30% healing, +20% food production</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>Key Features</h5>
+                        <ul>
+                            <li>Real-time combat with tactical units</li>
+                            <li>Advanced resource management</li>
+                            <li>Multiple research trees</li>
+                            <li>Cooperative and competitive modes</li>
+                            <li>Dynamic terrain modification</li>
+                            <li>12 different maps</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h5>Resource System</h5>
+                <p>Resources are critical for building units and structures:</p>
+                
+                <table class="resource-table">
+                    <thead>
+                        <tr>
+                            <th>Resource</th>
+                            <th>Base Income</th>
+                            <th>Storage Limit</th>
+                            <th>Primary Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Gold</strong></td>
+                            <td>10/min</td>
+                            <td>10,000</td>
+                            <td>Main currency, buildings, research</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Holz</strong></td>
+                            <td>8/min</td>
+                            <td>5,000</td>
+                            <td>Construction, buildings</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stein</strong></td>
+                            <td>5/min</td>
+                            <td>3,000</td>
+                            <td>Defense structures</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nahrung</strong></td>
+                            <td>12/min</td>
+                            <td>2,000</td>
+                            <td>Unit maintenance, population</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h5>Building Types</h5>
+                <table class="resource-table">
+                    <thead>
+                        <tr>
+                            <th>Building</th>
+                            <th>Cost</th>
+                            <th>Health</th>
+                            <th>Effect</th>
+                            <th>Build Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Festung (Hauptburg)</td>
+                            <td>1000 Gold, 500 Stein</td>
+                            <td>5000</td>
+                            <td>Game-ending structure, contains all functions</td>
+                            <td>5 minutes</td>
+                        </tr>
+                        <tr>
+                            <td>Rathaus</td>
+                            <td>500 Gold, 300 Holz</td>
+                            <td>1500</td>
+                            <td>+50 population capacity</td>
+                            <td>2 minutes</td>
+                        </tr>
+                        <tr>
+                            <td>Farm</td>
+                            <td>200 Gold, 150 Holz</td>
+                            <td>600</td>
+                            <td>+15 Nahrung/min</td>
+                            <td>45 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Mine</td>
+                            <td>300 Gold, 100 Holz</td>
+                            <td>700</td>
+                            <td>+8 Gold/min, +5 Stein/min</td>
+                            <td>75 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Sägewerk</td>
+                            <td>250 Gold, 50 Stein</td>
+                            <td>500</td>
+                            <td>+12 Holz/min</td>
+                            <td>60 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Kaserne</td>
+                            <td>300 Gold, 200 Holz</td>
+                            <td>1000</td>
+                            <td>Unlocks: Fußsoldat, Bogenschütze, Ritter</td>
+                            <td>90 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Wachturm</td>
+                            <td>350 Gold, 200 Stein</td>
+                            <td>1200</td>
+                            <td>200 range, 35 damage</td>
+                            <td>100 seconds</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h5>Unit Types</h5>
+                <table class="resource-table">
+                    <thead>
+                        <tr>
+                            <th>Unit</th>
+                            <th>Cost</th>
+                            <th>Health</th>
+                            <th>Damage</th>
+                            <th>Speed</th>
+                            <th>Range</th>
+                            <th>Build Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Fußsoldat</td>
+                            <td>100 Gold, 5 Nahrung</td>
+                            <td>150</td>
+                            <td>25</td>
+                            <td>16</td>
+                            <td>5</td>
+                            <td>30 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Bogenschütze</td>
+                            <td>120 Gold, 4 Nahrung</td>
+                            <td>100</td>
+                            <td>30</td>
+                            <td>14</td>
+                            <td>150</td>
+                            <td>25 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Ritter</td>
+                            <td>300 Gold, 15 Nahrung</td>
+                            <td>400</td>
+                            <td>60</td>
+                            <td>24 (cavalry)</td>
+                            <td>8</td>
+                            <td>90 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Magier</td>
+                            <td>200 Gold, 8 Nahrung</td>
+                            <td>80</td>
+                            <td>45 (magical)</td>
+                            <td>12</td>
+                            <td>180</td>
+                            <td>60 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>Katapult</td>
+                            <td>500 Gold, 200 Holz, 100 Stein</td>
+                            <td>200</td>
+                            <td>100 (2.5x vs buildings)</td>
+                            <td>8</td>
+                            <td>250</td>
+                            <td>180 seconds</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h5>Technology Tree</h5>
+                <p>The game features a comprehensive tech tree with multiple paths:</p>
+                <h6>Dunkles Zeitalter (Starting Era)</h6>
+                <ul>
+                    <li><strong>Grundlegende Landwirtschaft</strong>: +20% Nahrung production (cost: 100 Gold)</li>
+                    <li><strong>Grundlegender Bergbau</strong>: +15% Gold/Stein production (cost: 120 Gold)</li>
+                </ul>
+                
+                <h6>Feudalzeit (Feudal Age)</h6>
+                <ul>
+                    <li><strong>Stahlwaffen</strong>: +25% unit attack (cost: 200 Gold, 50 Stein)</li>
+                    <li><strong>Burgenbefestigung</strong>: +30% building defense (cost: 300 Gold, 200 Stein)</li>
+                </ul>
+                
+                <h5>Victory Conditions</h5>
+                <p>Players can achieve victory through multiple conditions:</p>
+                <ul>
+                    <li><strong>Vorherrschaft</strong>: Destroy all enemy castles</li>
+                    <li><strong>Eroberung</strong>: Control 75% of map for 5 minutes</li>
+                    <li><strong>Auslöschung</strong>: Eliminate all enemy units</li>
+                    <li><strong>Überleben</strong>: Survive 45 minutes of attacks (vs AI)</li>
+                </ul>
+                
+                <h5>Maps</h5>
+                <p>Different maps provide unique strategic advantages:</p>
+                <ul>
+                    <li><strong>Vergessenes Königreich</strong>: Classic battlefield, 4 starting positions</li>
+                    <li><strong>Drachenhort</strong>: Volcanic landscape with resources near dangers</li>
+                    <li><strong>Antikes Schlachtfeld</strong>: Ruins with bonuses but limited resources</li>
+                    <li><strong>Mystischer Wald</strong>: Magic creatures with healing sources</li>
+                    <li><strong>Schatten-Reich</strong>: Dark dimension with invisibility</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="lernblox-battle">
+            <h2>LernBlox School Battle</h2>
+            
+            <div class="game-card">
+                <h4>Game Overview</h4>
+                <p>Educational quiz game for students with questions from multiple school subjects.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h5>Basic Information</h5>
+                        <ul>
+                            <li><strong>Category:</strong> Educational/Quiz</li>
+                            <li><strong>Players:</strong> 1-10</li>
+                            <li><strong>Duration:</strong> 5-10 minutes per round</li>
+                            <li><strong>Max Rounds:</strong> 10</li>
+                            <li><strong>Age Range:</strong> 10-18</li>
+                            <li><strong>Language:</strong> DE, EN, ES</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>Subject Areas</h5>
+                        <ul>
+                            <li><strong>Mathematik:</strong> Arithmetic, Algebra, Geometry</li>
+                            <li><strong>Englisch:</strong> Grammar, Vocabulary, Reading</li>
+                            <li><strong>Spanisch:</strong> Grammar, Vocabulary, Culture</li>
+                            <li><strong>Geografie:</strong> Countries, Capitals, Landscapes</li>
+                            <li><strong>Geschichte:</strong> Ancient, Medieval, Modern periods</li>
+                            <li><strong>Naturwissenschaften:</strong> Physics, Chemistry, Biology</li>
+                            <li><strong>Literatur:</strong> Authors, Works, Genres</li>
+                            <li><strong>Kunst:</strong> Artists, Movements, Techniques</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h5>Game Mechanics</h5>
+                        <ul>
+                            <li>10 quests per game session</li>
+                            <li>Random questions from different subjects</li>
+                            <li>Correct answer: 100 points</li>
+                            <li>Wrong answer: 25 points (consolation)</li>
+                            <li>Perfect score extra: 500 bonus points</li>
+                            <li>Streak bonus multiplier</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h5>Points System</h5>
+                <table class="resource-table">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Points</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Correct Answer</td>
+                            <td>100</td>
+                            <td>Full points for correct response</td>
+                        </tr>
+                        <tr>
+                            <td>Wrong Answer</td>
+                            <td>25</td>
+                            <td>Consolation points given</td>
+                        </tr>
+                        <tr>
+                            <td>Perfect Game</td>
+                            <td>500</td>
+                            <td>All 10 questions correct bonus</td>
+                        </tr>
+                        <tr>
+                            <td>Streak Bonus</td>
+                            <td>Multiplier</td>
+                            <td>Consecutive correct answers</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h5>Subject Details</h5>
+                
+                <h6>Mathematik Questions</h6>
+                <ul>
+                    <li><strong>Arithmetic:</strong> "What is the square root of 144?"</li>
+                    <li><strong>Algebra:</strong> "Solve the equation: 2x + 5 = 13"</li>
+                    <li><strong>Geometry:</strong> "How do you calculate the area of a circle?"</li>
+                </ul>
+                
+                <h6>Englisch Questions</h6>
+                <ul>
+                    <li><strong>Grammar:</strong> "Which sentence is grammatically correct?"</li>
+                    <li><strong>Vocabulary:</strong> "What does the word 'ubiquitous' mean?"</li>
+                    <li><strong>Writing:</strong> "Choose the correct verb tense"</li>
+                </ul>
+                
+                <h6>Spanisch Questions</h6>
+                <ul>
+                    <li><strong>Grammar:</strong> "How do you say 'I go to school' in Spanish?"</li>
+                    <li><strong>Vocabulary:</strong> "What is the feminine form of 'estudiante'?"</li>
+                    <li><strong>Culture:</strong> "In which country is Spanish primarily spoken?"</li>
+                </ul>
+                
+                <h6>Geografie Questions</h6>
+                <ul>
+                    <li><strong>Countries:</strong> "What is the capital of Australia?"</li>
+                    <li><strong>Landforms:</strong> "Which mountain is the highest in Europe?"</li>
+                    <li><strong>Climates:</strong> "In which climate zone is the Sahara located?"</li>
+                </ul>
+                
+                <h5>Wissensabzeichen (Knowledge Badges)</h5>
+                <p>Players earn badges based on their performance:</p>
+                <ul>
+                    <li><strong>Wissensabzeichen (Common):</strong> +50 points</li>
+                    <li><strong>Gelehrtenkrone (Rare):</strong> +100 points</li>
+                    <li><strong>Weisheitskugel (Epic):</strong> Extra question</li>
+                    <li><strong>Meister-Trophäe (Legendary):</strong> +500 points (perfect game only)</li>
+                </ul>
+                
+                <h5>Achievement System</h5>
+                <p>Special achievements for various accomplishments:</p>
+                <ul>
+                    <li><strong>Erstes Spiel:</strong> Welcome to LernBlox (50 points)</li>
+                    <li><strong>Mathe-Meister:</strong> 10 math questions correct (100 points)</li>
+                    <li><strong>Sprach-Genius:</strong> Questions answered in 3 languages (100 points)</li>
+                    <li><strong>Allrounder:</strong> At least 1 question from each subject (100 points)</li>
+                    <li><strong>Perfektionist:</strong> All 10 questions right in one game (500 points)</li>
+                    <li><strong>Streak-König:</strong> 5 consecutive correct answers (200 points)</li>
+                </ul>
+                
+                <h5>Highscore Categories</h5>
+                <ul>
+                    <li><strong>Gesamtpunktzahl:</strong> Total points across all games</li>
+                    <li><strong>Genauigkeitsrate:</strong> Accuracy percentage</li>
+                    <li><strong>Fach-Beherrschung:</strong> Points per subject area</li>
+                    <li><strong>Streak-Rekord:</strong> Longest correct answer sequence</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="game-management">
+            <h2>Game Management</h2>
+            
+            <h3>Game Registration</h3>
+            <p>Each game must be registered with the system before it can be played:</p>
+            <div class="code-block">
+curl -X POST http://localhost:8081/api/games \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "name": "Kingdom of the Last Warriors",
+    "version": "1.0.0",
+    "description": "An epic medieval strategy game",
+    "category": "strategy",
+    "author": "Game Developer",
+    "maxPlayers": 8,
+    "tags": ["multiplayer", "strategy", "medieval"],
+    "settings": {
+      "defaultMap": "forgotten-kingdom",
+      "timeLimit": 2700,
+      "enableAI": true
+    }
+  }'
+            </div>
+            
+            <h3>Starting a Game Instance</h3>
+            <p>Once registered, games can be started with specific configuration:</p>
+            <div class="code-block">
+curl -X POST http://localhost:8081/api/games/GAME_ID/start \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \  
+  -d '{
+    "maxPlayers": 6,
+    "map": "desert-battlefield",
+    "difficulty": "normal",
+    "settings": {
+      "resourcesMultiplier": 1.0,
+      "buildTimeMultiplier": 1.0,
+      "researchMultiplier": 1.0
+    }
+  }'
+            </div>
+            
+            <h3>Game Instance Management</h3>
+            <p>Track and manage active game instances:</p>
+            <div class="code-block">
+# List all active instances
+curl -X GET http://localhost:8081/api/instances \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Get specific instance status
+curl -X GET http://localhost:8081/api/instances/INSTANCE_ID \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Stop a game instance
+curl -X POST http://localhost:8081/api/instances/INSTANCE_ID/stop \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+            </div>
+            
+            <h3>Analytics & Monitoring</h3>
+            <p>The system tracks extensive game analytics:</p>
+            <ul>
+                <li><strong>Player Analytics:</strong> Session duration, accuracy rates, favorite subjects (for LernBlox)</li>
+                <li><strong>Game Performance:</strong> Round duration, player counts, map popularity</li>
+                <li><strong>Combat Analytics:</strong> Kills per minute, damage per second, headshot percentages</li>
+                <li><strong>Learning Analytics:</strong> Subject mastery, improvement rates, weak areas</li>
+                <li><strong>System Analytics:</strong> Resource usage, response times, error rates</li>
+            </ul>
+            
+            <h3>Event System</h3>
+            <p>Games emit events for real-time tracking:</p>
+            <table class="resource-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Trigger</th>
+                        <th>Parameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>player_join</td>
+                        <td>Player enters game</td>
+                        <td>playerId, username, joinTime</td>
+                    </tr>
+                    <tr>
+                        <td>player_quit</td>
+                        <td>Player leaves game</td>
+                        <td>playerId, reason, playTime</td>
+                    </tr>
+                    <tr>
+                        <td>question_answered</td>
+                        <td>LernBlox question response</td>
+                        <td>playerId, subject, correct, responseTime</td>
+                    </tr>
+                    <tr>
+                        <td>unit_created</td>
+                        <td>Kingdom Warriors unit spawn</td>
+                        <td>playerId, unitType, position, cost</td>
+                    </tr>
+                    <tr>
+                        <td>building_destroyed</td>
+                        <td>Building taken down</td>
+                        <td>buildingType, attackerPlayer, defenderPlayer</td>
+                    </tr>
+                    <tr>
+                        <td>victory_achieved</td>
+                        <td>Victory condition met</td>
+                        <td>winnerPlayer, victoryType, gameTime</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        
+        <section id="development">
+            <h2>Game Development Process</h2>
+            
+            <h3>Creating a New Game</h3>
+            <p>Adding a new game to the system involves several steps:</p>
+            
+            <h4>1. Directory Structure</h4>
+            <p>Each game follows a standardized structure:</p>
+            <div class="code-block">
+games/
+└── my-new-game/
+    ├── assets/
+    │   ├── images/
+    │   ├── sounds/
+    │   ├── models/
+    │   └── textures/
+    ├── config/
+    │   ├── game.json
+    │   ├── settings.json
+    │   └── localization/
+    ├── modules/
+    │   ├── game_logic.lua
+    │   ├── utils.lua
+    │   └── networking.lua
+    ├── scripts/
+    │   ├── main.lua
+    │   ├── client.lua
+    │   └── server.lua
+    ├── Dockerfile
+    ├── .dockerignore
+    └── README.md
+            </div>
+            
+            <h4>2. Game Metadata</h4>
+            <p>Each game needs a <code>game.json</code> file:</p>
+            <div class="code-block">
+{
+  "id": "my-new-game",
+  "name": "My New Game",
+  "version": "1.0.0",
+  "description": "A brief description of the game",
+  "author": "Developer Name",
+  "category": "game", // game, utility, framework, etc.
+  "tags": ["multiplayer", "puzzle", "strategy"],
+  "maxPlayers": 4,
+  "minPlayers": 1,
+  "estimatedDuration": 30,
+  "languages": ["en", "de"],
+  "dependencies": [],
+  "settings": {
+    "defaultMap": "default-map",
+    "sessionTimeout": 3600
+  },
+  "resources": {
+    "cpu": "0.5",
+    "memory": "1G",
+    "disk": "2G"
+  },
+  "compatibility": {
+    "minSystemVersion": "1.0.0",
+    "maxSystemVersion": "2.0.0"
+  }
+}
+            </div>
+            
+            <h4>3. Main Game Logic</h4>
+            <p>Game logic is implemented in the main Lua script:</p>
+            <div class="code-block">
+-- main.lua
+local game = {}
+
+function game.init()
+  -- Initialize game state
+  print("Initializing My New Game...")
+  
+  -- Load assets, set up players, etc.
+  game.state = {
+    players = {},
+    assets = {},
+    settings = json.load("/app/config/settings.json"),
+    events = EventQueue:new()
+  }
+  
+  return game.state
+end
+
+function game.startSession(sessionConfig)
+  -- Start a new game session
+  local session = {
+    id = generateId(),
+    startTime = os.time(),
+    settings = sessionConfig,
+    players = {},
+    state = "active"
+  }
+  
+  -- Notify subscribers
+  game.state.events:push("game_started", session)
+  
+  return session
+end
+
+function game.processEvent(event)
+  -- Handle incoming game events
+  if event.type == "player_join" then
+    return game.handlePlayerJoin(event.data)
+  elseif event.type == "player_action" then
+    return game.handlePlayerAction(event.data)
+  end
+  
+  return false
+end
+
+function game.handlePlayerJoin(data)
+  -- Add player to game session
+  local player = {
+    id = data.playerId,
+    name = data.name,
+    position = data.position,
+    joinedTime = os.time()
+  }
+  
+  -- Store player data
+  game.state.players[player.id] = player
+  
+  -- Notify other players
+  game.state.events:push("player_joined", player)
+  
+  return player
+end
+
+function game.handlePlayerAction(data)
+  -- Process player action
+  local player = game.state.players[data.playerId]
+  if not player then
+    return {error = "Player not found"}
+  end
+  
+  -- Apply action based on action type
+  if data.action == "move" then
+    player.position = data.position
+  elseif data.action == "attack" then
+    -- Handle attack logic
+  end
+  
+  -- Broadcast update
+  game.state.events:push("player_action", {
+    playerId = data.playerId,
+    action = data.action,
+    position = player.position
+  })
+  
+  return {success = true}
+end
+
+return game
+            </div>
+            
+            <h4>4. Docker Configuration</h4>
+            <p>Each game has a Dockerfile for containerization:</p>
+            <div class="code-block">
+FROM node:18-alpine AS game-builder
+
+# Install Lua and dependencies
+RUN apk add --no-cache \
+    lua5.3 \
+    lua5.3-dev \
+    luarocks \
+    curl \
+    git
+
+# Install Lua modules
+RUN luarocks install lua-cjson
+RUN luarocks install luasocket
+
+WORKDIR /app
+
+# Copy game files
+COPY . .
+
+# Build/prepare game assets
+RUN if [ -f "build.sh" ]; then sh build.sh; fi
+
+# Production stage
+FROM node:18-alpine
+
+RUN apk add --no-cache \
+    lua5.3 \
+    luarocks
+
+RUN luarocks install lua-cjson
+
+WORKDIR /app
+
+# Copy built game from previous stage
+COPY --from=game-builder /app ./
+
+# Expose game port
+EXPOSE 27015
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+# Start game
+CMD ["lua", "scripts/main.lua"]
+            </div>
+            
+            <h3>Testing New Games</h3>
+            <p>Before deploying, test games using the integrated testing framework:</p>
+            <div class="code-block">
+# Test game logic
+./scripts/test-game.sh my-new-game
+
+# Test multiplayer functionality
+./scripts/test-multiclient.sh --game=my-new-game --clients=4
+
+# Load testing
+./scripts/load-test.sh --game=my-new-game --players=20 --duration=300
+
+# Mock player simulation
+./scripts/test-with-mock-players.sh --game=my-new-game --players=10
+            </div>
+        </section>
+        
+        <section id="assets">
+            <h2>Asset Management</h2>
+            
+            <h3>Asset Types</h3>
+            <p>Games can include various types of assets:</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h5>Visual Assets</h5>
+                    <ul>
+                        <li>Images (JPEG, PNG, GIF)</li>
+                        <li>3D Models (OBJ, FBX, GLTF)</li>
+                        <li>Textures and Materials</li>
+                        <li>Animations and Sequences</li>
+                        <li>UI Elements</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h5>Audio Assets</h5>
+                    <ul>
+                        <li>Sound Effects (WAV, MP3, OGG)</li>
+                        <li>Background Music</li>
+                        <li>Voice Overs</li>
+                        <li>Ambient Sounds</li>
+                        <li>Interface Sounds</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <h5>Data Assets</h5>
+                    <ul>
+                        <li>Configuration Files (JSON, YAML)</li>
+                        <li>Localization Data</li>
+                        <li>Game Rules</li>
+                        <li>Question Databases (LernBlox)</li>
+                        <li>Map Data</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Asset Optimization</h3>
+            <p>Optimize assets for performance:</p>
+            <ul>
+                <li>Compress images using appropriate formats (WebP for photos, PNG for graphics)</li>
+                <li>Reduce polygon count on 3D models</li>
+                <li>Use audio compression (VBR MP3 or OGG)</li>
+                <li>Minify JSON and other data files</li>
+                <li>Cache frequently used assets in memory</li>
+                <li>Use texture atlases to reduce draw calls</li>
+            </ul>
+            
+            <h3>Asset Loading Strategy</h3>
+            <p>Implement efficient loading strategies:</p>
+            <ul>
+                <li>Loading screens during asset preprocessing</li>
+                <li>Progressive loading during gameplay</li>
+                <li>Preloading critical assets</li>
+                <li>Lazy loading for optional content</li>
+                <li>Caching mechanism with LRU eviction</li>
+            </ul>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Roblox Multi-Game System - Game Guide</p>
+            <p>© 2025 Roblox Game Development Team</p>
+        </div>
+    </footer>
+</body>
+</html>

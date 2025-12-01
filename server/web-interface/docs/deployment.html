@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Guide - Roblox Multi-Game System</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: #fafafa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        nav {
+            background-color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .step {
+            display: flex;
+            margin: 1.5rem 0;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: var(--border-radius);
+        }
+        
+        .success {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: var(--border-radius);
+        }
+        
+        .requirements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .requirement-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #e9ecef;
+        }
+        
+        .requirement-card h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.75rem;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .requirements {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Deployment Guide - Roblox Multi-Game System</h1>
+            <p>Complete guide for deploying the system in different environments</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <div class="nav-container">
+                <a href="./index.html" class="nav-link">Home</a>
+                <a href="#requirements" class="nav-link">Requirements</a>
+                <a href="#development" class="nav-link">Development</a>
+                <a href="#production" class="nav-link">Production</a>
+                <a href="#configuration" class="nav-link">Configuration</a>
+                <a href="#monitoring" class="nav-link">Monitoring</a>
+                <a href="#troubleshooting" class="nav-link">Troubleshooting</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section id="requirements">
+            <h2>System Requirements</h2>
+            
+            <h3>Minimum Hardware Requirements</h3>
+            <div class="requirements">
+                <div class="requirement-card">
+                    <h4>Development Environment</h4>
+                    <ul>
+                        <li><strong>CPU:</strong> 2 cores, 2.0 GHz or faster</li>
+                        <li><strong>RAM:</strong> 4 GB minimum</li>
+                        <li><strong>Disk:</strong> 10 GB free space</li>
+                        <li><strong>OS:</strong> Linux, macOS, or Windows with WSL2</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement-card">
+                    <h4>Production Environment</h4>
+                    <ul>
+                        <li><strong>CPU:</strong> 4 cores, 2.5 GHz or faster</li>
+                        <li><strong>RAM:</strong> 8 GB minimum, 16 GB recommended</li>
+                        <li><strong>Disk:</strong> 50 GB free space</li>
+                        <li><strong>Network:</strong> Stable internet connection</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement-card">
+                    <h4>High-Volume Production</h4>
+                    <ul>
+                        <li><strong>CPU:</strong> 8+ cores, 3.0 GHz or faster</li>
+                        <li><strong>RAM:</strong> 32+ GB recommended</li>
+                        <li><strong>Disk:</strong> 100+ GB SSD storage</li>
+                        <li><strong>Bandwidth:</strong> 100+ Mbps connection</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Software Requirements</h3>
+            <div class="requirements">
+                <div class="requirement-card">
+                    <h4>Required Software</h4>
+                    <ul>
+                        <li>Docker Engine 20.10 or higher</li>
+                        <li>Docker Compose v2.0 or higher</li>
+                        <li>Git version control system</li>
+                        <li>Node.js (for development tools)</li>
+                    </ul>
+                </div>
+                
+                <div class="requirement-card">
+                    <h4>Optional Enhancements</h4>
+                    <ul>
+                        <li>Docker Swarm for clustering</li>
+                        <li>Kubernetes for container orchestration</li>
+                        <li>Reverse proxy (nginx/Apache) for SSL termination</li>
+                        <li>Load balancer for high availability</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="development">
+            <h2>Development Deployment</h2>
+            
+            <p>For development and testing purposes, follow these steps to deploy a local instance:</p>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <h3>Clone the Repository</h3>
+                    <div class="code-block">
+git clone &lt;repository-url&gt;
+cd rb-server/server
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <h3>Configure Environment Variables</h3>
+                    <div class="code-block">
+# Copy the example environment file
+cp .env.example .env
+
+# Edit the environment variables as needed
+nano .env
+                    </div>
+                    
+                    <p>Key environment variables to configure:</p>
+                    <div class="code-block">
+# Database Configuration
+DB_PASSWORD=your_secure_password
+DB_NAME=roblox_game
+DB_USER=roblox_user
+
+# Redis Configuration
+REDIS_PASSWORD=your_redis_password
+
+# Server Configuration
+GAME_MANAGER_PORT=8081
+MAX_GAMES=10
+MAX_PLAYERS_PER_GAME=50
+
+# Security
+JWT_SECRET=very_secure_secret_key
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <h3>Build the System</h3>
+                    <div class="code-block">
+# Build all services (only needed if changes made)
+docker compose build
+
+# Or just start the containers directly
+docker compose up -d
+                    </div>
+                    
+                    <p class="success">Success: All services are now building and will start up automatically.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div>
+                    <h3>Verify the Deployment</h3>
+                    <div class="code-block">
+# Check if all services are running
+docker compose ps
+
+# View the logs to ensure everything is working
+docker compose logs
+
+# Check the health of specific services
+docker compose logs roblox-server
+docker compose logs nginx
+                    </div>
+                    
+                    <p>Expected output: All services should show as "healthy" after initialization.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">5</div>
+                <div>
+                    <h3>Access the System</h3>
+                    <p>Once deployed, you can access the system at:</p>
+                    <ul>
+                        <li><strong>Web Interface:</strong> <a href="http://localhost:8081" target="_blank">http://localhost:8081</a></li>
+                        <li><strong>Game Server API:</strong> http://localhost:8081/api</li>
+                        <li><strong>Documentation:</strong> http://localhost:8081/static/docs/</li>
+                    </ul>
+                    
+                    <p class="warning">Note: If port 8081 is already in use, check your .env file for the HTTP_PORT variable.</p>
+                </div>
+            </div>
+            
+            <h3>Development-Specific Configurations</h3>
+            
+            <h4>Hot Reloading</h4>
+            <p>For development, you can enable hot reloading to automatically reload changes:</p>
+            <div class="code-block">
+# Enable development mode with hot reloading
+./start.sh start --development
+
+# Or use the development compose file directly
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+            </div>
+            
+            <h4>Development Tools</h4>
+            <div class="code-block">
+# Run comprehensive tests
+./start.sh test
+
+# View detailed logs
+./start.sh logs -f
+
+# Run security checks
+node scripts/dependency-security-scanner.js
+
+# Clean up development environment
+./start.sh clean
+            </div>
+        </section>
+        
+        <section id="production">
+            <h2>Production Deployment</h2>
+            
+            <p>For production deployments, additional security and performance considerations are required.</p>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <h3>Production-Specific Configuration</h3>
+                    <p>Production deployments should use the production compose file with enhanced security:</p>
+                    <div class="code-block">
+# Production deployment with security features
+docker compose -f docker-compose.prod.yml up -d
+
+# With secure configurations
+docker compose -f docker-compose.prod.yml -f docker-compose.secure.yml up -d
+
+# With monitoring stack
+docker compose -f docker-compose.prod.yml --profile monitoring up -d
+                    </div>
+                    
+                    <p class="warning">Important: Ensure all passwords and secrets are properly configured before production deployment.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <h3>Security Configuration</h3>
+                    <p>Production environments require proper security configuration:</p>
+                    <div class="code-block">
+# Generate strong passwords for production
+export DB_PASSWORD=$(openssl rand -base64 32)
+export REDIS_PASSWORD=$(openssl rand -base64 32)
+export JWT_SECRET=$(openssl rand -hex 32)
+
+# Configure SSL certificates (if not using a reverse proxy)
+mkdir -p config/nginx/ssl
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout config/nginx/ssl/key.pem \
+  -out config/nginx/ssl/cert.pem \
+  -subj "/C=US/ST=State/L=City/O=Organization/CN=yourdomain.com"
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <h3>Performance Tuning</h3>
+                    <p>Optimize system performance for production workloads:</p>
+                    <h4>Database Configuration</h4>
+                    <div class="code-block">
+# Production database settings in .env
+DB_CONNECTION_POOL_SIZE=20
+DB_STATEMENT_TIMEOUT=30000
+DB_IDLE_TIMEOUT=300000
+                    </div>
+                    
+                    <h4>Redis Configuration</h4>
+                    <div class="code-block">
+# Production Redis settings in .env
+REDIS_MAX_MEMORY=2gb
+REDIS_MAX_MEMORY_POLICY=allkeys-lru
+                    </div>
+                    
+                    <h4>Game Server Configuration</h4>
+                    <div class="code-block">
+# Performance settings in .env
+GAME_SERVER_MAX_HEAP_SIZE=2g
+GAME_SERVER_MAX_PLAYERS=100
+GAME_SERVER_SESSION_TIMEOUT=7200
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div>
+                    <h3>High Availability Setup</h3>
+                    <p>For production systems requiring high availability:</p>
+                    <div class="code-block">
+# Using Docker Swarm for clustering
+docker swarm init
+docker stack deploy -c docker-compose.prod.yml roblox-multi-game
+
+# Or with Kubernetes
+kubectl apply -f k8s/production-deployment.yaml
+
+# Load balancing configuration
+# Configure nginx or HAProxy to balance load across multiple instances
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Production Deployment Commands</h3>
+            <div class="code-block">
+# Complete production deployment
+./start.sh start-prod
+
+# Deploy with monitoring
+./start.sh start --production --monitoring
+
+# Deploy with load balancing 
+docker compose -f docker-compose.prod.yml --profile load-balancer up -d
+
+# Verify production deployment
+docker compose -f docker-compose.prod.yml ps
+                    </div>
+        </section>
+        
+        <section id="configuration">
+            <h2>Configuration Guide</h2>
+            
+            <h3>Environment Variables</h3>
+            <p>All system configuration is managed through environment variables in the <code>.env</code> file:</p>
+            
+            <h4>Database Configuration</h4>
+            <div class="code-block">
+# PostgreSQL Database Settings
+DB_HOST=postgres         # Database service name in Docker
+DB_PORT=5432             # PostgreSQL default port
+DB_NAME=roblox_game      # Database name
+DB_USER=roblox_user      # Database username
+DB_PASSWORD=secure_password  # Database password
+DB_SSL_MODE=prefer       # SSL connection mode
+DB_POOL_SIZE=20          # Connection pool size
+            </div>
+            
+            <h4>Redis Configuration</h4>
+            <div class="code-block">
+# Redis Cache Settings
+REDIS_HOST=redis         # Redis service name in Docker
+REDIS_PORT=6379          # Redis default port
+REDIS_PASSWORD=redis_password  # Redis password
+REDIS_DB=0               # Redis database number
+REDIS_TTL=3600           # Default TTL for cached items (seconds)
+            </div>
+            
+            <h4>Game Server Configuration</h4>
+            <div class="code-block">
+# Roblox Game Server Settings
+ROBLOX_SERVER_PORT=27015     # Game client connection port
+ROBLOX_SERVER_HTTP_PORT=10000 # HTTP API port
+MAX_PLAYERS=50               # Maximum players per game
+SESSION_TIMEOUT=3600         # Session timeout in seconds
+GAME_LOG_LEVEL=INFO          # Logging level
+SERVER_NAME="Production Server" # Server display name
+            </div>
+            
+            <h4>Web Interface and API Configuration</h4>
+            <div class="code-block">
+# Web Interface Settings
+HTTP_PORT=80               # HTTP port (overridden by .env)
+HTTPS_PORT=443             # HTTPS port
+WEB_INTERFACE_ENABLED=true # Enable web interface
+WEB_THEME=modern           # UI theme
+CORS_ORIGINS=*             # Allowed origins for CORS
+
+# API Security
+JWT_SECRET=jwt_secret_key     # JWT signing key
+JWT_EXPIRES_IN=24h            # Token expiration
+RATE_LIMIT_WINDOW_MS=900000   # Rate limit window (15 minutes)
+RATE_LIMIT_MAX=100            # Max requests per window
+            </div>
+            
+            <h3>Service-Specific Configuration</h3>
+            <p>Additional configuration files can be found in the <code>config/</code> directory:</p>
+            <ul>
+                <li><code>config/nginx/nginx.conf</code> - Nginx reverse proxy configuration</li>
+                <li><code>config/nginx/sites/roblox-server</code> - Site-specific configurations</li>
+                <li><code>config/redis.conf</code> - Redis configuration file</li>
+                <li><code>config/server.json</code> - Additional server configurations</li>
+            </ul>
+        </section>
+        
+        <section id="monitoring">
+            <h2>Monitoring and Logging</h2>
+            
+            <h3>System Monitoring</h3>
+            <p>The system includes comprehensive monitoring capabilities:</p>
+            
+            <h4>Log Aggregation</h4>
+            <div class="code-block">
+# View logs for all services
+docker compose logs
+
+# View logs for specific service
+docker compose logs roblox-server
+
+# Follow logs in real-time
+docker compose logs -f
+
+# View logs for specific time period
+docker compose logs --since 1h
+            </div>
+            
+            <h4>Health Checks</h4>
+            <div class="code-block">
+# Check system health via API
+curl http://localhost:8081/api/health
+
+# Check individual service health
+curl http://localhost:8081/api/stats
+
+# Monitor via Docker
+docker stats
+            </div>
+            
+            <h3>Monitoring Stack</h3>
+            <p>Deploy a complete monitoring stack with Prometheus and Grafana:</p>
+            <div class="code-block">
+# Start monitoring stack
+docker compose --profile monitoring up -d
+
+# Access monitoring dashboard
+# Prometheus: http://localhost:9090
+# Grafana: http://localhost:3000 (default login: admin/admin)
+            </div>
+            
+            <h3>Performance Monitoring</h3>
+            <div class="code-block">
+# Monitor system resources
+docker stats --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+
+# Monitor network usage
+docker stats --format "table {{.Container}}\t{{.NetIO}}"
+
+# Monitor disk usage
+docker system df
+            </div>
+        </section>
+        
+        <section id="troubleshooting">
+            <h2>Troubleshooting</h2>
+            
+            <h3>Common Issues and Solutions</h3>
+            
+            <h4>Service Won't Start</h4>
+            <div class="code-block">
+# Check container status
+docker compose ps
+
+# Check logs for errors
+docker compose logs SERVICE_NAME
+
+# Check if ports are available
+netstat -tulpn | grep :PORT_NUMBER
+
+# Remove and restart specific service
+docker compose stop SERVICE_NAME
+docker compose rm SERVICE_NAME
+docker compose up SERVICE_NAME
+            </div>
+            
+            <h4>Database Connection Issues</h4>
+            <div class="code-block">
+# Verify database is running
+docker compose logs postgres
+
+# Check database connectivity
+docker compose exec postgres psql -U roblox_user -d roblox_game -c "SELECT 1;"
+
+# Reset database if needed
+docker compose down
+docker volume rm server_postgres_data
+docker compose up -d
+            </div>
+            
+            <h4>Redis Connection Issues</h4>
+            <div class="code-block">
+# Verify Redis is running
+docker compose logs redis
+
+# Test Redis connection
+docker compose exec redis redis-cli ping
+
+# Check Redis status
+docker compose exec redis redis-cli info
+            </div>
+            
+            <h4>Game Server Issues</h4>
+            <div class="code-block">
+# Check game server logs
+docker compose logs roblox-server
+
+# Verify game server is responding
+curl http://localhost:10000/api/health
+
+# Check if game server ports are accessible
+telnet localhost 27015
+            </div>
+            
+            <h4>SSL Certificate Issues</h4>
+            <div class="code-block">
+# Check SSL configuration
+docker compose exec nginx ls -la /etc/nginx/ssl/
+
+# Verify certificate validity
+openssl x509 -in config/nginx/ssl/cert.pem -text -noout
+
+# Generate new certificates if needed
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout config/nginx/ssl/key.pem \
+  -out config/nginx/ssl/cert.pem \
+  -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
+            </div>
+            
+            <h3>Debugging Commands</h3>
+            <div class="code-block">
+# Enter a running container
+docker compose exec roblox-server bash
+docker compose exec postgres psql -U roblox_user
+
+# Run commands in a service
+docker compose run roblox-server /bin/sh
+
+# Check system resources
+docker stats
+docker system df
+
+# Check network configuration
+docker network ls
+docker network inspect server_roblox-network
+
+# View all system information
+docker system info
+            </div>
+            
+            <h3>Backup and Recovery</h3>
+            <div class="code-block">
+# Backup database
+docker compose exec postgres pg_dump -U roblox_user roblox_game > backup_$(date +%Y%m%d_%H%M%S).sql
+
+# Restore database
+cat backup_file.sql | docker compose exec -T postgres psql -U roblox_user roblox_game
+
+# Backup Redis
+docker compose exec redis redis-cli BGSAVE
+docker compose cp redis:/data/dump.rdb redis_backup_$(date +%Y%m%d_%H%M%S).rdb
+
+# List all volumes
+docker volume ls
+
+# Backup volumes
+docker run --rm -v server_postgres_data:/data -v $(pwd):/backup alpine tar czf /backup/postgres_backup.tar.gz -C /data .
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Roblox Multi-Game System - Deployment Guide</p>
+            <p>© 2025 Roblox Game Development Team</p>
+        </div>
+    </footer>
+</body>
+</html>
